@@ -1,12 +1,3 @@
-.home-section:nth-child(odd) {
-    background-color:lightgrey;
-    width:100%;
-}
-.home-section:first-child {
-    height:300px;
-    margin-bottom:30px;
-}
-.home-section:nth-child(n+2) {
-    margin-top:30px !important;
-    margin-bottom:30px !important;
+.home-section {
+    min-height: 400px;
 }

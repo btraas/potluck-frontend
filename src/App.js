@@ -9,11 +9,11 @@ import Home from './components/Home';
 class App extends Component {
   render() {
     return (
-      <Container>
+      <div style={{width:"100%"}}>
         <Navigation />
         <Home />
         <Footer />
-      </Container>
+      </div>
     );
   }
 }
