@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
-import { Container, Grid } from 'semantic-ui-react';
+import { Menu } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 
 class Footer extends Component {
   render() {
     return (
-        <Grid as={Container}>
-            <Grid.Row>
-                Footer
-            </Grid.Row>
-        </Grid>
+        <Menu inverted>
+            <Menu.Item>Footer</Menu.Item>
+        </Menu>
     );
   }
 }

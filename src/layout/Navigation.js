@@ -12,7 +12,7 @@ class Navigation extends Component {
         const { activeItem } = this.state 
 
         return (
-            <Menu inverted>
+            <Menu fluid inverted>
                 <Menu.Item 
                     name='logo'>
                     Logo
