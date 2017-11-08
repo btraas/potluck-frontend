@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Menu } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
+
 import 'semantic-ui-css/semantic.min.css';
 
 class Navigation extends Component {
@@ -13,24 +15,34 @@ class Navigation extends Component {
 
         return (
             <Menu fluid inverted>
-                <Menu.Item 
-                    name='logo'>
+                <Menu.Item
+                    as={Link}
+                    to="/"
+                    name='home'
+                    active={ activeItem === 'features' }
+                    onClick={this.handleItemClick}>
                     Logo
                 </Menu.Item>
                 <Menu.Menu position='right'>
                     <Menu.Item 
+                        as={Link}
+                        to="/features"
                         name='features'
                         active={ activeItem === 'features' }
                         onClick={this.handleItemClick}>
                         Features
                     </Menu.Item>
                     <Menu.Item 
+                        as={Link}
+                        to="/register"
                         name='register'
                         active={ activeItem === 'register' }
                         onClick={this.handleItemClick}>
                         Register
                     </Menu.Item>
                     <Menu.Item 
+                        as={Link}
+                        to="/login"
                         name='login'
                         active={ activeItem === 'login' }
                         onClick={this.handleItemClick}>
@@ -41,5 +53,4 @@ class Navigation extends Component {
         );
   }
 }
-
 export default Navigation;
