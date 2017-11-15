@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Grid, Icon, Button, Image, Divider, Header } from 'semantic-ui-react';
+import { Grid, Button, Image, Divider, Header } from 'semantic-ui-react';
 import DocumentTitle from 'react-document-title';
 import { Link } from 'react-router-dom';
 import 'semantic-ui-css/semantic.min.css';
