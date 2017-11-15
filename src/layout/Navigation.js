@@ -6,7 +6,7 @@ import 'semantic-ui-css/semantic.min.css';
 
 class Navigation extends Component {
 
-    state = {} 
+    state = { activeItem: '' } 
 
     handleItemClick = (e, { name }) => this.setState({ activeItem: name}) 
 
@@ -24,14 +24,6 @@ class Navigation extends Component {
                     Logo
                 </Menu.Item>
                 <Menu.Menu position='right'>
-                    <Menu.Item 
-                        as={Link}
-                        to="/features"
-                        name='features'
-                        active={ activeItem === 'features' }
-                        onClick={this.handleItemClick}>
-                        Features
-                    </Menu.Item>
                     <Menu.Item 
                         as={Link}
                         to="/register"

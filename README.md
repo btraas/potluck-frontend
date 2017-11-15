@@ -5,5 +5,7 @@
 
 
 # Installation  
-- npm install  
-- yarn  
+- npm install (in root)  
+- npm install -g yarn (install yarn globally)  
+- yarn (install yarn in root)  
+- yarn start (to serve)  
