@@ -1,43 +1,50 @@
 import React, { Component } from 'react';
 import DocumentTitle from 'react-document-title';
+import { Card, Form, Checkbox, Button, Grid } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
+import '../../css/reglog.css'
 //import { Link } from 'react-router-dom';
 
 class Register extends Component {
   render() {
     return (
         <DocumentTitle title='Potluck - Register'>
-            <div class="ui centered card">
-                <div class="content">
-                    <a class="header">Register</a>
-                    <div class="ui form success">
-                        <div class="field">
-                            <label>First Name</label>
-                            <input type="text" name="firstName" placeholder="First Name"></input>
-                        </div>
-                        <div class="field">
-                            <label>Last Name</label>
-                            <input type="text" name="lastName" placeholder="Last Name"></input>
-                        </div>
-                        <div class="field">
-                            <label>E-mail</label>
-                            <input type="email" name="email" placeholder="joe@schmoe.com"></input>
-                        </div>
-                        <div class="field">
-                            <label>Password</label>
-                            <input type="password" name="password" placeholder="Enter a password"></input>
-                        </div>
-                        <div class="field">
-                            <label>Confirm Password</label>
-                            <input type="password" name="confirm" placeholder="Confirm password"></input>
-                        </div>
-                        <div class="ui success message">
-                            <div class="header">Congrats!</div>
-                            <p>You have created a Potluck account!</p>
-                        </div>
-                        <div class="ui submit button">Submit</div>
-                    </div>
-                </div>
+            <div className="background">
+            <Grid centered columns={5}>
+                <Grid.Row>
+                    <Grid.Column textAlign="Center">
+                        <br />
+                        <span className="title">Potluck</span>
+                    </Grid.Column>
+                </Grid.Row>
+                <Grid.Row>
+                    <Grid.Column textAlign="Center">
+                        <span className="flavor">Sign up</span>
+                    </Grid.Column>
+                </Grid.Row>
+                <Grid.Row>
+                    <Grid.Column textAlign="Center">
+                        <Form>
+                            <Form.Input label='First Name' type='text' placeholder="First Name"/>
+                            <Form.Input label='Last Name' type='text' placeholder="Last Name"/>
+                            <Form.Input label='E-mail' type='email' placeholder="E-mail"/>
+                            <Form.Input label='Enter Password' type='password' placeholder="Enter password"/>
+                            <Form.Input label='Confirm Password' type='password' placeholder="Confirm password"/>
+                            <label> &nbsp;
+                            <button className="confirm-button" name="submit">Sign Up</button>
+                            </label>
+                        </Form>
+                        <br />
+                        <h2 class="decorated"><span className="or">or</span></h2>
+                        <br />
+                        <span className="already">Already have an account?</span>
+                        <br />
+                        <label> &nbsp;
+                            <button className="switch-button" name="submit">Log In</button>
+                        </label>
+                    </Grid.Column>
+                </Grid.Row>
+            </Grid>
             </div>
         </DocumentTitle>
     );

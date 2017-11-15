@@ -32,9 +32,9 @@ class Home extends Component {
                         <p>Make an invite.</p>
                         <p>Send out an event.</p>
                         <p>Pledge your dishes.</p>
-                        <p><b>Host your event.</b></p>                    
+                        <p><b>Host your event.</b></p>
                     </div>
-                    <Divider />                
+                    <Divider />
                 </Grid.Column>
             </Grid.Row>
             <Grid.Row className="home-section" verticalAlign="middle" textAlign="center">
