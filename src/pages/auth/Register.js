@@ -10,7 +10,7 @@ class Register extends Component {
     return (
         <DocumentTitle title='Potluck - Register'>
             <div className="background">
-            <Grid centered columns={5}>
+            <Grid doubling centered columns={5}>
                 <Grid.Row>
                     <Grid.Column textAlign="Center">
                         <br />
