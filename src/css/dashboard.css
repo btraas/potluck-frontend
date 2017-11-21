@@ -1,0 +1,33 @@
+.event-header {
+    background-color: #3E6550 !important;
+    color: #EAEDD0 !important;
+}
+
+.event-content {
+    background-color: #8AB454 !important;
+    color: #EAEDD0 !important;    
+}
+
+body {
+    background-color: #EAEDD0 !important;
+}
+
+.section-header {
+    color: #3E6550 !important;
+
+}
+
+.btn-create-event {
+    background-color: #3E6550 !important;
+    color: #EAEDD0 !important;    
+}
+
+.history-event-header {
+    background-color: #4F4F4F !important;
+    color: #EAEDD0 !important;  
+}
+
+.history-event-content {
+    background-color: 	#C1C1C1 !important;
+    color: #4F4F4F !important;  
+}
