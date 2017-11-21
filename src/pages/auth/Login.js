@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import DocumentTitle from 'react-document-title';
-import { Card, Form, Checkbox, Button, Grid } from 'semantic-ui-react'
+import { Form, Grid } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 import '../../css/reglog.css'
 //import { Link } from 'react-router-dom';
