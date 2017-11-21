@@ -9,7 +9,6 @@ class Register extends Component {
   render() {
     return (
         <DocumentTitle title='Potluck - Register'>
-            <div className="background">
             <Grid doubling centered columns={5}>
                 <Grid.Row>
                     <Grid.Column textAlign="Center">
@@ -45,7 +44,6 @@ class Register extends Component {
                     </Grid.Column>
                 </Grid.Row>
             </Grid>
-            </div>
         </DocumentTitle>
     );
   }
