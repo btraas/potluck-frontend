@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 //import { Button, Container, Header, Input, Grid } from 'semantic-ui-react'
 
-class Event extends Component {
+class EventDetail extends Component {
 
     constructor(props) {
         super(props);
@@ -24,4 +24,4 @@ class Event extends Component {
         );
   }
 }
-export default Event;
+export default EventDetail;
