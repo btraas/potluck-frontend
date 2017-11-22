@@ -1,0 +1,10 @@
+.time-select {
+    min-width:50px !important;
+    margin-left:5px;
+}
+.daypicker-form {
+    text-align: center;
+}
+.event-date-picker {
+    background-color:white;
+}
