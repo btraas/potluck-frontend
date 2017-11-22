@@ -1,33 +1,57 @@
+body {
+    background-color: #EAEDD0 !important;
+    Font-Family: Roboto !important;
+}
+
 .event-header {
     background-color: #3E6550 !important;
     color: #EAEDD0 !important;
+    Font-Family: Roboto !important;
 }
 
 .event-content {
     background-color: #8AB454 !important;
-    color: #EAEDD0 !important;    
+    color: #EAEDD0 !important;
+    font-family: 'Roboto', sans-serif !important;  
+   
+
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;   
 }
 
-body {
-    background-color: #EAEDD0 !important;
-}
+
 
 .section-header {
     color: #3E6550 !important;
-
+    font-family: 'Roboto', sans-serif !important; 
 }
 
 .btn-create-event {
     background-color: #3E6550 !important;
-    color: #EAEDD0 !important;    
+    color: #EAEDD0 !important;  
+    font-family: 'Roboto', sans-serif !important; 
 }
 
 .history-event-header {
     background-color: #4F4F4F !important;
     color: #EAEDD0 !important;  
+    font-family: 'Roboto', sans-serif !important; 
 }
 
 .history-event-content {
     background-color: 	#C1C1C1 !important;
     color: #4F4F4F !important;  
+    font-family: 'Roboto', sans-serif !important;  
+}
+
+.no-event {
+    border: 5px dashed #3F664E !important;
+    box-sizing: border-box !important;
+    border-radius: 10px !important;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    vertical-align: text-middle;
 }

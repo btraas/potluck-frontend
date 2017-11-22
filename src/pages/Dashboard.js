@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Container, Header, Input, Grid, Segment } from 'semantic-ui-react'
+import { Button, Container, Header, Input, Grid, Segment, Image } from 'semantic-ui-react'
 import '../css/dashboard.css';
 
 
@@ -18,7 +18,7 @@ class Dashboard extends Component {
                                 <Button className='btn-create-event'>Create Event</Button>
                             </Grid.Column>
                             <Grid.Column mobile={9} computer={9} tablet={9}>
-                                <Input fluid focus placeholder='Search...' />
+                                <Input fluid focus placeholder='Search BLAH ' />
                             </Grid.Column>
                         </Grid.Row>
                     </Grid>
@@ -28,13 +28,20 @@ class Dashboard extends Component {
                     <Header className='section-header' as="h2">Attending</Header>
                     <br />
                     <Grid padded>
+                        {/* <Grid.Column mobile={3} computer={3} tablet={3}>
+                            <div>
+                                <Header className='event-header' as='h5' attached='top'>Event Name</Header>
+                                <Segment attached className='event-content'>
+                                     BLAH blah blah blah BLAH blah blah blah BLAH blah blah blah BLAH 
+                                </Segment>
+                            </div>
+                        </Grid.Column> */}
                         <Grid.Column mobile={3} computer={3} tablet={3}>
-                        <div>
-                            <Header className='event-header' as='h5' attached='top'>Event Name</Header>
-                            <Segment attached className='event-content'>
-                                ....blah blah blah...blah blah blah...blah blah blah...
-                            </Segment>
-                        </div>
+                            <div className='no-event'>
+                                <p className='no-event-text'>
+                                    No Event
+                                </p>
+                            </div>
                         </Grid.Column>
                     </Grid>
                 </Container>
@@ -48,7 +55,7 @@ class Dashboard extends Component {
                                 <div>
                                     <Header className='event-header' as='h5' attached='top'>Thanksgiving Mania</Header>
                                     <Segment attached className='event-content'>
-                                        Thanksgiving Mania....blah blah blah...blah blah blah...blah blah blah...
+                                        Thanksgiving Mania BLAH blah blah blah BLAH blah blah blah BLAH blah blah blah BLAH blah blah blah BLAH blah blah blah BLAH 
                                     </Segment>
                                 </div>
                             </Grid.Column>
@@ -56,7 +63,7 @@ class Dashboard extends Component {
                                 <div>
                                     <Header className='event-header' as='h5' attached='top'>Thanksgiving Mania</Header>
                                     <Segment attached className='event-content'>
-                                        Thanksgiving Mania....blah blah blah...blah blah blah...blah blah blah...
+                                        Thanksgiving Mania BLAH blah blah blah BLAH blah blah blah BLAH blah blah blah BLAH 
                                     </Segment>
                                 </div>
                             </Grid.Column>
@@ -64,7 +71,7 @@ class Dashboard extends Component {
                                 <div>
                                     <Header className='event-header' as='h5' attached='top'>Thanksgiving Mania</Header>
                                     <Segment attached className='event-content'>
-                                        Thanksgiving Mania....blah blah blah...blah blah blah...blah blah blah...
+                                        Thanksgiving Mania BLAH blah blah blah BLAH blah blah blah BLAH blah blah blah BLAH 
                                     </Segment>
                                 </div>
                             </Grid.Column>
@@ -81,7 +88,7 @@ class Dashboard extends Component {
                                 <div>
                                     <Header className='event-header' as='h5' attached='top'>Thanksgiving Mania</Header>
                                     <Segment attached className='event-content'>
-                                        Thanksgiving Mania....blah blah blah...blah blah blah...blah blah blah...
+                                        Thanksgiving Mania BLAH blah blah blah BLAH blah blah blah BLAH blah blah blah BLAH 
                                     </Segment>
                                 </div>
                             </Grid.Column>
@@ -89,7 +96,7 @@ class Dashboard extends Component {
                                 <div>
                                     <Header className='event-header' as='h5' attached='top'>Thanksgiving Mania</Header>
                                     <Segment attached className='event-content'>
-                                        Thanksgiving Mania....blah blah blah...blah blah blah...blah blah blah...
+                                        Thanksgiving Mania BLAH blah blah blah BLAH blah blah blah BLAH blah blah blah BLAH 
                                     </Segment>
                                 </div>
                             </Grid.Column>
@@ -97,7 +104,7 @@ class Dashboard extends Component {
                                 <div>
                                     <Header className='event-header' as='h5' attached='top'>Thanksgiving Mania</Header>
                                     <Segment attached className='event-content'>
-                                        Thanksgiving Mania....blah blah blah...blah blah blah...blah blah blah...
+                                        Thanksgiving Mania BLAH blah blah blah BLAH blah blah blah BLAH blah blah blah BLAH 
                                     </Segment>
                                 </div>
                             </Grid.Column>
@@ -114,7 +121,7 @@ class Dashboard extends Component {
                                 <div>
                                     <Header className='history-event-header' as='h5' attached='top'>Thanksgiving Mania</Header>
                                     <Segment attached className='history-event-content'>
-                                        Thanksgiving Mania....blah blah blah...blah blah blah...blah blah blah...
+                                        Thanksgiving Mania BLAH blah blah blah BLAH blah blah blah BLAH blah blah blah BLAH 
                                     </Segment>
                                 </div>
                             </Grid.Column>
@@ -122,7 +129,7 @@ class Dashboard extends Component {
                                 <div>
                                     <Header className='history-event-header' as='h5' attached='top'>Thanksgiving Mania</Header>
                                     <Segment attached className='history-event-content'>
-                                        Thanksgiving Mania....blah blah blah...blah blah blah...blah blah blah...
+                                        Thanksgiving Mania BLAH blah blah blah BLAH blah blah blah BLAH blah blah blah BLAH 
                                     </Segment>
                                 </div>
                             </Grid.Column>
@@ -130,7 +137,7 @@ class Dashboard extends Component {
                                 <div>
                                     <Header className='history-event-header' as='h5' attached='top'>Thanksgiving Mania</Header>
                                     <Segment attached className='history-event-content'>
-                                        Thanksgiving Mania....blah blah blah...blah blah blah...blah blah blah...
+                                        Thanksgiving Mania BLAH blah blah blah BLAH blah blah blah BLAH blah blah blah BLAH 
                                     </Segment>
                                 </div>
                             </Grid.Column>
