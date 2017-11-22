@@ -9,7 +9,7 @@ class Home extends Component {
   render() {
     return (
         <DocumentTitle title='Potluck'>
-        <Grid padded >
+        <Grid padded id="home-container">
             <Grid.Row className="home-section" centered>
                 <Grid.Column mobile={16} computer={8} tablet={10} textAlign="center" verticalAlign="middle">
                     <Header>Potluck</Header>
@@ -32,9 +32,9 @@ class Home extends Component {
                         <p>Make an invite.</p>
                         <p>Send out an event.</p>
                         <p>Pledge your dishes.</p>
-                        <p><b>Host your event.</b></p>                    
+                        <p><b>Host your event.</b></p>
                     </div>
-                    <Divider />                
+                    <Divider />
                 </Grid.Column>
             </Grid.Row>
             <Grid.Row className="home-section" verticalAlign="middle" textAlign="center">

@@ -1,14 +1,61 @@
 import React, { Component } from 'react';
-import { Button, Container, Header, Input, Grid, Segment, Image } from 'semantic-ui-react'
+import { Button, Container, Header, Input, Grid } from 'semantic-ui-react'
+import Collection from '../components/Collection';
+import Event from '../components/Event';
+import Invitation from '../components/Invitation';
+import PastEvent from '../components/PastEvent';
 import '../css/dashboard.css';
 
 
 class Dashboard extends Component {
 
-    state = { } 
+    constructor(props) {
+        super(props);
+        this.state = {
+            loading: true,
+            Events: [],
+            Pledges: [],
+            Invitations: []
+        };
+        this.collect = this.collect.bind(this);
+        this.baseUrl = 'http://potluckapi.azurewebsites.net/api/';
+        this.endpoints = ['Events', 'Invitations', 'Pledges'];
+    }
+
+    componentDidMount() {
+        this.collect();
+    }
+
+    /**
+     * Collect all user data.
+     */
+    collect() {
+        let headers = new Headers();
+        headers.append('Access-Control-Allow-Origin', '*');
+        headers.append('Access-Control-Allow-Credentials', 'true');
+        let options = { header:headers };
+        Promise.all(this.endpoints.map((endpoint) => {
+            return fetch(this.baseUrl+endpoint, options)
+                    .then(response => { return response.json()})
+                    .then(data => {
+                        return data;
+                    });
+        }))
+        .then(values => {
+            let state = Object.assign({}, this.state);
+            values.map((item, index)=> {
+                let stateKey = this.endpoints[index];
+                state[stateKey] = item;
+            });
+            this.setState(state);
+        })
+        .catch(e => {
+            console.log('Error: ', e)
+        })
+
+    }
 
     render() {
-
         return (
             <div>
                 <Container>
@@ -23,127 +70,31 @@ class Dashboard extends Component {
                         </Grid.Row>
                     </Grid>
                 </Container>
-                <br /><br />
+                <br/><br/>
                 <Container>
                     <Header className='section-header' as="h2">Attending</Header>
-                    <br />
-                    <Grid padded>
-                        {/* <Grid.Column mobile={3} computer={3} tablet={3}>
-                            <div>
-                                <Header className='event-header' as='h5' attached='top'>Event Name</Header>
-                                <Segment attached className='event-content'>
-                                     BLAH blah blah blah BLAH blah blah blah BLAH blah blah blah BLAH 
-                                </Segment>
-                            </div>
-                        </Grid.Column> */}
-                        <Grid.Column mobile={3} computer={3} tablet={3}>
-                            <div className='no-event'>
-                                <p className='no-event-text'>
-                                    No Event
-                                </p>
-                            </div>
-                        </Grid.Column>
-                    </Grid>
+                    <br/>
+                    <Collection title="dash-attending" child={Event} data={this.state.Events}/>
+                </Container>
+                <br/><br/>
+                <Container>
+                    <Header className='section-header' as="h2">Hosting</Header>
+                    <br/>
+                    <Collection title="dash-hosting" child={Event} data={this.state.Events}/>
                 </Container>
                 <br /><br />
                 <Container>
-                    <Header className='section-header' as='h2'>Hosting</Header>
-                    <br />
-                    <Grid padded>
-                        <Grid.Row>
-                            <Grid.Column mobile={3} computer={3} tablet={3}>
-                                <div>
-                                    <Header className='event-header' as='h5' attached='top'>Thanksgiving Mania</Header>
-                                    <Segment attached className='event-content'>
-                                        Thanksgiving Mania BLAH blah blah blah BLAH blah blah blah BLAH blah blah blah BLAH blah blah blah BLAH blah blah blah BLAH 
-                                    </Segment>
-                                </div>
-                            </Grid.Column>
-                            <Grid.Column mobile={3} computer={3} tablet={3}>
-                                <div>
-                                    <Header className='event-header' as='h5' attached='top'>Thanksgiving Mania</Header>
-                                    <Segment attached className='event-content'>
-                                        Thanksgiving Mania BLAH blah blah blah BLAH blah blah blah BLAH blah blah blah BLAH 
-                                    </Segment>
-                                </div>
-                            </Grid.Column>
-                            <Grid.Column mobile={3} computer={3} tablet={3}>
-                                <div>
-                                    <Header className='event-header' as='h5' attached='top'>Thanksgiving Mania</Header>
-                                    <Segment attached className='event-content'>
-                                        Thanksgiving Mania BLAH blah blah blah BLAH blah blah blah BLAH blah blah blah BLAH 
-                                    </Segment>
-                                </div>
-                            </Grid.Column>
-                        </Grid.Row>
-                    </Grid>
+                    <Header className='section-header' as="h2">Invited</Header>
+                    <br/>
+                    <Collection title="dash-invitations" child={Invitation} data={this.state.Invitations}/>
                 </Container>
-                <br /><br />
-                <Container>
-                    <Header className='section-header' as='h2'>Invited</Header>
-                    <br />
-                    <Grid padded>
-                        <Grid.Row>
-                            <Grid.Column mobile={3} computer={3} tablet={3}>
-                                <div>
-                                    <Header className='event-header' as='h5' attached='top'>Thanksgiving Mania</Header>
-                                    <Segment attached className='event-content'>
-                                        Thanksgiving Mania BLAH blah blah blah BLAH blah blah blah BLAH blah blah blah BLAH 
-                                    </Segment>
-                                </div>
-                            </Grid.Column>
-                            <Grid.Column mobile={3} computer={3} tablet={3}>
-                                <div>
-                                    <Header className='event-header' as='h5' attached='top'>Thanksgiving Mania</Header>
-                                    <Segment attached className='event-content'>
-                                        Thanksgiving Mania BLAH blah blah blah BLAH blah blah blah BLAH blah blah blah BLAH 
-                                    </Segment>
-                                </div>
-                            </Grid.Column>
-                            <Grid.Column mobile={3} computer={3} tablet={3}>
-                                <div>
-                                    <Header className='event-header' as='h5' attached='top'>Thanksgiving Mania</Header>
-                                    <Segment attached className='event-content'>
-                                        Thanksgiving Mania BLAH blah blah blah BLAH blah blah blah BLAH blah blah blah BLAH 
-                                    </Segment>
-                                </div>
-                            </Grid.Column>
-                        </Grid.Row>
-                    </Grid>
-                </Container>
-                <br /><br />
+                <br/><br />
                 <Container>
                     <Header className='section-header' as='h2'>History</Header>
-                    <br />
-                    <Grid padded>
-                        <Grid.Row>
-                            <Grid.Column mobile={3} computer={3} tablet={3}>
-                                <div>
-                                    <Header className='history-event-header' as='h5' attached='top'>Thanksgiving Mania</Header>
-                                    <Segment attached className='history-event-content'>
-                                        Thanksgiving Mania BLAH blah blah blah BLAH blah blah blah BLAH blah blah blah BLAH 
-                                    </Segment>
-                                </div>
-                            </Grid.Column>
-                            <Grid.Column mobile={3} computer={3} tablet={3}>
-                                <div>
-                                    <Header className='history-event-header' as='h5' attached='top'>Thanksgiving Mania</Header>
-                                    <Segment attached className='history-event-content'>
-                                        Thanksgiving Mania BLAH blah blah blah BLAH blah blah blah BLAH blah blah blah BLAH 
-                                    </Segment>
-                                </div>
-                            </Grid.Column>
-                            <Grid.Column mobile={3} computer={3} tablet={3}>
-                                <div>
-                                    <Header className='history-event-header' as='h5' attached='top'>Thanksgiving Mania</Header>
-                                    <Segment attached className='history-event-content'>
-                                        Thanksgiving Mania BLAH blah blah blah BLAH blah blah blah BLAH blah blah blah BLAH 
-                                    </Segment>
-                                </div>
-                            </Grid.Column>
-                        </Grid.Row>
-                    </Grid>
+                    <br/>
+                    <Collection title="dash-history" child={PastEvent} data={this.state.Events}/>
                 </Container>
+                <br /><br />
             </div>
         );
   }

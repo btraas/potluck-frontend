@@ -1,0 +1,104 @@
+body {
+    font-family: Roboto;
+    background-color: #3F664E !important;
+}
+
+.title {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 900;
+    line-height: normal;
+    font-size: 85px;
+    color: #EBEDD0;
+}
+
+.flavor {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 900;
+    line-height: normal;
+    font-size: 40px;
+    color: #88B652;
+}
+
+label {
+    font-family: Roboto !important;
+    font-style: normal !important;
+    font-weight: 500 !important;
+    line-height: normal !important;
+    font-size: 24px !important;
+    color: #EBEDD0 !important;
+    text-align: left !important;
+}
+
+.confirm-button {
+    background: #88B652;
+    border-radius: 10px;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    font-size: 24px;
+
+    color: #EBEDD0;
+    width: 100%;
+}
+
+.or {
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    font-size: 30px;
+
+    color: #EBEDD0;
+}
+
+.switch-button {
+
+    background: #EBEDD0;
+    border-radius: 10px;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    font-size: 24px;
+    color: #3F664E;
+    border-radius: 10px;
+    width: 100%;
+}
+
+.already {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    font-size: 18px;
+
+    color: #EBEDD0;
+}
+
+
+.decorated{
+    overflow: hidden;
+    text-align: center;
+}
+.decorated > span{
+    position: relative;
+    display: inline-block;
+}
+.decorated > span:before, .decorated > span:after{
+    content: '';
+    position: absolute;
+    top: 50%;
+    border-bottom: 2px solid;
+    width: 591px; /* half of limiter*/
+    margin: 0 20px;
+}
+.decorated > span:before{
+    right: 100%;
+}
+.decorated > span:after{
+    left: 100%;
+}
