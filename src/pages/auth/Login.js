@@ -9,20 +9,20 @@ class Login extends Component {
   render() {
     return (
         <DocumentTitle title='Potluck - Login'>
-            <Grid centered columns={5}>
-                <Grid.Row>
-                    <Grid.Column textAlign="center">
+            <Grid padded centered verticalAlign='top'>
+                <Grid.Row centered>
+                    <Grid.Column textAlign="center" computer={6} tablet={10} mobile={16}>
                         <br />
                         <span className="title">Potluck</span>
                     </Grid.Column>
                 </Grid.Row>
-                <Grid.Row>
-                    <Grid.Column textAlign="center">
+                <Grid.Row centered >
+                    <Grid.Column textAlign="center" computer={6} tablet={10} mobile={16}>
                         <span className="flavor">Sign up</span>
                     </Grid.Column>
                 </Grid.Row>
-                <Grid.Row>
-                    <Grid.Column>
+                <Grid.Row centered>
+                    <Grid.Column computer={6} tablet={10} mobile={16}>
                         <Form>
                             <Form.Input label='E-mail' type='email' placeholder="E-mail"/>
                             <Form.Input label='Enter Password' type='password' placeholder="Enter password"/>

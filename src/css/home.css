@@ -1,9 +1,12 @@
+#home-container {
+    background-color: #3F664E;
+}
+
 .home-section {
     min-height: 400px;
     border-bottom:2px solid grey;
 }
 
-body {
-    background-color: #3F664E;
+#home-container > .home-section:nth-child(4) {
+    border-bottom:0;
 }
-
