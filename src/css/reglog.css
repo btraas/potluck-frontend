@@ -1,9 +1,6 @@
 body {
     font-family: Roboto;
-}
-
-.background {
-    background-color: #3F664E;
+    background-color: #3F664E !important;
 }
 
 .title {

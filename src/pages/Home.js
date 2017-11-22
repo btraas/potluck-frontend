@@ -9,7 +9,7 @@ class Home extends Component {
   render() {
     return (
         <DocumentTitle title='Potluck'>
-        <Grid padded >
+        <Grid padded id="home-container">
             <Grid.Row className="home-section banner" centered>
                 {/*<Image wrapped className="bannerImg" src="img/Putluck.png" />*/}
                 <Image wrapped className="blackOverlayImg" />
@@ -20,6 +20,7 @@ class Home extends Component {
                     <p className="headerSignUp">Sign up with Potluck and start organizing.</p>
                     <Button className="signUpBtn" color='olive' as={Link} to="/register">Sign Up</Button>
                     <div className="headerAlready">Already registered? <Link color='blue'to="/login">Log in.</Link></div>
+
                 </Grid.Column>
             </Grid.Row>
             <Grid.Row className="home-section" color="olive" verticalAlign="middle">
@@ -39,7 +40,7 @@ class Home extends Component {
                 </Grid.Column>
             </Grid.Row>
 
-            <Grid.Row className="home-section" verticalAlign="middle" textAlign="center" >
+            <Grid.Row className="home-section thirdSection" verticalAlign="middle" textAlign="center" >
                 <Grid.Column mobile={16} computer={8} tablet={8} >
                     <Header className="headerTake">"Take it on the go"</Header>
                     <hr className="dividerForSecondBannerThird"/>

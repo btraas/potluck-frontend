@@ -24,7 +24,7 @@ class Navigation extends Component {
                     active={ activeItem === 'features' }
                     onClick={this.handleItemClick}>
 
-                    PutLuck
+                    PotLuck
                 </Menu.Item>
                 <Menu.Menu position='right' className='naviRightPadding'>
                     <Menu.Item 

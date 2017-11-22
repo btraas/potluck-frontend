@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import 'semantic-ui-css/semantic.min.css';
 import Navigation from './layout/Navigation';
 import Footer from './layout/Footer';
 import PrivateRoute from './components/PrivateRoute';
 import AuthLayout from './layout/AuthLayout';
 import NoAuthLayout from './layout/NoAuthLayout';
-
+import './css/application.css';
 /**
  * Application entry point. 
  */

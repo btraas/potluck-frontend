@@ -6,7 +6,7 @@ import '../css/foot.css';
 class Footer extends Component {
   render() {
     return (
-        <Menu inverted className='foot'>
+        <Menu inverted className="footer">
             <Menu.Item>Footer</Menu.Item>
         </Menu>
     );
