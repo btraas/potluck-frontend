@@ -18,6 +18,7 @@ class EventCreate extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleDayClick = this.handleDayClick.bind(this);
+        this.handleClick = this.handleClick.bind(this);
     }
 
     componentDidMount() {
@@ -39,6 +40,20 @@ class EventCreate extends Component {
         });
     }
 
+    /**
+     * Send users to the previous page.
+     * @param {*} button click event 
+     */
+    handleClick(event) {
+        const {step} = this.state;
+        console.log(this.state[step].prev, step)
+        if(this.state[step].prev !== undefined) {
+            this.setState({
+                step:this.state[step].prev
+            })
+        }
+    }
+
     handleChange(event, {name, value}) {
         let current = Object.assign({}, this.state[this.state.step]); 
         current.values[name] = value
@@ -58,11 +73,13 @@ class EventCreate extends Component {
         let {step} = this.state;
         let hours = [];
         for(let i=1; i<13; i++) {
-            hours.push({key:i, value:i, text:i});
+            let text = i < 10 ? `0${i}`:i
+            hours.push({key:i, value:i, text:text});
         }
         let minutes = [];
         for(let i=0; i<60; i++) {
-            minutes.push({key:i, value:i, text:i});
+            let text = i < 10 ? `0${i}`:i
+            minutes.push({key:i, value:i, text:text});
         }
         let ampm = [{key:'am', value:'am', text:'am'}, {key:'pm', value:'pm', text:'pm'}];
 
@@ -70,15 +87,15 @@ class EventCreate extends Component {
             <DocumentTitle title='Potluck - Create Event'>
             <Grid padded centered >
                 <Grid.Row centered>
-                    <Grid.Column textAlign="center" computer={8} tablet={10} mobile={16}>
+                    <Grid.Column textAlign="center" computer={5} tablet={10} mobile={16}>
                         <br />
                         <span className="title">Potluck</span>
                     </Grid.Column>
                 </Grid.Row>
                 <Grid.Row centered>
-                    <Grid.Column textAlign="center" computer={8} tablet={10} mobile={16}>
+                    <Grid.Column textAlign="center" computer={5} tablet={10} mobile={16}>
                         <span className="flavor">Create an Event</span>
-                        <Step.Group>
+                        <Step.Group size='tiny'>
                             <Step active={step === 'details'}>
                                 <Icon name='list' />
                                 <Step.Content title='Details'/>
@@ -97,39 +114,44 @@ class EventCreate extends Component {
                     </Grid.Column>
                 </Grid.Row>
                 {step === 'details' && <Grid.Row>
-                    <Grid.Column computer={5} tablet={10} mobile={16} >
+                    <Grid.Column computer={4} tablet={10} mobile={16} >
                         <Form onSubmit={this.handleSubmit}>
-                        <Form.Input name='name' label='Event Name' placeholder='Event Name' onChange={this.handleChange} required/>
-                        <Form.Input name='description' label='Event Description' placeholder='Event Description'  onChange={this.handleChange} required/>
-                        <Form.Input name='location' label='Event Location' placeholder='Event Location'  onChange={this.handleChange} required/>                    
+                        <Form.Input name='name' label='Event Name:' placeholder='Event Name' onChange={this.handleChange} required/>
+                        <Form.Input name='description' label='Event Description:' placeholder='Event Description'  onChange={this.handleChange} required/>
+                        <Form.Input name='location' label='Event Location:' placeholder='Event Location'  onChange={this.handleChange} required/>                    
                         <Button floated='right' type='submit'>Continue</Button>
                         </Form>
                     </Grid.Column>
                 </Grid.Row>}
                 {step === 'date' && <Grid.Row>
-                    <Grid.Column computer={5} tablet={10} mobile={16} >
+                    <Grid.Column computer={4} tablet={10} mobile={16} >
                         <Form onSubmit={this.handleSubmit} size='mini'>
-                            <Form.Field className="daypicker-form">
-                                <label>Event Date</label>
+                            <Form.Field className="daypicker-form" required>
+                                <label>Event Date:</label>
                                 <DayPicker onDayClick={this.handleDayClick} 
                                            fromMonth={new Date()}
                                            className="event-date-picker"
                                            />
                             </Form.Field>
-                            <Form.Group inline>
-                                <label>Start Time</label>
-                                <Form.Select compact name='start_time-hours' options={hours} className="time-select"
+                            <Form.Field>
+                            <label>Event Start Time:</label>
+                            <Form.Group inline widths='equal'>
+                                <Form.Select compact name='start_time-hours' options={hours} defaultValue={hours[0].value} className="time-select"
+                                                onChange={this.handleChange} lrequired/>:
+                                <Form.Select compact name='start_time-mins' options={minutes} defaultValue={minutes[0].value} className="time-select"
                                                 onChange={this.handleChange} required/>
-                                <Form.Select compact name='start_time-mins' options={minutes} className="time-select"
-                                                onChange={this.handleChange} required/>
-                                <Form.Select compact name='start_time-noon' options={ampm} className="time-select"
+                                <Form.Select compact name='start_time-noon' options={ampm} defaultValue={ampm[0].value} className="time-select"
                                                 onChange={this.handleChange} required/>
                             </Form.Group>
-                            <Form.Group inline>
-                                <label>Duration</label>
-                                <Form.Select compact name='duration-hours' options={hours} onChange={this.handleChange} required/>
-                                <Form.Select compact name='duration-mins' options={minutes} onChange={this.handleChange} required/>                        
+                            </Form.Field>
+                            <Form.Group required>
+                                <label>Duration: </label>
+                                <Form.Select compact name='duration-hours' options={hours} defaultValue={hours[0].value}
+                                        onChange={this.handleChange} required/>
+                                <Form.Select compact name='duration-mins' options={minutes} defaultValue={minutes[0].value}
+                                        onChange={this.handleChange} required/>                        
                             </Form.Group>
+                            <Button floated='left' type="button" onClick={this.handleClick}>Back</Button>
                             <Button floated='right' type='submit'>Continue</Button>
                         </Form>
                     </Grid.Column>
