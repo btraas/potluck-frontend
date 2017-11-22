@@ -6,6 +6,21 @@ html, body {
     overflow: auto;
 }
 
+#root {
+    height: 100%;
+}
+
+#root > div {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+#root > div > div:nth-child(2) {
+    display:block;
+    flex: 1 100%;
+}
+
 .footer {
     background-color: #efefef;
     text-align: center;
