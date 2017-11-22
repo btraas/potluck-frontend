@@ -11,13 +11,13 @@ class Login extends Component {
         <DocumentTitle title='Potluck - Login'>
             <Grid centered columns={5}>
                 <Grid.Row>
-                    <Grid.Column textAlign="Center">
+                    <Grid.Column textAlign="center">
                         <br />
                         <span className="title">Potluck</span>
                     </Grid.Column>
                 </Grid.Row>
                 <Grid.Row>
-                    <Grid.Column textAlign="Center">
+                    <Grid.Column textAlign="center">
                         <span className="flavor">Sign up</span>
                     </Grid.Column>
                 </Grid.Row>

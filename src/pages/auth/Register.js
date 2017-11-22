@@ -9,20 +9,20 @@ class Register extends Component {
   render() {
     return (
         <DocumentTitle title='Potluck - Register'>
-            <Grid doubling centered columns={5}>
+            <Grid doubling centered columns={6}>
                 <Grid.Row>
-                    <Grid.Column textAlign="Center">
+                    <Grid.Column textAlign="center">
                         <br />
                         <span className="title">Potluck</span>
                     </Grid.Column>
                 </Grid.Row>
                 <Grid.Row>
-                    <Grid.Column textAlign="Center">
+                    <Grid.Column textAlign="center">
                         <span className="flavor">Sign up</span>
                     </Grid.Column>
                 </Grid.Row>
                 <Grid.Row>
-                    <Grid.Column textAlign="Center">
+                    <Grid.Column textAlign="center">
                         <Form>
                             <Form.Input label='First Name' type='text' placeholder="First Name"/>
                             <Form.Input label='Last Name' type='text' placeholder="Last Name"/>
@@ -34,7 +34,7 @@ class Register extends Component {
                             </label>
                         </Form>
                         <br />
-                        <h2 class="decorated"><span className="or">or</span></h2>
+                        <h2 className="decorated"><span className="or">or</span></h2>
                         <br />
                         <span className="already">Already have an account?</span>
                         <br />
