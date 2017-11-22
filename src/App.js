@@ -6,7 +6,7 @@ import Footer from './layout/Footer';
 import PrivateRoute from './components/PrivateRoute';
 import AuthLayout from './layout/AuthLayout';
 import NoAuthLayout from './layout/NoAuthLayout';
-
+import './css/application.css';
 /**
  * Application entry point. 
  */

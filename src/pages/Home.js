@@ -9,7 +9,7 @@ class Home extends Component {
   render() {
     return (
         <DocumentTitle title='Potluck'>
-        <Grid padded >
+        <Grid padded id="home-container">
             <Grid.Row className="home-section" centered>
                 <Grid.Column mobile={16} computer={8} tablet={10} textAlign="center" verticalAlign="middle">
                     <Header>Potluck</Header>
