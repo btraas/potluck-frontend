@@ -1,0 +1,21 @@
+
+.naviMenu{
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.navipadding{
+    margin-left: 10% !important;
+    font-family: Roboto !important;
+    color: white !important;
+    font-size: 18px !important;
+    font-weight: bold !important;
+}
+
+.naviRightPadding{
+    margin-right: 10% !important;
+    font-family: Roboto !important;
+    color: white !important;
+    font-size: 18px !important;
+    font-weight: 900 !important;
+}
