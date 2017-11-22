@@ -5,11 +5,9 @@ import 'semantic-ui-css/semantic.min.css';
 class Footer extends Component {
   render() {
     return (
-        <div class="footer">
-            <Menu inverted>
-                <Menu.Item>Footer</Menu.Item>
-            </Menu>
-        </div>
+        <Menu inverted className="footer">
+            <Menu.Item>Footer</Menu.Item>
+        </Menu>
     );
   }
 }
