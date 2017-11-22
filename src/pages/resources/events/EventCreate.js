@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import DocumentTitle from 'react-document-title';
-import { Icon, Step, Grid, Form, Button } from 'semantic-ui-react';
+import { Icon, Step, Grid, Form, Button, Segment } from 'semantic-ui-react';
 import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 import '../../../css/event.css';
@@ -11,9 +11,11 @@ class EventCreate extends Component {
         super(props);
         this.state = {
             step: 'details',
-            details: { prev: '', next: 'date', completed: false, values: {}},
-            date: { prev: 'details', next: 'confirm', completed: false, values: {}},
-            confirm: {prev: 'date', next: '', completed: false, values: {}}
+            details: { prev: '', next: 'date', completed: false, 
+                values: {location:'', title:'',description:''}},
+            date: { prev: 'details', next: 'confirm', completed: false, 
+                values: {start_time_hours:'', start_time_mins:'', start_time_noon:'', duration_hours:'', duration_mins:''}},
+            confirm: { prev: 'date', next: '', completed: false }
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -62,7 +64,8 @@ class EventCreate extends Component {
 
     handleDayClick(day) {
         let current = Object.assign({}, this.state.date); 
-        current.selectedDate = day;
+        current.startTime = day;
+        //calculate end Time
         this.setState({
             date: current
         });
@@ -71,18 +74,21 @@ class EventCreate extends Component {
 
     render() {
         let {step} = this.state;
-        let hours = [];
+        let hours, dur_hours = [];
         for(let i=1; i<13; i++) {
             let text = i < 10 ? `0${i}`:i
             hours.push({key:i, value:i, text:text});
+            dur_hours.push({key:i, value:i, text:text+' hours'});   
         }
-        let minutes = [];
+        let minutes, dur_mins = [];        
         for(let i=0; i<60; i++) {
             let text = i < 10 ? `0${i}`:i
             minutes.push({key:i, value:i, text:text});
+            dur_mins.push({key:i, value:i, text:text+' mins'});
         }
         let ampm = [{key:'am', value:'am', text:'am'}, {key:'pm', value:'pm', text:'pm'}];
-
+        
+        
         return (
             <DocumentTitle title='Potluck - Create Event'>
             <Grid padded centered >
@@ -100,7 +106,7 @@ class EventCreate extends Component {
                                 <Icon name='list' />
                                 <Step.Content title='Details'/>
                             </Step>
-                        
+
                             <Step active={step === 'date'}>
                                 <Icon name='calendar' />
                                 <Step.Content title='Date'/>
@@ -116,7 +122,7 @@ class EventCreate extends Component {
                 {step === 'details' && <Grid.Row>
                     <Grid.Column computer={4} tablet={10} mobile={16} >
                         <Form onSubmit={this.handleSubmit}>
-                        <Form.Input name='name' label='Event Name:' placeholder='Event Name' onChange={this.handleChange} required/>
+                        <Form.Input name='title' label='Event Name:' placeholder='Event Name' onChange={this.handleChange} required/>
                         <Form.Input name='description' label='Event Description:' placeholder='Event Description'  onChange={this.handleChange} required/>
                         <Form.Input name='location' label='Event Location:' placeholder='Event Location'  onChange={this.handleChange} required/>                    
                         <Button floated='right' type='submit'>Continue</Button>
@@ -133,33 +139,47 @@ class EventCreate extends Component {
                                            className="event-date-picker"
                                            />
                             </Form.Field>
-                            <Form.Field>
-                            <label>Event Start Time:</label>
-                            <Form.Group inline widths='equal'>
-                                <Form.Select compact name='start_time-hours' options={hours} defaultValue={hours[0].value} className="time-select"
-                                                onChange={this.handleChange} lrequired/>:
-                                <Form.Select compact name='start_time-mins' options={minutes} defaultValue={minutes[0].value} className="time-select"
-                                                onChange={this.handleChange} required/>
-                                <Form.Select compact name='start_time-noon' options={ampm} defaultValue={ampm[0].value} className="time-select"
-                                                onChange={this.handleChange} required/>
-                            </Form.Group>
+                            <Form.Field required>
+                                <label>Event Start Time:</label>
+                                <Form.Group inline widths='equal'>
+                                    <Form.Select compact name='start_time_hours' options={hours} className="time-select"
+                                                    onChange={this.handleChange} required/>
+                                    <span>:</span>
+                                    <Form.Select compact name='start_time_mins' options={minutes} className="time-select"
+                                                    onChange={this.handleChange} required/>
+                                    <Form.Select compact name='start_time_noon' options={ampm} className="time-select"
+                                                    onChange={this.handleChange} required/>
+                                </Form.Group>
                             </Form.Field>
-                            <Form.Group required>
-                                <label>Duration: </label>
-                                <Form.Select compact name='duration-hours' options={hours} defaultValue={hours[0].value}
-                                        onChange={this.handleChange} required/>
-                                <Form.Select compact name='duration-mins' options={minutes} defaultValue={minutes[0].value}
-                                        onChange={this.handleChange} required/>                        
-                            </Form.Group>
+                            <Form.Field required>
+                                <label>Event Duration:</label>
+                                <Form.Group inline widths='equal'>
+                                    <Form.Select compact name='duration_hours' options={dur_hours} 
+                                            onChange={this.handleChange} required/>
+                                    <Form.Select compact name='duration_mins' options={dur_mins} 
+                                            onChange={this.handleChange} required/>                        
+                                </Form.Group>
+                            </Form.Field>
                             <Button floated='left' type="button" onClick={this.handleClick}>Back</Button>
                             <Button floated='right' type='submit'>Continue</Button>
                         </Form>
                     </Grid.Column>
                 </Grid.Row>}
                 {step === 'confirm' && <Grid.Row>
-                    <Grid.Column as={Form} computer={8} tablet={10} mobile={16}>
+                <Grid.Column computer={4} tablet={10} mobile={16} >
+                    <Segment>
+                        <label>Event Summary:</label>
+                        <label>Title:</label>
+                        <label>Description</label>
+                        <label>Location:</label>
+                        <label>Date:</label>
+                        <label>Time:</label>
+                        <label>Duration:</label>
                         
-                    </Grid.Column>
+                        <Button floated='left' type="button" onClick={this.handleClick}>Back</Button>
+                        <Button floated='right' type='submit'>Continue</Button>
+                    </Segment>
+            </Grid.Column>
                 </Grid.Row>}
             </Grid>
         </DocumentTitle>
