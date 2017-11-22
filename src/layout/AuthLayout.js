@@ -17,3 +17,4 @@ class AuthLayout extends Component {
 }
 
 export default AuthLayout;
+
