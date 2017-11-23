@@ -44,7 +44,7 @@ class Dashboard extends Component {
         }))
         .then(values => {
             let state = Object.assign({}, this.state);
-            values.map((item, index)=> {
+            values.map((item, index) => {
                 let stateKey = this.endpoints[index];
                 state[stateKey] = item;
             });
