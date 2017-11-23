@@ -21,6 +21,7 @@ class App extends Component {
           <Switch>
             <PrivateRoute isAuthenticated={isAuthenticated} path='/dashboard' component={AuthLayout} />                         
             <Route path="/" component={NoAuthLayout}/>  
+            <PrivateRoute isAuthenticated={isAuthenticated} path='/EventPage' component={AuthLayout} />
           </Switch>
           <Footer />
         </div>
