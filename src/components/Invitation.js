@@ -23,7 +23,7 @@ class Invitation extends Component {
     }
 
     render() {
-        if(this.state.data.length === 0) 
+        if(this.state.data == null) 
         {
             return (
                 <Card className="no-event-card">

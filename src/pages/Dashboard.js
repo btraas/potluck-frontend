@@ -92,13 +92,13 @@ class Dashboard extends Component {
                 <Container>
                     <Header className='section-header' as="h2">Invited</Header>
                     <br/>
-                    <Collection title="dash-invitations" child={Invitation} data={[this.state.Invitations]}/>
+                    <Collection title="dash-invitations" child={Invitation} data={this.state.Invitations}/>
                 </Container>
                 <br/><br />
                 <Container>
                     <Header className='section-header' as='h2'>History</Header>
                     <br/>
-                    <Collection title="dash-history" child={PastEvent} data={[this.state.Events]}/>
+                    <Collection title="dash-history" child={PastEvent} data={this.state.Events}/>
                 </Container>
                 <br /><br />
             </div>
