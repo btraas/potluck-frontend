@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Button, Container, Header, Input, Grid } from 'semantic-ui-react'
+import { Button, Container, Header, Input, Grid, Loader, Dimmer } from 'semantic-ui-react'
+import { Link } from 'react-router-dom';
 import Collection from '../components/Collection';
 import Event from '../components/Event';
 import Invitation from '../components/Invitation';
@@ -47,7 +48,8 @@ class Dashboard extends Component {
                 let stateKey = this.endpoints[index];
                 state[stateKey] = item;
             });
-            this.setState(state);
+            state.loading = false;
+            setTimeout(()=>{this.setState(state)}, 3000);
         })
         .catch(e => {
             console.log('Error: ', e)
@@ -56,13 +58,17 @@ class Dashboard extends Component {
     }
 
     render() {
+        let {loading} = this.state;
         return (
             <div>
+                <Dimmer active={loading}>
+                    <Loader size="massive"/>
+                </Dimmer>
                 <Container>
                     <Grid verticalAlign='middle' columns={2} centered padded>
                     <Grid.Row>
                             <Grid.Column mobile={3} computer={3} tablet={3}>
-                                <Button className='btn-create-event'>Create Event</Button>
+                                <Button as={Link} to="/dashboard/events/create" className='btn-create-event'>Create Event</Button>
                             </Grid.Column>
                             <Grid.Column mobile={9} computer={9} tablet={9}>
                                 <Input fluid focus placeholder='Search BLAH ' />

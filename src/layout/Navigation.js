@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Menu } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
+import '../css/navi.css';
 
 import 'semantic-ui-css/semantic.min.css';
 
@@ -14,16 +15,18 @@ class Navigation extends Component {
         const { activeItem } = this.state 
 
         return (
-            <Menu fluid inverted>
+            <Menu fluid inverted color={'olive'} size='huge' className='naviMenu'>
                 <Menu.Item
+                    className='navipadding'
                     as={Link}
                     to="/"
                     name='home'
                     active={ activeItem === 'features' }
                     onClick={this.handleItemClick}>
-                    Logo
+
+                    PotLuck
                 </Menu.Item>
-                <Menu.Menu position='right'>
+                <Menu.Menu position='right' className='naviRightPadding'>
                     <Menu.Item 
                         as={Link}
                         to="/register"
