@@ -13,7 +13,7 @@ class Dashboard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: false,
+            loading: true,
             Events: [],
             Pledges: [],
             Invitations: []
