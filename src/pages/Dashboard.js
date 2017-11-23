@@ -71,7 +71,7 @@ class Dashboard extends Component {
                                 <Button as={Link} to="/dashboard/events/create" className='btn-create-event'>Create Event</Button>
                             </Grid.Column>
                             <Grid.Column mobile={9} computer={9} tablet={9}>
-                                <Input fluid focus placeholder='Search BLAH ' />
+                                <Input fluid focus placeholder='Search...' />
                             </Grid.Column>
                         </Grid.Row>
                     </Grid>
