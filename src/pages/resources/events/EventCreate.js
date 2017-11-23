@@ -147,17 +147,17 @@ class EventCreate extends Component {
         const { details, date, loading } = this.state;
         return (
             <DocumentTitle title='Potluck - Create Event'>
-            <Grid padded centered >
+            <Grid padded centered>
                 <Dimmer active={loading}>
                     <Loader size="massive"/>
                 </Dimmer>
-                <Grid.Row centered>
+                <Grid.Row centered padded>
                     <Grid.Column textAlign="center" computer={5} tablet={10} mobile={16}>
                         <br />
                         <span className="title">Potluck</span>
                     </Grid.Column>
                 </Grid.Row>
-                <Grid.Row centered>
+                <Grid.Row centered padded>
                     <Grid.Column textAlign="center" computer={5} tablet={10} mobile={16}>
                         <span className="flavor">Create an Event</span>
                         <Step.Group size='tiny'>
@@ -179,8 +179,8 @@ class EventCreate extends Component {
                     </Grid.Column>
                 </Grid.Row>
 
-                {step === 'details' && <Grid.Row>
-                    <Grid.Column computer={4} tablet={10} mobile={16} >
+                {step === 'details' && <Grid.Row centered padded>
+                    <Grid.Column computer={4} tablet={10} mobile={14} >
                         <Form onSubmit={this.handleSubmit}>
                         <Form.Input name='title' label='Event Name:' placeholder='Event Name' 
                             defaultValue={details.values.title} onChange={this.handleChange} required/>
@@ -193,8 +193,8 @@ class EventCreate extends Component {
                     </Grid.Column>
                 </Grid.Row>}
 
-                {step === 'date' && <Grid.Row>
-                    <Grid.Column computer={4} tablet={10} mobile={16} >
+                {step === 'date' && <Grid.Row centered padded>
+                    <Grid.Column computer={4} tablet={10} mobile={14} >
                         <Form onSubmit={this.handleSubmit} size='mini'>
                             <Form.Field className="daypicker-form" required>
                                 <label>Event Date:</label>
@@ -237,8 +237,8 @@ class EventCreate extends Component {
                     </Grid.Column>
                 </Grid.Row>}
                 
-                {step === 'confirm' && <Grid.Row>
-                <Grid.Column computer={5} tablet={10} mobile={16} >
+                {step === 'confirm' && <Grid.Row centered padded>
+                <Grid.Column computer={5} tablet={10} mobile={14} >
                     <Header>Event Summary:</Header>
                     <Segment>                        
                         <div>
