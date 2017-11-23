@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Container, Header, Input, Grid, Loader, Dimmer, Segment } from 'semantic-ui-react'
+import { Button, Container, Header, Input, Grid, Loader, Dimmer } from 'semantic-ui-react'
 import { Link } from 'react-router-dom';
 import Collection from '../components/Collection';
 import Event from '../components/Event';
