@@ -7,29 +7,11 @@ import { Grid } from 'semantic-ui-react'
  */
 class Collection extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            data: []
-        };
-    }
-
-    componentDidMount() {
-        this.setState({
-            data:this.props.data
-        })
-    }
-
-    componentWillReceiveProps(nextProps, prevState) {
-        this.setState({
-            data: nextProps.data
-        })
-    }
-
     render() {
         let Child = this.props.child;
         let title = this.props.title;
-        let items = this.state.data.map((item,index) => {
+        let data = this.props.data;
+        let items = data.map((item,index) => {
             return (
                 <Grid.Column mobile={16} computer={4} tablet={8} key={`${title}+'-'+${index}`}>
                     <Child  data={item}/>
