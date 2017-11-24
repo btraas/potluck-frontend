@@ -60,7 +60,7 @@ class Login extends Component {
     render() {
         return (
             <DocumentTitle title='Potluck - Login'>
-                <Grid padded centered verticalAlign='top'>
+                <Grid padded centered verticalAlign='top' id="auth-page">
                     <Grid.Row centered>
                         <Grid.Column textAlign="center" computer={6} tablet={10} mobile={16}>
                             <br />

@@ -9,7 +9,7 @@ class Register extends Component {
   render() {
     return (
         <DocumentTitle title='Potluck - Register'>
-            <Grid padded centered >
+            <Grid padded centered id="auth-page">
                 <Grid.Row centered>
                     <Grid.Column textAlign="center" computer={6} tablet={10} mobile={16}>
                         <br />
