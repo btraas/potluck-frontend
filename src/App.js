@@ -54,17 +54,15 @@ class App extends Component {
     });            
     sessionStorage.setItem("access_token", e.access_token);
     sessionStorage.setItem("id_token", e.id_token);
-    
   }
 
   render() {
     const {idToken, accessToken, uid} = this.state; 
     const isAuth = idToken ? true:false;
-    console.log('auth?', isAuth);
     return (
       <BrowserRouter>
         <div>
-          <Navigation isAuthenticated={isAuth} />
+          <Navigation isAuthenticated={isAuth} access={accessToken}/>
           <Switch>
             {isAuth && <PrivateRoute path='/' isAuthenticated={isAuth} access={accessToken} uid={uid} component={AuthLayout} />}                                             
             <Route path="/" render={props=><NoAuthLayout onTokenAccept={this.handleToken} {...props}/>}/>  
