@@ -17,17 +17,17 @@ class Dashboard extends Component {
             loading: true,
             error:false,
             Events: [],
-            Pledges: [],
             Invitations: []
         };
         this.collect = this.collect.bind(this);
         this.baseUrl = 'http://potluckapi.azurewebsites.net/api/';
-        this.endpoints = ['Events', 'Invitations', 'Pledges'];
+        this.endpoints = ['Events/User/', 'Invitations/User/']; //, 'Pledges/User/' remove
     }
 
     componentDidMount() {
         this.collect();
         console.log(this.props)
+        console.log(this.baseUrl + this.endpoints[0] + this.props.uid)
     }
 
 
@@ -35,14 +35,16 @@ class Dashboard extends Component {
      * Collect all user data.
      */
     collect() {
+        const {uid, access} = this.props;
         let options = {
             headers: {
-                Authorization: `Bearer ${this.props.access}`,
+                Authorization: `Bearer ${access}`,
                 Accept: "application/json"
             }
         };
+        
         axios.all(this.endpoints.map((endpoint) => {
-            return axios.get(this.baseUrl + endpoint, options)
+            return axios.get(this.baseUrl + endpoint + uid, options)
         }))
         .then(values => {
             console.log(values);
