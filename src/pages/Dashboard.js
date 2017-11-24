@@ -17,7 +17,6 @@ class Dashboard extends Component {
             loading: true,
             error:false,
             Events: [],
-            Pledges: [],
             Invitations: []
         };
         this.collect = this.collect.bind(this);
@@ -36,15 +35,16 @@ class Dashboard extends Component {
      * Collect all user data.
      */
     collect() {
+        const {uid, access} = this.props;
         let options = {
             headers: {
-                Authorization: `Bearer ${this.props.access}`,
+                Authorization: `Bearer ${access}`,
                 Accept: "application/json"
             }
         };
         
         axios.all(this.endpoints.map((endpoint) => {
-            return axios.get(this.baseUrl + endpoint + this.props.uid, options)
+            return axios.get(this.baseUrl + endpoint + uid, options)
         }))
         .then(values => {
             console.log(values);
