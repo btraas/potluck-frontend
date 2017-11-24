@@ -19,12 +19,14 @@ class NoAuthLayout extends Component {
   }
 
   render() {
+    const {isAuthenticated} = this.props;
     return (
         <Switch>
+            {isAuthenticated && <Redirect to="/dashboard" />}
             <Route exact path='/register' component={Register}/>        
             <Route exact path='/login' render={props=><Login onTokenAccept={this.handleToken} {...props}/>} /> 
-            <Route exact path='/' component={Home}/>                           
-            <Redirect to="/" />     
+            <Route exact path='/' component={Home}/> 
+            <Redirect to="/" />
         </Switch>
     );
   }
