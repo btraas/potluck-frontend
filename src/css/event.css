@@ -1,3 +1,6 @@
+#event-create-page {
+    background-color: #3F664E;
+}
 .time-select {
     min-width:50px !important;
     margin-left:5px;
@@ -7,4 +10,15 @@
 }
 .event-date-picker {
     background-color:white;
+}
+.right-aligned-p{
+    float:right;
+}
+#event-page {
+    background-color: #EAEDD0 !important;
+}
+.event-tiles {
+    background-color:#88B652;
+    border-radius: 25px;
+    padding:10px;
 }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Container, Grid, Dropdown, Progress, Divider  } from 'semantic-ui-react';
-import '../../../css/eventPage.css';
+import '../../../css/event.css';
 
 const options = [
     { key: 1, text: 'Invited', value: 1 },
@@ -50,7 +50,7 @@ class EventPage extends Component {
         var organizer = this.state.Event.organizer;
         console.log(this.state.Event);
         return (
-            <Grid padded>
+            <Grid padded id="event-page">
                 <Grid.Row className="event-tiles" centered as={Container}>
                     <Grid.Column mobile={16} computer={12} tablet={14} textAlign="left" >
                         <h1>{this.state.Event.title}</h1>
