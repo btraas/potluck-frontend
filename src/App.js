@@ -6,22 +6,77 @@ import Footer from './layout/Footer';
 import PrivateRoute from './components/PrivateRoute';
 import AuthLayout from './layout/AuthLayout';
 import NoAuthLayout from './layout/NoAuthLayout';
+import jwt_decode from 'jwt-decode';
 import './css/application.css';
 /**
  * Application entry point. 
+ * Automatically routes to Authenticated Dashboard if user is authenticated.
  */
 class App extends Component {
+  
+  constructor(props) {
+    super(props); 
+    this.state = {
+      accessToken:'',
+      idToken:'',
+      uid:''
+    };
+    this.handleToken = this.handleToken.bind(this);    
+  }
+
+  componentDidMount() {
+    let id = sessionStorage.getItem("id_token");
+    let access = sessionStorage.getItem("access_token");
+    if(id) {
+      try {
+        let result = jwt_decode(id);
+        this.setState({
+          idToken:id,
+          accessToken:access,
+          uid:result.sub
+        });
+      } catch (e) {
+        console.log(e)
+      }
+    }
+  }
+
+  /**
+   * Handler to accept tokens
+   * @param {*} e a token is passed to application
+   */
+  handleToken(e) {
+    let access = '';
+    let id = '';
+    if(e !== '') {
+      let decoded = jwt_decode(e.id_token);
+      access = e.access_token;
+      id = e.id_token;
+      this.setState({
+        accessToken:access,
+        idToken:id,
+        uid:decoded.sub
+      });         
+    } else {
+      this.setState({
+        accessToken:access,
+        idToken:id,
+      })
+    }
+    sessionStorage.setItem("access_token", access); //reset if empty token
+    sessionStorage.setItem("id_token", id);
+  }
 
   render() {
-    const isAuthenticated = true; //TODO auth token check here
+    const {idToken, accessToken, uid} = this.state; 
+    const isAuth = idToken ? true:false;
     return (
       <BrowserRouter>
         <div>
-          <Navigation />
+          <Navigation isAuthenticated={isAuth} onTokenAccept={this.handleToken} access={accessToken}/>
           <Switch>
-            <PrivateRoute isAuthenticated={isAuthenticated} path='/dashboard' component={AuthLayout} />                         
-            <Route path="/" component={NoAuthLayout}/>  
-            <PrivateRoute isAuthenticated={isAuthenticated} path='/EventPage' component={AuthLayout} />
+            {isAuth && <PrivateRoute path='/dashboard' isAuthenticated={isAuth} access={accessToken} uid={uid} component={AuthLayout} />}                                             
+            <Route path="/" render={props=><NoAuthLayout isAuthenticated={isAuth} onTokenAccept={this.handleToken} {...props}/>}/>  
           </Switch>
           <Footer />
         </div>

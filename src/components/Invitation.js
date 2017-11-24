@@ -3,27 +3,8 @@ import { Card, Header, Segment } from 'semantic-ui-react'
 
 class Invitation extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            data: {}
-        };
-    }
-
-    componentDidMount() {
-        this.setState({
-            data: this.props.data
-        });
-    }
-
-    componentWillReceiveProps(nextProps, prevState) {
-        this.setState({
-            data: nextProps.data
-        });
-    }
-
     render() {
-        if(this.state.data == null) 
+        if(this.props.data == null) 
         {
             return (
                 <Card className="no-event-card">
@@ -34,7 +15,7 @@ class Invitation extends Component {
             );
         } else 
         {
-            const {eventId, event, applicationUserId} = this.state.data;
+            const {eventId, event, applicationUserId} = this.props.data;
             return (
                 <Card className="event-card">
                     <Header className='event-header' as='h5' attached='top'>{event? event.title :"N/A"}</Header>

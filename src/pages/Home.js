@@ -44,7 +44,7 @@ class Home extends Component {
                 <Grid.Column mobile={16} computer={8} tablet={8} >
                     <Header className="headerTake">"Take it on the go"</Header>
                     <hr className="dividerForSecondBannerThird"/>
-                    <div className="thirdBannerText" textAlign="center" verticalAlign="middle">
+                    <div className="thirdBannerText" >
                         <p >Pledge and keep track of your </p>
                         <p>events on your mobile device </p>
                         <p>with our mobile apps.</p>

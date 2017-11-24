@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { Button, Container, Header, Input, Grid, Loader, Dimmer } from 'semantic-ui-react'
+import { Button, Container, Header, Input, Grid, Loader, Dimmer, Message } from 'semantic-ui-react'
 import { Link } from 'react-router-dom';
 import Collection from '../components/Collection';
 import Event from '../components/Event';
 import Invitation from '../components/Invitation';
 import PastEvent from '../components/PastEvent';
+import axios from 'axios';
 import '../css/dashboard.css';
 
 
@@ -14,6 +15,7 @@ class Dashboard extends Component {
         super(props);
         this.state = {
             loading: true,
+            error:false,
             Events: [],
             Pledges: [],
             Invitations: []
@@ -25,46 +27,49 @@ class Dashboard extends Component {
 
     componentDidMount() {
         this.collect();
+        console.log(this.props)
     }
+
 
     /**
      * Collect all user data.
      */
     collect() {
-        let headers = new Headers();
-        headers.append('Access-Control-Allow-Origin', '*');
-        headers.append('Access-Control-Allow-Credentials', 'true');
-        let options = { header:headers };
-        Promise.all(this.endpoints.map((endpoint) => {
-            return fetch(this.baseUrl+endpoint, options)
-                    .then(response => { return response.json()})
-                    .then(data => {
-                        return data;
-                    });
+        let options = {
+            headers: {
+                Authorization: `Bearer ${this.props.access}`,
+                Accept: "application/json"
+            }
+        };
+        axios.all(this.endpoints.map((endpoint) => {
+            return axios.get(this.baseUrl + endpoint, options)
         }))
         .then(values => {
+            console.log(values);
             let state = Object.assign({}, this.state);
-            values.map((item, index) => {
-                let stateKey = this.endpoints[index];
-                state[stateKey] = item;
-            });
+            let errors = 0;
+            for(let key in values) {
+                let value = values[key]; 
+                let stateKey = this.endpoints[key];                
+                state[stateKey] = value.data;
+            }
+            //state.error = false;
             state.loading = false;
-            setTimeout(()=>{this.setState(state)}, 3000);
-        })
-        .catch(e => {
-            console.log('Error: ', e)
-        })
-
+            this.setState(state);
+        });
     }
 
     render() {
-        let {loading} = this.state;
+        let {loading, error} = this.state;
         return (
             <div>
                 <Dimmer active={loading}>
                     <Loader size="massive"/>
                 </Dimmer>
                 <Container>
+                    {error && <Message error
+                        header='There was a problem loading the page. Try refreshing later!'
+                    />}
                     <Grid verticalAlign='middle' columns={2} centered padded>
                     <Grid.Row>
                             <Grid.Column mobile={3} computer={3} tablet={3}>
@@ -75,6 +80,7 @@ class Dashboard extends Component {
                             </Grid.Column>
                         </Grid.Row>
                     </Grid>
+                    
                 </Container>
                 <br/><br/>
                 <Container>

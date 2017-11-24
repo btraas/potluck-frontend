@@ -3,6 +3,7 @@ import DocumentTitle from 'react-document-title';
 import { Link } from 'react-router-dom';
 import { Loader, Dimmer, Icon, Step, Grid, Form, Header, Button, Segment } from 'semantic-ui-react';
 import DayPicker from 'react-day-picker';
+import axios from 'axios';
 import 'react-day-picker/lib/style.css';
 import '../../../css/event.css';
 
@@ -57,20 +58,20 @@ class EventCreate extends Component {
         } else {
             this.setState({loading:true})
             let data = this.processRequestData();
-            fetch('http://potluckapi.azurewebsites.net/api/Events', {
+            let url = 'http://potluckapi.azurewebsites.net/api/Events';
+            let options = {
                 method:'POST', 
                 headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
+                    Authorization: `Bearer ${this.props.access}`,
+                    Accept: "application/json",
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data)
-            })
-            .then(response => {
-                console.log(response);
-            })
-            .catch(error => {
-                console.log(error);
-            });
+                data: data
+            };
+            axios.post(url, options)
+                .then(response => {
+                    
+                })
         }
     }
 
@@ -120,16 +121,13 @@ class EventCreate extends Component {
             description: description,
             startTime:start.toISOString(),
             endTime:end.toISOString(),
-            organizerId:''
+            organizerId:this.props.uid
         }
         return data;
     }
 
-    convertTime() {
-
-    }
-
     render() {
+        console.log(this.props)
         let {step} = this.state;
         let hours = [], dur_hours = [], minutes = [], dur_mins = [];        
         for(let i=1; i<13; i++) {
@@ -147,7 +145,7 @@ class EventCreate extends Component {
         const { details, date, loading } = this.state;
         return (
             <DocumentTitle title='Potluck - Create Event'>
-            <Grid padded centered >
+            <Grid padded centered>
                 <Dimmer active={loading}>
                     <Loader size="massive"/>
                 </Dimmer>
@@ -179,8 +177,8 @@ class EventCreate extends Component {
                     </Grid.Column>
                 </Grid.Row>
 
-                {step === 'details' && <Grid.Row>
-                    <Grid.Column computer={4} tablet={10} mobile={16} >
+                {step === 'details' && <Grid.Row centered>
+                    <Grid.Column computer={4} tablet={10} mobile={14} >
                         <Form onSubmit={this.handleSubmit}>
                         <Form.Input name='title' label='Event Name:' placeholder='Event Name' 
                             defaultValue={details.values.title} onChange={this.handleChange} required/>
@@ -193,8 +191,8 @@ class EventCreate extends Component {
                     </Grid.Column>
                 </Grid.Row>}
 
-                {step === 'date' && <Grid.Row>
-                    <Grid.Column computer={4} tablet={10} mobile={16} >
+                {step === 'date' && <Grid.Row centered>
+                    <Grid.Column computer={4} tablet={10} mobile={14} >
                         <Form onSubmit={this.handleSubmit} size='mini'>
                             <Form.Field className="daypicker-form" required>
                                 <label>Event Date:</label>
@@ -237,8 +235,8 @@ class EventCreate extends Component {
                     </Grid.Column>
                 </Grid.Row>}
                 
-                {step === 'confirm' && <Grid.Row>
-                <Grid.Column computer={5} tablet={10} mobile={16} >
+                {step === 'confirm' && <Grid.Row centered>
+                <Grid.Column computer={5} tablet={10} mobile={14} >
                     <Header>Event Summary:</Header>
                     <Segment>                        
                         <div>

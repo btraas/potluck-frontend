@@ -4,27 +4,8 @@ import { Link } from 'react-router-dom';
 
 class Event extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            data: {}
-        };
-    }
-
-    componentDidMount() {
-        this.setState({
-            data: this.props.data
-        });
-    }
-
-    componentWillReceiveProps(nextProps, prevState) {
-        this.setState({
-            data: nextProps.data
-        });
-    }
-
     render() {
-        if(this.state.data == null) 
+        if(this.props.data == null) 
         {
             return (
                     <Card className="no-event-card">
@@ -35,9 +16,9 @@ class Event extends Component {
             );
         } else 
         {
-            const { eventId, title, location, startTime, endTime} = this.state.data;
+            const { eventId, title, location, startTime, endTime} = this.props.data;
             return (
-                <Link to={`/dashboard/resource/events/${eventId}`}>
+                <Link to={`/dashboard/events/${eventId}`}>
                     <Card className="event-card">
                         <Header className='event-header' as='h5' attached='top'>{title}</Header>
                         <Segment attached className='event-content'>

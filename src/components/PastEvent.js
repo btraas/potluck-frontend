@@ -3,27 +3,8 @@ import { Card, Header, Segment } from 'semantic-ui-react'
 
 class PastEvent extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            data: {}
-        };
-    }
-
-    componentDidMount() {
-        this.setState({
-            data: this.props.data
-        });
-    }
-
-    componentWillReceiveProps(nextProps, prevState) {
-        this.setState({
-            data: nextProps.data
-        });
-    }
-
     render() {
-        if(this.state.data == null) 
+        if(this.props.data == null) 
         {
             return (
                 <Card className="no-event-card">
@@ -34,7 +15,7 @@ class PastEvent extends Component {
             );
         } else 
         {
-            const { title, location, startTime, endTime} = this.state.data;          
+            const { title, location, startTime, endTime} = this.props.data;          
             return (
                 <Card className="event-card">
                     <Header className='history-event-header' as='h5' attached='top'>{title}</Header>
