@@ -46,14 +46,25 @@ class App extends Component {
    * @param {*} e a token is passed to application
    */
   handleToken(e) {
-    let decoded = jwt_decode(e.id_token);
-    this.setState({
-      accessToken:e.access_token,
-      idToken:e.id_token,
-      uid:decoded.sub
-    });            
-    sessionStorage.setItem("access_token", e.access_token);
-    sessionStorage.setItem("id_token", e.id_token);
+    let access = '';
+    let id = '';
+    if(e !== '') {
+      let decoded = jwt_decode(e.id_token);
+      access = e.access_token;
+      id = e.id_token;
+      this.setState({
+        accessToken:access,
+        idToken:id,
+        uid:decoded.sub
+      });         
+    } else {
+      this.setState({
+        accessToken:access,
+        idToken:id,
+      })
+    }
+    sessionStorage.setItem("access_token", access); //reset if empty token
+    sessionStorage.setItem("id_token", id);
   }
 
   render() {
@@ -62,10 +73,10 @@ class App extends Component {
     return (
       <BrowserRouter>
         <div>
-          <Navigation isAuthenticated={isAuth} access={accessToken}/>
+          <Navigation isAuthenticated={isAuth} onTokenAccept={this.handleToken} access={accessToken}/>
           <Switch>
-            {isAuth && <PrivateRoute path='/' isAuthenticated={isAuth} access={accessToken} uid={uid} component={AuthLayout} />}                                             
-            <Route path="/" render={props=><NoAuthLayout onTokenAccept={this.handleToken} {...props}/>}/>  
+            {isAuth && <PrivateRoute path='/dashboard' isAuthenticated={isAuth} access={accessToken} uid={uid} component={AuthLayout} />}                                             
+            <Route path="/" render={props=><NoAuthLayout isAuthenticated={isAuth} onTokenAccept={this.handleToken} {...props}/>}/>  
           </Switch>
           <Footer />
         </div>
