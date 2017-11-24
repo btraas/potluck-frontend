@@ -5,6 +5,7 @@ import Collection from '../components/Collection';
 import Event from '../components/Event';
 import Invitation from '../components/Invitation';
 import PastEvent from '../components/PastEvent';
+import axios from 'axios';
 import '../css/dashboard.css';
 
 
@@ -21,11 +22,12 @@ class Dashboard extends Component {
         };
         this.collect = this.collect.bind(this);
         this.baseUrl = 'http://potluckapi.azurewebsites.net/api/';
-        this.endpoints = ['events', 'invitations', 'pledges'];
+        this.endpoints = ['Events', 'Invitations', 'Pledges'];
     }
 
     componentDidMount() {
         this.collect();
+        console.log(this.props)
     }
 
 
@@ -33,43 +35,28 @@ class Dashboard extends Component {
      * Collect all user data.
      */
     collect() {
-        let headers = new Headers();
-        headers.append('Access-Control-Allow-Origin', '*');
-        headers.append('Access-Control-Allow-Credentials', 'true');
-        let auth = "Bearer " + this.props.access; 
-        headers.append('Accept', 'application/json');
-        headers.append("Authorization", auth);
-        
-        let options = { header:headers };
-        Promise.all(this.endpoints.map((endpoint) => {
-            return fetch(this.baseUrl+endpoint, options)
-                    .then(response => { 
-                        if(response.ok) {
-                            return response.json()                            
-                        } else {
-                            throw new Error(response.statusText)                        
-                        }
-                    })
-                    .catch(e => { console.log(e); return e})
+        let options = {
+            headers: {
+                Authorization: `Bearer ${this.props.access}`,
+                Accept: "application/json"
+            }
+        };
+        axios.all(this.endpoints.map((endpoint) => {
+            return axios.get(this.baseUrl + endpoint, options)
         }))
         .then(values => {
-            if(values.find(item => { return item !== undefined })) {
-                let state = Object.assign({}, this.state);
-                values.map((item, index)=> {
-                    let stateKey = this.endpoints[index];
-                    state[stateKey] = item;
-                    return item;
-                });
-                state.loading = false;
-                setTimeout(()=>{this.setState(state)}, 2000);
-            } else {
-                this.setState({
-                    error:true, 
-                    loading:false
-                });
+            console.log(values);
+            let state = Object.assign({}, this.state);
+            let errors = 0;
+            for(let key in values) {
+                let value = values[key]; 
+                let stateKey = this.endpoints[key];                
+                state[stateKey] = value.data;
             }
-            
-        })
+            //state.error = false;
+            state.loading = false;
+            this.setState(state);
+        });
     }
 
     render() {
@@ -80,9 +67,9 @@ class Dashboard extends Component {
                     <Loader size="massive"/>
                 </Dimmer>
                 <Container>
-                    <Message error={error}
+                    {error && <Message error
                         header='There was a problem loading the page. Try refreshing later!'
-                    />
+                    />}
                     <Grid verticalAlign='middle' columns={2} centered padded>
                     <Grid.Row>
                             <Grid.Column mobile={3} computer={3} tablet={3}>
