@@ -21,13 +21,11 @@ class Dashboard extends Component {
         };
         this.collect = this.collect.bind(this);
         this.baseUrl = 'http://potluckapi.azurewebsites.net/api/';
-        this.endpoints = ['Events/User/', 'Invitations/User/']; //, 'Pledges/User/' remove
+        this.endpoints = ['Events', 'Invitations']; //, 'Pledges/User/' remove
     }
 
     componentDidMount() {
         this.collect();
-        console.log(this.props)
-        console.log(this.baseUrl + this.endpoints[0] + this.props.uid)
     }
 
 
@@ -44,7 +42,7 @@ class Dashboard extends Component {
         };
         
         axios.all(this.endpoints.map((endpoint) => {
-            return axios.get(this.baseUrl + endpoint + uid, options)
+            return axios.get(this.baseUrl + endpoint + '/User/'+ uid, options)
         }))
         .then(values => {
             console.log(values);
@@ -52,12 +50,13 @@ class Dashboard extends Component {
             let errors = 0;
             for(let key in values) {
                 let value = values[key]; 
-                let stateKey = this.endpoints[key];                
+                let stateKey = this.endpoints[key];    
+                console.log(stateKey);            
                 state[stateKey] = value.data;
             }
             //state.error = false;
             state.loading = false;
-            this.setState(state);
+            this.setState(state, console.log(this.state));
         });
     }
 

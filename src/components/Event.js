@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 class Event extends Component {
 
     render() {
-        console.log('event');
         if(this.props.data == null) 
         {
             return (
