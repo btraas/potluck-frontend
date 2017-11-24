@@ -66,9 +66,9 @@ class EventCreate extends Component {
                     'Content-Type': 'application/json',
                     'Accept':'application/json',
                     'Access-Control-Allow-Headers':'*',
-                    'Access-Control-Allow-Origin':'http://localhost:3000'
+                    //'Access-Control-Allow-Origin':'http://localhost:3000'
                 },
-                data: JSON.stringify(data)
+                data: data
             };
             axios.post(url, options)
                 .then(response => {
@@ -128,7 +128,6 @@ class EventCreate extends Component {
             endTime:end.toISOString(),
             organizerId:this.props.uid
         }
-        console.log(data);
         return data;
     }
 
