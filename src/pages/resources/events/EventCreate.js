@@ -63,14 +63,19 @@ class EventCreate extends Component {
                 method:'POST', 
                 headers: {
                     Authorization: `Bearer ${this.props.access}`,
-                    Accept: "application/json",
                     'Content-Type': 'application/json',
+                    'Accept':'application/json',
+                    'Access-Control-Allow-Headers':'*',
+                    'Access-Control-Allow-Origin':'http://localhost:3000'
                 },
-                data: data
+                data: JSON.stringify(data)
             };
             axios.post(url, options)
                 .then(response => {
-                    
+                    console.log(response);
+                })
+                .catch(e => {
+                    console.log(e);
                 })
         }
     }
@@ -123,11 +128,11 @@ class EventCreate extends Component {
             endTime:end.toISOString(),
             organizerId:this.props.uid
         }
+        console.log(data);
         return data;
     }
 
     render() {
-        console.log(this.props)
         let {step} = this.state;
         let hours = [], dur_hours = [], minutes = [], dur_mins = [];        
         for(let i=1; i<13; i++) {
@@ -143,9 +148,10 @@ class EventCreate extends Component {
         let ampm = [{key:'am', value:'am', text:'am'}, {key:'pm', value:'pm', text:'pm'}];
 
         const { details, date, loading } = this.state;
+
         return (
             <DocumentTitle title='Potluck - Create Event'>
-            <Grid padded centered>
+            <Grid padded centered id="event-create-page">
                 <Dimmer active={loading}>
                     <Loader size="massive"/>
                 </Dimmer>
