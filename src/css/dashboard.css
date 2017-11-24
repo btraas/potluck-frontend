@@ -8,10 +8,6 @@
     color: #EAEDD0 !important;    
 }
 
-body {
-    background-color: #3E6550 !important;
-}
-
 .section-header {
     color: #3E6550 !important;
 
@@ -30,4 +26,22 @@ body {
 .history-event-content {
     background-color: 	#C1C1C1 !important;
     color: #4F4F4F !important;  
+}
+
+ .no-event-card {
+    background-color: #EAEDD2 !important;
+    border: 5px dashed #3F664E !important;
+    box-sizing: border-box !important;
+    border-radius: 10px !important;
+}
+
+.no-event-content {
+    background-color: #EAEDD2 !important;
+    color: #3F664E !important;
+    text-align: center !important;
+    height: 118.5px !important;
+}
+
+.no-event-text {
+    margin-top: 10% !important;
 }

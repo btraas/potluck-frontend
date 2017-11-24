@@ -8,9 +8,8 @@ import { Grid } from 'semantic-ui-react'
 class Collection extends Component {
 
     render() {
+        let {title, data} = this.props;
         let Child = this.props.child;
-        let title = this.props.title;
-        let data = this.props.data;
         let items = data.map((item,index) => {
             return (
                 <Grid.Column mobile={16} computer={4} tablet={8} key={`${title}+'-'+${index}`}>
