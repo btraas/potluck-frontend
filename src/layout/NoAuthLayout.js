@@ -9,12 +9,21 @@ import Login from '../pages/auth/Login';
  */
 class NoAuthLayout extends Component {
 
+  constructor(props) {
+    super(props);
+    this.handleToken = this.handleToken.bind(this);
+  }
+
+  handleToken(e) {
+    this.props.onTokenAccept(e); 
+  }
+
   render() {
     return (
         <Switch>
-            <Route exact path='/' component={Home}/>               
-            <Route path='/register' component={Register}/>        
-            <Route path='/login' component={Login}/> 
+            <Route exact path='/register' component={Register}/>        
+            <Route exact path='/login' render={props=><Login onTokenAccept={this.handleToken} {...props}/>} /> 
+            <Route exact path='/' component={Home}/>                           
             <Redirect to="/" />     
         </Switch>
     );
