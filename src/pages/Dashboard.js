@@ -8,7 +8,6 @@ import PastEvent from '../components/PastEvent';
 import axios from 'axios';
 import '../css/dashboard.css';
 
-
 class Dashboard extends Component {
 
     constructor(props) {
@@ -45,18 +44,16 @@ class Dashboard extends Component {
             return axios.get(this.baseUrl + endpoint + '/User/'+ uid, options)
         }))
         .then(values => {
-            console.log(values);
             let state = Object.assign({}, this.state);
             let errors = 0;
             for(let key in values) {
                 let value = values[key]; 
-                let stateKey = this.endpoints[key];    
-                console.log(stateKey);            
+                let stateKey = this.endpoints[key];  
                 state[stateKey] = value.data;
             }
             //state.error = false;
             state.loading = false;
-            this.setState(state, console.log(this.state));
+            this.setState(state);
         });
     }
 

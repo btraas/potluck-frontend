@@ -8,6 +8,7 @@ import AuthLayout from './layout/AuthLayout';
 import NoAuthLayout from './layout/NoAuthLayout';
 import jwt_decode from 'jwt-decode';
 import './css/application.css';
+
 /**
  * Application entry point. 
  * Automatically routes to Authenticated Dashboard if user is authenticated.
@@ -27,13 +28,16 @@ class App extends Component {
   componentDidMount() {
     let id = sessionStorage.getItem("id_token");
     let access = sessionStorage.getItem("access_token");
+    let refresh = sessionStorage.getItem("refresh_token");
+    
     if(id) {
       try {
         let result = jwt_decode(id);
         this.setState({
           idToken:id,
           accessToken:access,
-          uid:result.sub
+          uid:result.sub,
+          refreshToken:refresh
         });
       } catch (e) {
         console.log(e)
@@ -48,13 +52,16 @@ class App extends Component {
   handleToken(e) {
     let access = '';
     let id = '';
+    let refresh = '';
     if(e !== '') {
       let decoded = jwt_decode(e.id_token);
       access = e.access_token;
       id = e.id_token;
+      refresh = e.refresh_token;
       this.setState({
         accessToken:access,
         idToken:id,
+        refreshToken:refresh,
         uid:decoded.sub
       });         
     } else {
@@ -65,6 +72,8 @@ class App extends Component {
     }
     sessionStorage.setItem("access_token", access); //reset if empty token
     sessionStorage.setItem("id_token", id);
+    sessionStorage.setItem("refresh_token", refresh);
+    
   }
 
   render() {
