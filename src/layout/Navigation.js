@@ -10,6 +10,18 @@ class Navigation extends Component {
     state = { activeItem: '' } 
 
     handleItemClick = (e, { name }) => this.setState({ activeItem: name}) 
+    handleLogout = (e, {name}) => {
+        let url = 'http://potluckapi.azurewebsites.net/connect/logout';
+        let headers = new Headers();
+        let options = {
+            method:'POST'
+        };
+        headers.append('Accept', 'text/html');
+        headers.append('Authorization', 'Bearer ' + this.props.access);
+        /*fetch(url, options)
+            .then()
+            .catch();*/
+    }
 
     render() {
         const { activeItem } = this.state 
@@ -27,22 +39,34 @@ class Navigation extends Component {
                     PotLuck
                 </Menu.Item>
                 <Menu.Menu position='right' className='naviRightPadding'>
-                    <Menu.Item 
+                    { !this.props.isAuthenticated && <Menu.Item 
                         as={Link}
                         to="/register"
                         name='register'
                         active={ activeItem === 'register' }
                         onClick={this.handleItemClick}>
                         Register
-                    </Menu.Item>
-                    <Menu.Item 
+                    </Menu.Item>}
+                    { !this.props.isAuthenticated && <Menu.Item 
                         as={Link}
                         to="/login"
                         name='login'
                         active={ activeItem === 'login' }
                         onClick={this.handleItemClick}>
                         Login
-                    </Menu.Item>
+                    </Menu.Item> }
+                    { this.props.isAuthenticated && <Menu.Item 
+                        name='account'
+                        active={ activeItem === 'account' }
+                        onClick={this.handleItemClick}>
+                        Account
+                    </Menu.Item>}
+                    { this.props.isAuthenticated && <Menu.Item 
+                        name='logout'
+                        active={ activeItem === 'logout' }
+                        onClick={this.handleItemClick}>
+                        Logout
+                    </Menu.Item>}
                 </Menu.Menu>
             </Menu>
         );
