@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Menu } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import '../css/navi.css';
 
 import 'semantic-ui-css/semantic.min.css';
@@ -11,21 +12,26 @@ class Navigation extends Component {
 
     handleItemClick = (e, { name }) => this.setState({ activeItem: name}) 
     handleLogout = (e, {name}) => {
-        let url = 'http://potluckapi.azurewebsites.net/connect/logout';
-        let headers = new Headers();
         let options = {
-            method:'POST'
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${this.props.access}`,
+                Accept: "application/json"
+            }
         };
-        headers.append('Accept', 'text/html');
-        headers.append('Authorization', 'Bearer ' + this.props.access);
-        /*fetch(url, options)
-            .then()
-            .catch();*/
+        let url = 'http://potluckapi.azurewebsites.net/connect/logout';
+        axios.post(url, options)
+            .then(response => {
+                console.log(response);
+            })
+            .catch(e => {
+                console.log('error', e) //TODO 
+            })
+        this.props.onTokenAccept('');
     }
 
     render() {
         const { activeItem } = this.state 
-
         return (
             <Menu fluid inverted color={'olive'} size='huge' className='naviMenu'>
                 <Menu.Item
@@ -64,7 +70,7 @@ class Navigation extends Component {
                     { this.props.isAuthenticated && <Menu.Item 
                         name='logout'
                         active={ activeItem === 'logout' }
-                        onClick={this.handleItemClick}>
+                        onClick={this.handleLogout}>
                         Logout
                     </Menu.Item>}
                 </Menu.Menu>
