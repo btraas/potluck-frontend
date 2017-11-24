@@ -22,12 +22,13 @@ class Dashboard extends Component {
         };
         this.collect = this.collect.bind(this);
         this.baseUrl = 'http://potluckapi.azurewebsites.net/api/';
-        this.endpoints = ['Events', 'Invitations', 'Pledges'];
+        this.endpoints = ['Events/User/', 'Invitations/User/']; //, 'Pledges/User/' remove
     }
 
     componentDidMount() {
         this.collect();
         console.log(this.props)
+        console.log(this.baseUrl + this.endpoints[0] + this.props.uid)
     }
 
 
@@ -41,8 +42,9 @@ class Dashboard extends Component {
                 Accept: "application/json"
             }
         };
+        
         axios.all(this.endpoints.map((endpoint) => {
-            return axios.get(this.baseUrl + endpoint, options)
+            return axios.get(this.baseUrl + endpoint + this.props.uid, options)
         }))
         .then(values => {
             console.log(values);
