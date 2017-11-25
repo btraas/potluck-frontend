@@ -217,14 +217,17 @@ class EventCreate extends Component {
                     {step === 'date' && <Grid.Row centered>
                         <Grid.Column computer={4} tablet={10} mobile={14} >
                             <Form onSubmit={this.handleSubmit} size='mini'>
-                                <Form.Field className="daypicker-form" required>
+                                <Form.Field required>
                                     <label>Event Date:</label>
-                                    <DayPicker onDayClick={this.handleDayClick}
-                                        fromMonth={new Date()}
-                                        className="event-date-picker"
-                                        disabledDays={{ before: new Date() }}
-                                        selectedDays={date.values.event_date}
-                                    />
+                                    <div className="daypicker-form" >
+                                        <DayPicker onDayClick={this.handleDayClick}
+                                            fromMonth={new Date()}
+                                            className="event-date-picker"
+                                            disabledDays={{ before: new Date() }}
+                                            selectedDays={date.values.event_date}
+                                        />
+                                    </div>
+                                    
                                 </Form.Field>
                                 <Form.Field required>
                                     <label>Event Start Time:</label>
@@ -245,10 +248,10 @@ class EventCreate extends Component {
                                     <label>Event Duration:</label>
                                     <Form.Group inline widths='equal'>
                                         <Form.Select compact name='duration_hours' options={dur_hours}
-                                            defaultValue={date.values.duration_hours}
+                                            defaultValue={date.values.duration_hours} className="time-select"
                                             onChange={this.handleChange} placeholder="Hours" required />
                                         <Form.Select compact name='duration_mins' options={dur_mins}
-                                            defaultValue={date.values.duration_hours}
+                                            defaultValue={date.values.duration_hours} className="time-select"
                                             onChange={this.handleChange} placeholder="Mins" required />
                                     </Form.Group>
                                 </Form.Field>
@@ -282,13 +285,14 @@ class EventCreate extends Component {
                                     <label>Duration:</label> {`${date.values.duration_hours} hours ${date.values.duration_mins} mins`}
                                 </div>
                             </Segment>
-                            <Form.Group widths='equal'>
-                                <Form.Field>
-                                    <Button icon='chevron left' labelPosition='left' content='Edit' type="button" onClick={this.handleClick} />
-                                    <Button color='green' icon='chevron right' floated='right' labelPosition='right' onClick={this.handleSubmit}
-                                        content='Confirm' type='submit' />
-                                </Form.Field>
+                            <Form>
+                            <Form.Group inline widths='equal'>
+                                <Form.Button content="Back" className="equal-inline" icon='chevron left' labelPosition='left' 
+                                    content='Edit' type="button" onClick={this.handleClick}/>
+                                <Form.Button content="Confirm" className="equal-inline" color='green' icon='chevron right' 
+                                    floated='right' labelPosition='right' onClick={this.handleSubmit} type='submit'/>
                             </Form.Group>
+                            </Form>
                             <br />
                             <Button as={Link} to="/dashboard" style={{ width: '100%' }} color='red'>Cancel</Button>
                         </Grid.Column>
