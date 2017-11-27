@@ -23,7 +23,7 @@ class NoAuthLayout extends Component {
     return (
         <Switch>
             {isAuthenticated && <Redirect to="/dashboard" />}
-            <Route exact path='/register' component={Register}/>        
+            <Route exact path='/register' render={props=><Register onTokenAccept={this.handleToken} {...props}/>}/>
             <Route exact path='/login' render={props=><Login onTokenAccept={this.handleToken} {...props}/>} /> 
             <Route exact path='/' component={Home}/> 
             <Redirect to="/" />

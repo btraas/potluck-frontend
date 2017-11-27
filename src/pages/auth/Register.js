@@ -8,8 +8,8 @@ import '../../css/reglog.css'
 
 class Register extends Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {fname: '', lname: '', email: '', password: '', cPassword: ''};
         this.handleSubmit          = this.handleSubmit.bind(this);
         this.handleFNameChange     = this.handleFNameChange.bind(this);
@@ -31,8 +31,8 @@ class Register extends Component {
         }
 
         const data = {email           : this.state.email,
-                     password        : this.state.password,
-                     confirmpassword : this.state.cPassword };
+                      password        : this.state.password,
+                      confirmpassword : this.state.cPassword };
       
         axios({
             url: "http://potluckapi.azurewebsites.net/api/register",
