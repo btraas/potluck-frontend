@@ -15,6 +15,7 @@ import { getPledges }       from '../../../api/PledgesApi'
 import { getItemCategories } from '../../../api/ItemCategoriesApi'
 import jwt_decode from 'jwt-decode';
 import '../../../css/event.css';
+import _ from 'lodash'
 
 const options = [
     { key: 1, text: 'Attending', value: 1 },
@@ -26,12 +27,10 @@ class EventPage extends Component {
         super(props);
 
         this.state = {
-            loading        : true,
-            event          : {},
-            guests         : [],
-            pledges        : [],
-            items          : [],   
-            itemCategories : [],
+            loading         : true,
+            event           : {},
+            guests          : [],
+            pledgesForEvent : []
         };
 
         this.api          = new ApiHelper()
@@ -44,10 +43,16 @@ class EventPage extends Component {
     }
 
     async componentWillMount() {
+        /*
         await this._fetchEvent()
         await this._fetchItemCategories()
         await this._fetchItems()
         await this._fetchInvitations()
+        */
+
+        await this._processPledges()
+
+        console.log(this.state.pledgesForEvent)
     }
 
     /**
@@ -60,8 +65,41 @@ class EventPage extends Component {
 
         console.log(event)
 
+        this.setState({ event })
+
         return event
     };
+
+
+    _processPledges = async () => {
+        const { eventId }  = this.props.match.params
+
+        let itemCategories = await getItemCategories()
+        let items          = await getItemsForEvent(eventId)
+        let pledges        = await getPledges()
+
+        const pledgesForEvent = _.map(itemCategories, (itemCategory) => 
+                                {
+                                    let itemsForCategory = _.map(_.filter(items, { 'itemCategoryId' : itemCategory.itemCategoryId }),
+                                                                (item) => 
+                                                                {
+                                                                    return {
+                                                                        itemName     : item.itemName,
+                                                                        quota        : item.quota,
+                                                                        pledgesCount : _.filter(pledges, { itemId : item.itemId }).length,
+                                                                    }
+                                                                })
+
+                                    return { 
+                                        category  : {
+                                            name  : itemCategory.name,
+                                            items : itemsForCategory
+                                        }
+                                    }
+                                })
+
+        this.setState({ pledgesForEvent })
+    }
 
     /**
      * 
