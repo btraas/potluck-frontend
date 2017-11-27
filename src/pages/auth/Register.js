@@ -30,9 +30,13 @@ class Register extends Component {
             return;
         }
 
-        const data = {email           : this.state.email,
-                     password        : this.state.password,
-                     confirmpassword : this.state.cPassword };
+        const data = {
+                    email           : this.state.email,
+                    password        : this.state.password,
+                    confirmpassword : this.state.cPassword,
+                    firstName       : this.state.fname,
+                    lastName        : this.state.lname,
+            };
       
         axios({
             url: "http://potluckapi.azurewebsites.net/api/register",
@@ -43,7 +47,8 @@ class Register extends Component {
             data: JSON.stringify (data)
         }).then(response => {
             this.setState({ openModal: true, success: response.status === 201 })
-            console.log ("Works");
+            console.log(response);
+            this.props.history.push('/login');
         }).catch(e => {
             console.log(e)
             this.setState({ openModal: true, success: false })
