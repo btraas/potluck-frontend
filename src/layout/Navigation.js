@@ -12,21 +12,20 @@ class Navigation extends Component {
 
     handleItemClick = (e, { name }) => this.setState({ activeItem: name}) 
     handleLogout = (e, {name}) => {
-        let options = {
-            method: 'POST',
+        axios({
+            method: 'POST',            
+            url: 'http://potluckapi.azurewebsites.net/connect/logout',
             headers: {
                 Authorization: `Bearer ${this.props.access}`,
-                Accept: "application/json"
+                Accept: "text/html"
             }
-        };
-        let url = 'http://potluckapi.azurewebsites.net/connect/logout';
-        axios.post(url, options)
-            .then(response => {
-                console.log(response);
-            })
-            .catch(e => {
-                console.log('error', e) //TODO 
-            })
+        })
+        .then(response => {
+            console.log(response);
+        })
+        .catch(e => {
+            console.log('error', e) //TODO 
+        })
         this.props.onTokenAccept('');
     }
 

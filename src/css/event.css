@@ -1,12 +1,17 @@
 #event-create-page {
     background-color: #3F664E;
 }
-.time-select {
-    min-width:50px !important;
-    margin-left:5px;
+.time-select > .selection.dropdown, .equal-inline > button {
+    width:100% !important;
+}
+div.inline.equal.width.fields > div.field:last-child {
+    padding-right:0 !important;
 }
 .daypicker-form {
     text-align: center;
+    width:100%;
+    height:100%;
+    background-color:white;
 }
 .event-date-picker {
     background-color:white;
