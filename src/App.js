@@ -22,7 +22,7 @@ class App extends Component {
       idToken:'',
       uid:''
     };
-    this.handleToken = this.handleToken.bind(this);    
+    this.handleToken = this.handleToken.bind(this);
   }
 
   componentDidMount() {
