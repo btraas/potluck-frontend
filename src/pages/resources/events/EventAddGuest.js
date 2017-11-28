@@ -179,7 +179,7 @@ class EventAddGuest extends Component {
                 <Grid columns={2} >
                     <Grid.Row>
                         <Grid.Column textAlign="right">
-                            <Button className="addguestBtn" as={Link} to="/dashboard"  color='red'>Cancel</Button>
+                            <Button className="addguestBtn" as={Link} to={`/dashboard/events/${this.state.event.eventId}`} color='red'>Cancel</Button>
                         </Grid.Column>
                         <Grid.Column textAlign="left">
                             <Modal trigger={<Button className="addguestBtn" color='blue'>Confirm</Button>} basic size='small'>
@@ -188,7 +188,7 @@ class EventAddGuest extends Component {
                                     <p>Do you want to add these people to your Event?</p>
                                 </Modal.Content>
                                 <Modal.Actions>
-                                    <Button as={Link} to="/dashboard" basic color='red' inverted>
+                                    <Button as={Link} to={`/dashboard/events/${this.state.event.eventId}`}basic color='red' inverted>
                                         <Icon name='remove' /> No
                                     </Button>
                                     <Button as={Link} to="/dashboard" color='green' inverted>
