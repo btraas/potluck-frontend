@@ -1,3 +1,4 @@
+
 #event-create-page {
     background-color: #3F664E;
 }
@@ -31,4 +32,32 @@ div.inline.equal.width.fields > div.field:last-child {
 
 .event-container {
     padding:10px;
+}
+
+.guest_section{
+    width: 100%;
+    height: auto;
+
+}
+
+.eventPageMainBanner{
+    margin-top: 0px;
+    padding-top: 0px;
+    padding: 0px;
+}
+.eventPage{
+    margin: 0px;
+    padding: 0px;
+}
+.ui.segment {
+    margin-top: 0px;
+}
+.guest_panel{
+    padding: 20px !important;
+    padding-bottom: 40px !important;
+}
+.addGuestBtn{
+    background-color: #EBEDD0 !important;
+
+
 }

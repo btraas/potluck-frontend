@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import ApiHelper from '../../../util/ApiHelper'
+import { Link } from 'react-router-dom';
+
 import { 
     Container, 
     Grid, 
@@ -120,11 +122,11 @@ class EventPage extends Component {
 
     render() {
         return (
-            <div style={{ marginBottom : 20}}>
+            <div style={{ marginBottom : 20}} className="eventPage">
              <Dimmer active={this.state.loading}>
                     <Loader size="massive"/>
             </Dimmer>
-            <Segment style={{ backgroundColor : "green" }}>
+            <Segment className="eventPageMainBanner" style={{ backgroundColor : "#3F664E" , marginHeight:"0px"}}>
                 <div style={{ margin : 50 }} >
                     <Header
                         as='h1'
@@ -223,17 +225,20 @@ class EventPage extends Component {
                         </Segment>
                     </Grid.Column>
                 </Grid.Row>
-                <Grid.Row centered as={Container} >
-                    <Grid.Column mobile={16} textAlign="left">
-                        <Segment>
-                            <p>Guests :</p>
+                <Grid.Row centered as={Container} className="guest_section">
+                    <Grid.Column mobile={16} textAlign="left" >
+                        <Segment className="guest_panel" style={{ backgroundColor : "#3F664E", color:"white"}}>
+                            <Button as={Link} to={`/dashboard/events/${this.state.event.eventId}/addguest`}className=" right-aligned-p addGuestBtn">Add Guest</Button>
+                            <span >Guests :</span>
                             {
-                                this.state.guests.map((guest) =>
-                                {
-                                    return(<p>{`${guest.firstName} ${guest.lastName}`}</p>)
+                                this.state.guests.map((guest) => {
+                                    return (<p>{`${guest.firstName} ${guest.lastName}`}</p>)
                                 })
                             }
+
                         </Segment>
+
+
                     </Grid.Column>
                 </Grid.Row>
             </Grid>
