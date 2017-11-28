@@ -65,7 +65,6 @@ class Login extends Component {
 
     render() {
         const didRegister = this.state.regSuccess
-        console.log(didRegister)
         return (
             <DocumentTitle title='Potluck - Login'>
                 <Grid padded centered verticalAlign='top' id="auth-page">

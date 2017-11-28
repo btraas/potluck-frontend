@@ -23,7 +23,6 @@ class NoAuthLayout extends Component {
   }
 
   regIsSuccessful() {
-      console.log("callback called")
       this.setState({
           regSuccess: true
       })
