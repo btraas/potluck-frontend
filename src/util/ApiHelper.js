@@ -30,9 +30,6 @@ export default class ApiHelper {
     }
 
     xhr = async (url, params, verb) => {
-        console.log(url)
-        console.log(`${Config.url}${url}`)
-
         try {
             let opts     = {}
             opts.method  = verb,

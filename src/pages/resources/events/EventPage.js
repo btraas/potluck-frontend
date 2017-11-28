@@ -6,7 +6,10 @@ import {
     Dropdown, 
     Progress,
     Segment,
-    Header 
+    Header,
+    Dimmer,
+    Loader,
+    Button
 } from 'semantic-ui-react';
 import { getEventById     } from '../../../api/EventsApi'
 import { getInvitations   } from '../../../api/InvitationsApi'
@@ -30,7 +33,8 @@ class EventPage extends Component {
             loading         : true,
             event           : {},
             guests          : [],
-            pledgesForEvent : []
+            pledgesForEvent : [],
+            loading         : false
         };
 
         this.api          = new ApiHelper()
@@ -43,50 +47,47 @@ class EventPage extends Component {
     }
 
     async componentWillMount() {
-        /*
-        await this._fetchEvent()
-        await this._fetchItemCategories()
-        await this._fetchItems()
-        await this._fetchInvitations()
-        */
+        // Start loading
+        this.setState({ loading : true })
 
+        await this._processEvent()
         await this._processPledges()
+        await this._processGuests()
 
-        console.log(this.state.pledgesForEvent)
+        // End loading 
+        this.setState({ loading : false })
     }
 
-    /**
-     * Fetch event data.
-     */
-    _fetchEvent = async () => {
-        const { eventId } = this.props.match.params 
+    _processEvent = async () => {
+        const { eventId } = this.props.match.params
 
         let event = await getEventById(eventId)
 
-        console.log(event)
-
         this.setState({ event })
+    }
 
-        return event
-    };
-
-
+    /**
+     * mapStateToProps kinda function that does the massaging of data and setting it to a state 
+     */
     _processPledges = async () => {
         const { eventId }  = this.props.match.params
 
-        let itemCategories = await getItemCategories()
-        let items          = await getItemsForEvent(eventId)
-        let pledges        = await getPledges()
+        let itemCategories    = await getItemCategories()
+        let items             = await getItemsForEvent(eventId)
+        let pledges           = await getPledges()
 
         const pledgesForEvent = _.map(itemCategories, (itemCategory) => 
                                 {
                                     let itemsForCategory = _.map(_.filter(items, { 'itemCategoryId' : itemCategory.itemCategoryId }),
                                                                 (item) => 
                                                                 {
+                                                                    const { itemName, itemId } = item 
+
                                                                     return {
-                                                                        itemName     : item.itemName,
+                                                                        ...{ itemName },
                                                                         quota        : item.quota,
-                                                                        pledgesCount : _.filter(pledges, { itemId : item.itemId }).length,
+                                                                        pledgesCount : _.reduce(_.filter(pledges, { itemId }), 
+                                                                                                (sum, pledge)  => { return sum + pledge.quantity }, 0),
                                                                     }
                                                                 })
 
@@ -104,43 +105,25 @@ class EventPage extends Component {
     /**
      * 
      */
-    _fetchItemCategories = async () => {
+    _processGuests = async () => {
+        const { eventId }  = this.props.match.params
 
-        let itemCategories = await getItemCategories()
-
-        console.log(itemCategories)
+        let invitations         = await getInvitations()
+        let invitationsForEvent = await _.filter(invitations, { eventId, status : 1 })
         
-        this.setState({ itemCategories })
+        let guests              = _.map(invitationsForEvent, (invitation) => {
+                                        return { ...invitation.applicationUser }
+                                    })
 
-        return itemCategories
-    }
-
-    /**
-     * 
-     */
-    _fetchItems = async () => {
-        const { eventId } = this.props.match.params 
-
-        let items = await getItemsForEvent(eventId)
-
-        console.log(items)
-
-        return items
-    }
-
-    _fetchInvitations = async () => {
-
-        let invitations = await getInvitations()
-
-        console.log(invitations)
-
-        return invitations
+        this.setState({ guests })
     }
 
     render() {
-    
         return (
-            <div>
+            <div style={{ marginBottom : 20}}>
+             <Dimmer active={this.state.loading}>
+                    <Loader size="massive"/>
+            </Dimmer>
             <Segment style={{ backgroundColor : "green" }}>
                 <div style={{ margin : 50 }} >
                     <Header
@@ -162,12 +145,16 @@ class EventPage extends Component {
                     <Grid.Column mobile={16} computer={8} textAlign="center">
                         <Segment>
                             {/*<span>Hosting</span>*/}
-                            <Dropdown button fluid placeholder="Status" options={options} style={{ textAlign: "center", backgroundColor : "transparent" }}/>
+                            {
+                                this.userId === this.state.event.organizerId ?
+                                <span>Hosting</span> :
+                                <Dropdown button fluid placeholder="Status" options={options} style={{ textAlign: "center", backgroundColor : "transparent" }}/>
+                            }
                         </Segment>
                     </Grid.Column>
                     <Grid.Column mobile={16} computer={8} textAlign="center">
                         <Segment>
-                            <span>Pledge</span>
+                            <Button>Pledge</Button>
                         </Segment>
                     </Grid.Column>
                 </Grid.Row>
@@ -198,19 +185,41 @@ class EventPage extends Component {
                     <Grid.Column textAlign="left">
                         <Segment>
                             <span>Pledge Status:</span>
-                            <p className="right-aligned-p">Button</p>
-                            <p>Food</p>
-                            <Progress percent={11} />
-                            <ul>
-                                <li>
-                                <p>Celery</p>
-                                <Progress percent={11} />
-                                </li>
-                            </ul>
-                            <p>Drinks</p>
-                            <Progress percent={33} />
-                            <p>Items</p>
-                            <Progress percent={76} />
+                            <Button className="right-aligned-p">Edit</Button>
+                            {
+                                this.state.pledgesForEvent &&
+                                this.state.pledgesForEvent.map((pledge, index) =>
+                                {
+                                    let categoryProgress = _.filter(pledge.category.items, (item) => { return item.quota === item.pledgesCount }).length
+                                    let categoryPercent  = pledge.category.items.length ?
+                                                           ((categoryProgress / pledge.category.items.length) * 100) : 0;
+
+                                    return (
+                                        <div key={index}>
+                                            <p>{ pledge.category.name + ": " }</p>
+                                            <Progress percent={categoryPercent} progress size="large"/>
+                                            {
+                                                pledge.category.items.length > 0 &&
+                                                (<ul>
+                                                    {
+                                                        pledge.category.items.map((item, itemsIndex) => 
+                                                        {
+                                                            let itemPercentage = ((item.pledgesCount / item.quota) * 100)
+
+                                                            return (
+                                                                <li key={itemsIndex}>
+                                                                    <p>{ item.itemName }</p>
+                                                                    <Progress percent={ ((item.pledgesCount / item.quota) * 100) } size="medium"/>
+                                                                </li>
+                                                            )
+                                                        })
+                                                    }
+                                                </ul>)
+                                            }
+                                        </div>
+                                    )
+                                })
+                            }
                         </Segment>
                     </Grid.Column>
                 </Grid.Row>
@@ -218,9 +227,12 @@ class EventPage extends Component {
                     <Grid.Column mobile={16} textAlign="left">
                         <Segment>
                             <p>Guests :</p>
-                            <p>Vincent H Lee (Lord of the potluck)</p>
-                            <p>Matt Li</p>
-                            <p>Hansol lee</p>
+                            {
+                                this.state.guests.map((guest) =>
+                                {
+                                    return(<p>{`${guest.firstName} ${guest.lastName}`}</p>)
+                                })
+                            }
                         </Segment>
                     </Grid.Column>
                 </Grid.Row>
