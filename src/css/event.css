@@ -21,9 +21,14 @@ div.inline.equal.width.fields > div.field:last-child {
 }
 #event-page {
     background-color: #EAEDD0 !important;
+
 }
 .event-tiles {
     background-color:#88B652;
     border-radius: 25px;
+    padding:10px;
+}
+
+.event-container {
     padding:10px;
 }

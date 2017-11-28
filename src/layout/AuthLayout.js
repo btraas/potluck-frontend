@@ -14,7 +14,7 @@ class AuthLayout extends Component {
         <Switch>
             <Route exact path="/dashboard" render={()=><Dashboard {...this.props}/>} />               
             <Route exact path="/dashboard/events/create" render={()=><EventCreate {...this.props}/> }/>
-            <Route exact path="/dashboard/events/:eventId" render={()=><EventPage {...this.props}/>}/>                    
+            <Route exact path="/dashboard/events/:eventId" component={EventPage}/>                    
             <Redirect to="/dashboard"/>    
         </Switch>
     );

@@ -26,8 +26,8 @@ class App extends Component {
   }
 
   componentDidMount() {
-    let id = sessionStorage.getItem("id_token");
-    let access = sessionStorage.getItem("access_token");
+    let id      = sessionStorage.getItem("id_token");
+    let access  = sessionStorage.getItem("access_token");
     let refresh = sessionStorage.getItem("refresh_token");
     
     if(id) {

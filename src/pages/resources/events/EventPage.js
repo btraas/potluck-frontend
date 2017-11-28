@@ -1,121 +1,243 @@
 import React, { Component } from 'react';
-import { Container, Grid, Dropdown, Progress, Divider  } from 'semantic-ui-react';
+import ApiHelper from '../../../util/ApiHelper'
+import { 
+    Container, 
+    Grid, 
+    Dropdown, 
+    Progress,
+    Segment,
+    Header,
+    Dimmer,
+    Loader,
+    Button
+} from 'semantic-ui-react';
+import { getEventById     } from '../../../api/EventsApi'
+import { getInvitations   } from '../../../api/InvitationsApi'
+import { getItemsForEvent } from '../../../api/ItemsApi'
+import { getPledges }       from '../../../api/PledgesApi' 
+import { getItemCategories } from '../../../api/ItemCategoriesApi'
+import jwt_decode from 'jwt-decode';
 import '../../../css/event.css';
+import _ from 'lodash'
 
 const options = [
-    { key: 1, text: 'Invited', value: 1 },
-    { key: 2, text: 'Not Invited', value: 2 },]
+    { key: 1, text: 'Attending', value: 1 },
+    { key: 2, text: 'Not Attending', value: 2 },]
 
 class EventPage extends Component {
 
     constructor(props) {
         super(props);
+
         this.state = {
-            loading: true,
-            Event: []
+            loading         : true,
+            event           : {},
+            guests          : [],
+            pledgesForEvent : [],
+            loading         : false
         };
-        this.collect = this.collect.bind(this);
-        this.baseUrl = 'http://potluckapi.azurewebsites.net/api/Events/';
+
+        this.api          = new ApiHelper()
+        this.userId       = jwt_decode(sessionStorage.getItem("id_token")).sub
+        this.accessToken  = sessionStorage.getItem("access_token")
     }
   
     componentDidMount() {
-        this.collect();
+        //this.collect();
+    }
+
+    async componentWillMount() {
+        // Start loading
+        this.setState({ loading : true })
+
+        await this._processEvent()
+        await this._processPledges()
+        await this._processGuests()
+
+        // End loading 
+        this.setState({ loading : false })
+    }
+
+    _processEvent = async () => {
+        const { eventId } = this.props.match.params
+
+        let event = await getEventById(eventId)
+
+        this.setState({ event })
     }
 
     /**
-     * Collect all user data.
+     * mapStateToProps kinda function that does the massaging of data and setting it to a state 
      */
-    collect() {
-        let eventid = this.props.match.params.eventId;
-        console.log(this.baseUrl + eventid);
-        let headers = new Headers();
-        headers.append('Access-Control-Allow-Origin', '*');
-        headers.append('Access-Control-Allow-Credentials', 'true');
-        let options = { header:headers };
-        fetch(this.baseUrl+eventid, options)
-            .then(response => { return response.json()})
-            .then(data => {
-                this.setState({
-                    Event:data
-                });
-            })
-            .catch(e => {
-                console.log('Error: ', e)
-            })
+    _processPledges = async () => {
+        const { eventId }  = this.props.match.params
 
+        let itemCategories    = await getItemCategories()
+        let items             = await getItemsForEvent(eventId)
+        let pledges           = await getPledges()
+
+        const pledgesForEvent = _.map(itemCategories, (itemCategory) => 
+                                {
+                                    let itemsForCategory = _.map(_.filter(items, { 'itemCategoryId' : itemCategory.itemCategoryId }),
+                                                                (item) => 
+                                                                {
+                                                                    const { itemName, itemId } = item 
+
+                                                                    return {
+                                                                        ...{ itemName },
+                                                                        quota        : item.quota,
+                                                                        pledgesCount : _.reduce(_.filter(pledges, { itemId }), 
+                                                                                                (sum, pledge)  => { return sum + pledge.quantity }, 0),
+                                                                    }
+                                                                })
+
+                                    return { 
+                                        category  : {
+                                            name  : itemCategory.name,
+                                            items : itemsForCategory
+                                        }
+                                    }
+                                })
+
+        this.setState({ pledgesForEvent })
+    }
+
+    /**
+     * 
+     */
+    _processGuests = async () => {
+        const { eventId }  = this.props.match.params
+
+        let invitations         = await getInvitations()
+        let invitationsForEvent = await _.filter(invitations, { eventId, status : 1 })
+        
+        let guests              = _.map(invitationsForEvent, (invitation) => {
+                                        return { ...invitation.applicationUser }
+                                    })
+
+        this.setState({ guests })
     }
 
     render() {
-        
-        var organizer = this.state.Event.organizer;
-        console.log(this.state.Event);
         return (
-            <Grid padded id="event-page">
-                <Grid.Row className="event-tiles" centered as={Container}>
-                    <Grid.Column mobile={16} computer={12} tablet={14} textAlign="left" >
-                        <h1>{this.state.Event.title}</h1>
-                        <Dropdown placeholder="Status" options={options} floated='right'/>
-                        <br/><br/>
-                        {/* need to get hosted by from organizer but its says null reference when its not */}
-                        <p>hosted by: /placeholder/ </p>
+            <div style={{ marginBottom : 20}}>
+             <Dimmer active={this.state.loading}>
+                    <Loader size="massive"/>
+            </Dimmer>
+            <Segment style={{ backgroundColor : "green" }}>
+                <div style={{ margin : 50 }} >
+                    <Header
+                        as='h1'
+                        content={this.state.event.title}
+                        inverted
+                        style={{ fontSize: '4em', fontWeight: 'normal'}}
+                    />
+                    <Header
+                        as='h2'
+                        content='Hosted by: John Cena'
+                        inverted
+                        style={{ fontSize: '1.7em', fontWeight: 'normal' }}
+                    />
+                </div>
+            </Segment>
+            <Grid container centered id="event-page">
+                <Grid.Row centered as={Container} >
+                    <Grid.Column mobile={16} computer={8} textAlign="center">
+                        <Segment>
+                            {/*<span>Hosting</span>*/}
+                            {
+                                this.userId === this.state.event.organizerId ?
+                                <span>Hosting</span> :
+                                <Dropdown button fluid placeholder="Status" options={options} style={{ textAlign: "center", backgroundColor : "transparent" }}/>
+                            }
+                        </Segment>
+                    </Grid.Column>
+                    <Grid.Column mobile={16} computer={8} textAlign="center">
+                        <Segment>
+                            <Button>Pledge</Button>
+                        </Segment>
                     </Grid.Column>
                 </Grid.Row>
-                <Grid.Row centered>
-                    <Grid.Column computer={10} mobile={16} tablet={14}>
-                        <Grid>
-                            <Grid.Row centered>
-                                <Grid.Column className="event-tiles" computer={16} tablet={16} mobile={16}  textAlign="left">
-                                <h2>Description</h2>
-                                <br/><br/>
-                                <p>{this.state.Event.description}</p>
-                                </Grid.Column>
-                            </Grid.Row>
+                <Grid.Row centered as={Container}>
+                     <Grid.Column mobile={16} computer={8} textAlign="left">
+                        <Segment>
+                            <h2>Location</h2>
+                            <p>{this.state.event.location}</p>
+                        </Segment>
+                    </Grid.Column>
+                    <Grid.Column mobile={16} computer={8} textAlign="left">
+                        <Segment>
+                            <p><span>Date: </span>{new Date(this.state.event.startTime).toDateString()}</p>
+                            <p><span>Duration: </span>{new Date(this.state.event.startTime).toTimeString()} Until: {new Date(this.state.event.endTime).toTimeString()}</p>
+                        </Segment>
+                    </Grid.Column>
+                </Grid.Row>
+                <Grid.Row centered as={Container}>
+                    <Grid.Column computer={16} tablet={16} mobile={16}  textAlign="left">
+                        <Segment>
+                            <h2>Description</h2>
                             <br/><br/>
-                            <Grid.Row>
-                                <Grid.Column  className="event-tiles" mobile={16} computer={7} tablet={10} textAlign="left">
-                                <h2>Location</h2>
-                                <p>{this.state.Event.location}</p>
-                                </Grid.Column>
-                                <Divider/>
-                                <Grid.Column floated='right' className="event-tiles" mobile={16} computer={7} tablet={10} textAlign="left">
-                                    <h2>Time: </h2>
-                                    <p>Starts at: {this.state.Event.startTime} Until: {this.state.Event.endTime}</p>
-                                    
-                                </Grid.Column>
-                            </Grid.Row>
-                            <br/><br/><br/>
-                            <Grid.Row >
-                                <Grid.Column className="event-tiles" mobile={16} computer={11} tablet={10} textAlign="left">
-                                    <span>Pledge Status:</span>
-                                    <p className="right-aligned-p">Button</p>
-                                    <br/><br/>
-                                    <p>Food</p>
-                                    <Progress percent={11} />
-                                    <ul>
-                                        <li>
-                                            <p>Celery</p>
-                                            <Progress percent={11} />
-                                        </li>
-                                    </ul>
-                                    <br/><br/>
-                                    <p>Drinks</p>
-                                    <Progress percent={33} />
-                                    <br/><br/>
-                                    <p>Items</p>
-                                    <Progress percent={76} />
-                                </Grid.Column>
-                                <Grid.Column floated='right' className="event-tiles" mobile={16} computer={4} tablet={10} textAlign="left">
-                                    <p>Guests :</p>
-                                    <p>Vincent H Lee (Lord of the potluck)</p>
-                                    <p>Matt Li</p>
-                                    <p>Hansol lee</p>
-                                </Grid.Column>
-                            </Grid.Row>
-                        </Grid>
+                            <p>{this.state.event.description}</p>
+                        </Segment>
                     </Grid.Column>
                 </Grid.Row>
-                
+                <Grid.Row centered as={Container}>
+                    <Grid.Column textAlign="left">
+                        <Segment>
+                            <span>Pledge Status:</span>
+                            <Button className="right-aligned-p">Edit</Button>
+                            {
+                                this.state.pledgesForEvent &&
+                                this.state.pledgesForEvent.map((pledge, index) =>
+                                {
+                                    let categoryProgress = _.filter(pledge.category.items, (item) => { return item.quota === item.pledgesCount }).length
+                                    let categoryPercent  = pledge.category.items.length ?
+                                                           ((categoryProgress / pledge.category.items.length) * 100) : 0;
+
+                                    return (
+                                        <div key={index}>
+                                            <p>{ pledge.category.name + ": " }</p>
+                                            <Progress percent={categoryPercent} progress size="large"/>
+                                            {
+                                                pledge.category.items.length > 0 &&
+                                                (<ul>
+                                                    {
+                                                        pledge.category.items.map((item, itemsIndex) => 
+                                                        {
+                                                            let itemPercentage = ((item.pledgesCount / item.quota) * 100)
+
+                                                            return (
+                                                                <li key={itemsIndex}>
+                                                                    <p>{ item.itemName }</p>
+                                                                    <Progress percent={ ((item.pledgesCount / item.quota) * 100) } size="medium"/>
+                                                                </li>
+                                                            )
+                                                        })
+                                                    }
+                                                </ul>)
+                                            }
+                                        </div>
+                                    )
+                                })
+                            }
+                        </Segment>
+                    </Grid.Column>
+                </Grid.Row>
+                <Grid.Row centered as={Container} >
+                    <Grid.Column mobile={16} textAlign="left">
+                        <Segment>
+                            <p>Guests :</p>
+                            {
+                                this.state.guests.map((guest) =>
+                                {
+                                    return(<p>{`${guest.firstName} ${guest.lastName}`}</p>)
+                                })
+                            }
+                        </Segment>
+                    </Grid.Column>
+                </Grid.Row>
             </Grid>
+            </div>
         );
   }
 }
