@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import DocumentTitle from 'react-document-title';
-import { Form, Grid, Message } from 'semantic-ui-react'
+import { Form, Grid, Message, Modal, Button } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 import '../../css/reglog.css'
 //import { Link } from 'react-router-dom';
@@ -12,10 +12,12 @@ class Login extends Component {
         this.state = {
             email:'',
             password:'',
-            error:false
+            error:false,
+            regSuccess: props.regSuccess,
         }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleModalClose = this.handleModalClose.bind(this)
         this.baseUrl = 'http://potluckapi.azurewebsites.net/connect/token';        
     }
 
@@ -57,7 +59,13 @@ class Login extends Component {
         })
     }
 
+    handleModalClose() {
+        this.setState({ regSuccess: false })
+    }
+
     render() {
+        const didRegister = this.state.regSuccess
+        console.log(didRegister)
         return (
             <DocumentTitle title='Potluck - Login'>
                 <Grid padded centered verticalAlign='top' id="auth-page">
@@ -84,6 +92,23 @@ class Login extends Component {
                             </Form>
                         </Grid.Column>
                     </Grid.Row>
+                        {didRegister &&
+                        <Grid.Row centered>
+                            <Modal size="tiny" open={this.state.regSuccess}>
+                                <Modal.Header>
+                                    Please Log In
+                                </Modal.Header>
+                                <Modal.Content>
+                                    <p>
+                                        Registration was successful, please log in!
+                                    </p>
+                                </Modal.Content>
+                                <Modal.Actions>
+                                    <Button positive icon='checkmark' labelPosition='right' content='Ok' onClick={this.handleModalClose} />
+                                </Modal.Actions>
+                            </Modal>
+                        </Grid.Row>
+                        }
                 </Grid>
             </DocumentTitle>
         );

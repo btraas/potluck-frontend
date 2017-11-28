@@ -8,9 +8,15 @@ import '../../css/reglog.css'
 
 class Register extends Component {
 
-    constructor() {
-        super();
-        this.state = {fname: '', lname: '', email: '', password: '', cPassword: ''};
+    constructor(props) {
+        super(props);
+        this.state = {
+            fname: '',
+            lname: '',
+            email: '',
+            password: '',
+            cPassword: ''
+        };
         this.handleSubmit          = this.handleSubmit.bind(this);
         this.handleFNameChange     = this.handleFNameChange.bind(this);
         this.handleLNameChange     = this.handleLNameChange.bind(this);
@@ -47,8 +53,8 @@ class Register extends Component {
             data: JSON.stringify (data)
         }).then(response => {
             this.setState({ openModal: true, success: response.status === 201 })
-            console.log(response);
-            this.props.history.push('/login');
+            this.props.regIsSuccessful()
+            this.props.history.push('/login')
         }).catch(e => {
             console.log(e)
             this.setState({ openModal: true, success: false })
