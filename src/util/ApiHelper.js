@@ -34,7 +34,7 @@ export default class ApiHelper {
             let opts     = {}
             opts.method  = verb,
             opts.headers = this.header,
-            opts.data    = params ?  JSON.stringify(params) : null
+            opts.data    = params ? JSON.stringify(params) : null
             
             let response = await axios({ url :`${Config.url}${url}`,  ...opts })
             

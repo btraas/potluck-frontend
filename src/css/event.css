@@ -19,6 +19,10 @@ div.inline.equal.width.fields > div.field:last-child {
 .right-aligned-p{
     float:right;
 }
+.left-aligned-p{
+    float:left;
+}
+
 #event-page {
     background-color: #EAEDD0 !important;
 
@@ -31,4 +35,38 @@ div.inline.equal.width.fields > div.field:last-child {
 
 .event-container {
     padding:10px;
+}
+
+.hosting-pledge {
+    height : 60px;
+}
+
+.location,.description {
+    display : flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.title {
+    display : flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.title-edit-button {
+    height : 40px;
+}
+
+.title-delete-button {
+    height : 40px;
+}
+
+.date {
+    display : flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.date-edit-button {
+    height : 40px;
 }
