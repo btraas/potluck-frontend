@@ -128,16 +128,20 @@ class EventCreate extends Component {
     processRequestData() {
         const { title, location, description } = this.state.details.values;
         const times = this.state.date.values;
-        let start = new Date(times.event_date.getTime());
+        let start = new Date(times.event_date.getFullYear(), times.event_date.getMonth(), times.event_date.getDate());
+        let end = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+        
         start.setMinutes(times.start_time_mins);
+        end.setMinutes(times.start_time_mins + times.duration_mins);
+        
         if (times.start_time_noon === 'am') {
-            start.setHours(times.start_time_hours);
+            start.setUTCHours(times.start_time_hours);
+            end.setUTCHours(times.duration_hours+times.start_time_hours);
         } else {
-            start.setHours(times.start_time_hours + 12);
+            start.setUTCHours(times.start_time_hours + 12);
+            end.setUTCHours(times.duration_hours+times.start_time_hours + 12);
         }
-        let end = new Date(start.getTime());
-        end.setHours(times.duration_hours);
-        end.setMinutes(times.duration_mins);
+        
         let data = {
             title: title,
             location: location,
@@ -165,7 +169,6 @@ class EventCreate extends Component {
         let ampm = [{ key: 'am', value: 'am', text: 'am' }, { key: 'pm', value: 'pm', text: 'pm' }];
 
         const { details, date, loading, openModal } = this.state;
-
         return (
             <DocumentTitle title='Potluck - Create Event'>
                 <Grid padded centered id="event-create-page">
@@ -279,7 +282,8 @@ class EventCreate extends Component {
                                 </div>
                                 <div>
                                     <label>Time:</label>
-                                    {`${date.values.start_time_hours}:${date.values.start_time_mins} ${date.values.start_time_noon}`}
+                                    {`${date.values.start_time_hours}:${date.values.start_time_mins < 10 
+                                        ? '0'+date.values.start_time_mins : date.values.start_time_mins} ${date.values.start_time_noon}`}
                                 </div>
                                 <div>
                                     <label>Duration:</label> {`${date.values.duration_hours} hours ${date.values.duration_mins} mins`}
