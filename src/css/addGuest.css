@@ -1,0 +1,26 @@
+.addGuestBanner{
+     background-color: #EBEDD0 !important;;
+}
+.addGuestTest{
+    padding-top: 30px;
+    padding-bottom: 30px;
+    font-size: 50px;
+    font-family: Roboto !important;
+    color: #3E6550;
+}
+.searchBar{
+    margin-top: 15px !important;
+    width: 600px !important;
+    height: 40px !important;
+}
+.searchBarPanel{
+    height: 100px !important;
+}
+.addguestBtn{
+    width: 130px;
+}
+.userName{
+    font-size: 20px;
+    font-family: Roboto !important;
+    color: #3E6550;
+}
