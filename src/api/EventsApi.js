@@ -34,3 +34,16 @@ export async function getEvents() {
         return null
     }
 }
+
+export async function updateEvent(event) {
+    console.log(event)
+
+    try {
+        return await API.headers({ "Authorization" : `Bearer ${sessionStorage.getItem("access_token")}` })
+                        .put(`api/Events/${event.eventId}`, event)
+    } catch (error) {
+        console.log(error)
+        alert("An error occurred while updating the event")
+        return null
+    }
+}

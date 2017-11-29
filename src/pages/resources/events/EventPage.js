@@ -11,12 +11,14 @@ import {
     Header,
     Dimmer,
     Loader,
-    Button
+    Button,
+    Form
 } from 'semantic-ui-react';
-import { getEventById     } from '../../../api/EventsApi'
-import { getInvitations   } from '../../../api/InvitationsApi'
+import DayPicker from 'react-day-picker'
+import { getEventById, updateEvent } from '../../../api/EventsApi'
+import { getInvitations } from '../../../api/InvitationsApi'
 import { getItemsForEvent } from '../../../api/ItemsApi'
-import { getPledges }       from '../../../api/PledgesApi' 
+import { getPledges } from '../../../api/PledgesApi'
 import { getItemCategories } from '../../../api/ItemCategoriesApi'
 import jwt_decode from 'jwt-decode';
 import '../../../css/event.css';
@@ -24,7 +26,17 @@ import _ from 'lodash'
 
 const options = [
     { key: 1, text: 'Attending', value: 1 },
-    { key: 2, text: 'Not Attending', value: 2 },]
+    { key: 2, text: 'Not Attending', value: 2 },
+    { key: 3, text: 'Invited', value: 0 }
+]
+
+const HOURS = _.range(1, 12).map((hour) => { return { key: hour, value: hour, text: hour < 10 ? `0${hour}` : hour } })
+const DUR_HOURS = _.range(1, 13).map((hour) => { return { key: hour, value: hour, text: hour < 10 ? `0${hour} hours` : `${hour} hours` } })
+
+const MINUTES = _.range(0, 60).map((minute) => { return { key: minute, value: minute, text: minute < 10 ? `0${minute}` : minute } })
+const DUR_MINUTES = _.range(0, 60).map((minute) => { return { key: minute, value: minute, text: minute < 10 ? `0${minute} mins` : `${minute} mins` } })
+
+const AM_PM = [{ key: 'am', value: 'am', text: 'am' }, { key: 'pm', value: 'pm', text: 'pm' }];
 
 class EventPage extends Component {
 
@@ -32,32 +44,51 @@ class EventPage extends Component {
         super(props);
 
         this.state = {
-            loading         : true,
-            event           : {},
-            guests          : [],
-            pledgesForEvent : [],
-            loading         : false
+            event: {},
+            guests: [],
+            pledgesForEvent: [],
+            isUserHost: false,
+            loading: false,
+            edit: {
+                location: false,
+                date: false,
+                description: false,
+                title : false
+            },
+            submit : {
+                location    : null,
+                startDate   : null,
+                description : null,
+                title       : null,
+                endDate     : null
+            },
+            date : {
+                noon     : null,
+                day      : null,
+                hours    : null,
+                durHours : null,
+                mins     : null,
+                durMins  : null
+            }
         };
 
-        this.api          = new ApiHelper()
-        this.userId       = jwt_decode(sessionStorage.getItem("id_token")).sub
-        this.accessToken  = sessionStorage.getItem("access_token")
+        this.api = new ApiHelper()
+        this.userId = jwt_decode(sessionStorage.getItem("id_token")).sub
+        this.accessToken = sessionStorage.getItem("access_token")
     }
-  
-    componentDidMount() {
-        //this.collect();
-    }
+
 
     async componentWillMount() {
         // Start loading
-        this.setState({ loading : true })
+        this.setState({ loading: true })
 
         await this._processEvent()
         await this._processPledges()
         await this._processGuests()
+        this._processIsUserHost()
 
         // End loading 
-        this.setState({ loading : false })
+        this.setState({ loading: false })
     }
 
     _processEvent = async () => {
@@ -72,34 +103,32 @@ class EventPage extends Component {
      * mapStateToProps kinda function that does the massaging of data and setting it to a state 
      */
     _processPledges = async () => {
-        const { eventId }  = this.props.match.params
+        const { eventId } = this.props.match.params
 
-        let itemCategories    = await getItemCategories()
-        let items             = await getItemsForEvent(eventId)
-        let pledges           = await getPledges()
+        let itemCategories = await getItemCategories()
+        let items = await getItemsForEvent(eventId)
+        let pledges = await getPledges()
 
-        const pledgesForEvent = _.map(itemCategories, (itemCategory) => 
-                                {
-                                    let itemsForCategory = _.map(_.filter(items, { 'itemCategoryId' : itemCategory.itemCategoryId }),
-                                                                (item) => 
-                                                                {
-                                                                    const { itemName, itemId } = item 
+        const pledgesForEvent = _.map(itemCategories, (itemCategory) => {
+            let itemsForCategory = _.map(_.filter(items, { 'itemCategoryId': itemCategory.itemCategoryId }),
+                (item) => {
+                    const { itemName, itemId } = item
 
-                                                                    return {
-                                                                        ...{ itemName },
-                                                                        quota        : item.quota,
-                                                                        pledgesCount : _.reduce(_.filter(pledges, { itemId }), 
-                                                                                                (sum, pledge)  => { return sum + pledge.quantity }, 0),
-                                                                    }
-                                                                })
+                    return {
+                        ...{ itemName },
+                        quota: item.quota,
+                        pledgesCount: _.reduce(_.filter(pledges, { itemId }),
+                            (sum, pledge) => { return sum + pledge.quantity }, 0),
+                    }
+                })
 
-                                    return { 
-                                        category  : {
-                                            name  : itemCategory.name,
-                                            items : itemsForCategory
-                                        }
-                                    }
-                                })
+            return {
+                category: {
+                    name: itemCategory.name,
+                    items: itemsForCategory
+                }
+            }
+        })
 
         this.setState({ pledgesForEvent })
     }
@@ -107,143 +136,364 @@ class EventPage extends Component {
     /**
      * 
      */
-    _processGuests = async () => {
-        const { eventId }  = this.props.match.params
+    _processIsUserHost = () => {
+        const { organizerId } = this.state.event
 
-        let invitations         = await getInvitations()
-        let invitationsForEvent = await _.filter(invitations, { eventId, status : 1 })
-        
-        let guests              = _.map(invitationsForEvent, (invitation) => {
-                                        return { ...invitation.applicationUser }
-                                    })
+        this.setState({ isUserHost: this.userId === organizerId })
+    }
+
+    /**
+     * 
+     */
+    _processGuests = async () => {
+        const { eventId } = this.props.match.params
+
+        let invitations = await getInvitations()
+        let invitationsForEvent = await _.filter(invitations, { eventId: parseInt(eventId), status: 1 })
+        let guests = _.map(invitationsForEvent, (invitation) => {
+            return { ...invitation.applicationUser }
+        })
 
         this.setState({ guests })
     }
 
+    /**
+     * 
+     */
+    _handleEdit = (field, open) => {
+        this.setState({ edit: { [field]: open } })
+    }
+
+    /**
+     * 
+     */
+    _handleSubmit = async (field) => {
+        this.setState({ loading : true })
+
+        let event = { ...this.state.event }
+
+        // Assign the new value for the field
+        if (field === "date") {
+            let dates    = this._getEventDate()
+            event.startTime = dates.startDate.toISOString()
+            event.endTime   = dates.endDate.toISOString()
+        } else {
+            event[field] = this.state.submit[field];
+        }
+
+        // Remove invitations and organizer object
+        delete event.invitations
+        delete event.organizer
+
+        let response = await updateEvent(event)
+        
+        // Blank string means success as Back End only returns empty string for the success PUT request
+        if (response === "") {
+            this.setState({ edit : { [field] : false } })
+            
+            // Reload event
+            await this._processEvent()
+        }
+
+        this.setState({ loading : false })
+    }
+
+    /**
+     * 
+     */
+    _onChangeFields = (field, value) => {
+        this.setState({ submit : { [field] : value } })
+    }
+
+    /**
+     * 
+     */
+    _onChangeDate   = (dateField, value) => {
+        let current = { ...this.state.date }
+
+        delete current[dateField]
+
+        this.setState({ date : { [dateField] : value, ...current } })
+    }
+
+    /**
+     * 
+     */
+    _getEventDate = () => {
+        let startDate = this.state.date.day
+        let endDate   = new Date(startDate)
+
+        startDate.setMinutes(this.state.date.mins)
+        startDate.setHours(this.state.date.hours + (this.state.date.noon === "am" ? 0 : 12))
+
+        endDate.setHours(startDate.getHours() + this.state.date.durHours)
+        endDate.setMinutes(startDate.getMinutes() + this.state.date.durMins)
+
+        return { startDate, endDate }
+    }
+
     render() {
         return (
-            <div style={{ marginBottom : 20}} className="eventPage">
-             <Dimmer active={this.state.loading}>
-                    <Loader size="massive"/>
-            </Dimmer>
-            <Segment className="eventPageMainBanner" style={{ backgroundColor : "#3F664E" , marginHeight:"0px"}}>
-                <div style={{ margin : 50 }} >
-                    <Header
-                        as='h1'
-                        content={this.state.event.title}
-                        inverted
-                        style={{ fontSize: '4em', fontWeight: 'normal'}}
-                    />
-                    <Header
-                        as='h2'
-                        content='Hosted by: John Cena'
-                        inverted
-                        style={{ fontSize: '1.7em', fontWeight: 'normal' }}
-                    />
-                </div>
-            </Segment>
-            <Grid container centered id="event-page">
-                <Grid.Row centered as={Container} >
-                    <Grid.Column mobile={16} computer={8} textAlign="center">
-                        <Segment>
-                            {/*<span>Hosting</span>*/}
-                            {
-                                this.userId === this.state.event.organizerId ?
-                                <span>Hosting</span> :
-                                <Dropdown button fluid placeholder="Status" options={options} style={{ textAlign: "center", backgroundColor : "transparent" }}/>
-                            }
-                        </Segment>
-                    </Grid.Column>
-                    <Grid.Column mobile={16} computer={8} textAlign="center">
-                        <Segment>
-                            <Button>Pledge</Button>
-                        </Segment>
-                    </Grid.Column>
-                </Grid.Row>
-                <Grid.Row centered as={Container}>
-                     <Grid.Column mobile={16} computer={8} textAlign="left">
-                        <Segment>
-                            <h2>Location</h2>
-                            <p>{this.state.event.location}</p>
-                        </Segment>
-                    </Grid.Column>
-                    <Grid.Column mobile={16} computer={8} textAlign="left">
-                        <Segment>
-                            <p><span>Date: </span>{new Date(this.state.event.startTime).toDateString()}</p>
-                            <p><span>Duration: </span>{new Date(this.state.event.startTime).toTimeString()} Until: {new Date(this.state.event.endTime).toTimeString()}</p>
-                        </Segment>
-                    </Grid.Column>
-                </Grid.Row>
-                <Grid.Row centered as={Container}>
-                    <Grid.Column computer={16} tablet={16} mobile={16}  textAlign="left">
-                        <Segment>
-                            <h2>Description</h2>
-                            <br/><br/>
-                            <p>{this.state.event.description}</p>
-                        </Segment>
-                    </Grid.Column>
-                </Grid.Row>
-                <Grid.Row centered as={Container}>
-                    <Grid.Column textAlign="left">
-                        <Segment>
-                            <span>Pledge Status:</span>
-                            <Button className="right-aligned-p">Edit</Button>
-                            {
-                                this.state.pledgesForEvent &&
-                                this.state.pledgesForEvent.map((pledge, index) =>
+            <div style={{ marginBottom: 20 }}>
+                <Dimmer active={this.state.loading}>
+                    <Loader size="massive" />
+                </Dimmer>
+                {!this.state.loading &&
+                    <div>
+                        <Segment style={{ backgroundColor: "green" }}>
+                            <div style={{ margin: 50 }} >
                                 {
-                                    let categoryProgress = _.filter(pledge.category.items, (item) => { return item.quota === item.pledgesCount }).length
-                                    let categoryPercent  = pledge.category.items.length ?
-                                                           ((categoryProgress / pledge.category.items.length) * 100) : 0;
+                                    this.state.edit.title &&
+                                    <div style={{ display : "inline", width: "100%", height : "100px"}}>
+                                        <Form.Input name='title' 
+                                                    placeholder='Title'
+                                                    value={this.state.submit.title === null ? this.state.event.title : this.state.submit.title}
+                                                    onChange={(event, { name, value }) => { this._onChangeFields('title', value) }} 
+                                                    required size="large"/>
+                                        <Button onClick={() => { this._handleEdit('title', false) }}>Cancel</Button>
+                                        <Button onClick={() => { this._handleSubmit('title') }}>Confirm</Button>
+                                    </div>
 
-                                    return (
-                                        <div key={index}>
-                                            <p>{ pledge.category.name + ": " }</p>
-                                            <Progress percent={categoryPercent} progress size="large"/>
+                                }
+                                {
+                                    !this.state.edit.title &&
+                                    <Segment basic className="title">
+                                        <Header as='h1' 
+                                                inverted 
+                                                content={this.state.event.title}
+                                                style={{ fontSize: "4rem", fontWeight: "normal"}}
+                                                />
+                                        {
+                                            (this.state.isUserHost) && 
+                                            <div style={{marginLeft : "10px", marginTop : "10px"}}>
+                                                <Button className="title-edit-button" compact onClick={() => { this._handleEdit('title', true) }}>
+                                                    Edit
+                                                </Button>
+                                                <Button className="title-delete-button" compact onClick={() => { }}>
+                                                    Delete Event
+                                                </Button>
+                                            </div>
+                                        }
+                                    </Segment>
+                                }
+                                <Segment basic className="title">
+                                    <Header as='h2' 
+                                            content={`Hosted by: ${this.state.event.organizer.firstName} ${this.state.event.organizer.firstName}`}
+                                            inverted
+                                            style={{ fontSize: '1.7em', fontWeight: 'normal' }}/>
+                                </Segment>
+                            </div>
+                        </Segment>
+                        <Grid container centered id="event-page">
+                            <Grid.Row centered as={Container} >
+                                <Grid.Column mobile={16} computer={8} textAlign="center">
+                                    <Segment className="hosting-pledge">
+                                        {
+                                            this.userId === this.state.event.organizerId ?
+                                                <span>Hosting</span> :
+                                                <Dropdown button fluid placeholder="Status" options={options} style={{ textAlign: "center", backgroundColor: "transparent" }} />
+                                        }
+                                    </Segment>
+                                </Grid.Column>
+                                <Grid.Column mobile={16} computer={8} textAlign="center">
+                                    <Segment className="hosting-pledge">
+                                        <Button compact>Pledge</Button>
+                                    </Segment>
+                                </Grid.Column>
+                            </Grid.Row>
+                            <Grid.Row centered as={Container}>
+                                <Grid.Column mobile={16} computer={8} textAlign="left">
+                                    <Segment>
+                                        {
+                                            this.state.edit.location &&
+                                            <div>
+                                                <Button compact className="right-aligned-p" onClick={() => { this._handleEdit('location', false) }}>Cancel</Button>
+                                                <Button compact className="right-aligned-p" onClick={() => { this._handleSubmit('location') }}>Confirm</Button>
+                                            </div>
+                                        }
+                                        <Grid.Row className="location">
+                                            <h2>Location</h2> 
                                             {
-                                                pledge.category.items.length > 0 &&
-                                                (<ul>
-                                                    {
-                                                        pledge.category.items.map((item, itemsIndex) => 
-                                                        {
-                                                            let itemPercentage = ((item.pledgesCount / item.quota) * 100)
-
-                                                            return (
-                                                                <li key={itemsIndex}>
-                                                                    <p>{ item.itemName }</p>
-                                                                    <Progress percent={ ((item.pledgesCount / item.quota) * 100) } size="medium"/>
-                                                                </li>
-                                                            )
-                                                        })
-                                                    }
-                                                </ul>)
+                                                (this.state.isUserHost && !this.state.edit.location)
+                                                && <Button compact onClick={() => { this._handleEdit('location', true) }}>Edit</Button>
                                             }
-                                        </div>
-                                    )
-                                })
-                            }
-                        </Segment>
-                    </Grid.Column>
-                </Grid.Row>
-                <Grid.Row centered as={Container} className="guest_section">
-                    <Grid.Column mobile={16} textAlign="left" >
-                        <Segment className="guest_panel" style={{ backgroundColor : "#3F664E", color:"white"}}>
-                            <Button as={Link} to={`/dashboard/events/${this.state.event.eventId}/addguest`}className=" right-aligned-p addGuestBtn">Add Guest</Button>
-                            <span >Guests :</span>
-                            {
-                                this.state.guests.map((guest) => {
-                                    return (<p>{`${guest.firstName} ${guest.lastName}`}</p>)
-                                })
-                            }
+                                        </Grid.Row>
+                                        {
+                                            this.state.edit.location ?
+                                                <Form.Input name='location' 
+                                                            placeholder='Event Location'
+                                                            value={this.state.submit.location === null ? this.state.event.location : this.state.submit.location}
+                                                            onChange={(event, { name, value }) => { this._onChangeFields('location', value) }} 
+                                                            required fluid /> :
+                                                <p>{this.state.event.location}</p>
+                                        }
+                                    </Segment>
+                                </Grid.Column>
+                                <Grid.Column mobile={16} computer={8} textAlign="left">
+                                    <Segment>
+                                        {
+                                            this.state.edit.date &&
+                                            <div>
+                                                <Button className="right-aligned-p" onClick={() => { this._handleEdit('date', false) }}>Cancel</Button>
+                                                <Button className="right-aligned-p" onClick={() => { this._handleSubmit('date') }}>Confirm</Button>
+                                            </div>
+                                        }
+                                        {
+                                            this.state.edit.date ?
+                                                (<div>
+                                                    <Form.Field required>
+                                                        <h2>Event Date:</h2>
+                                                        <div className="daypicker-form" >
+                                                            <DayPicker 
+                                                                onDayClick={(day) =>{ this._onChangeDate('day', day) }}
+                                                                fromMonth={new Date()}
+                                                                className="event-date-picker"
+                                                                disabledDays={{ before: new Date() }}
+                                                                selectedDays={this.state.date.day === null ? new Date(this.state.event.startTime) : this.state.date.day}
+                                                            />
+                                                        </div>
 
-                        </Segment>
+                                                    </Form.Field>
+                                                    <Form.Field required>
+                                                        <h2>Event Start Time:</h2>
+                                                        <Form.Group inline widths='equal'>
+                                                            <Form.Select name='start_time_hours' 
+                                                                         options={HOURS}
+                                                                         onChange={(event, {name, value}) => { this._onChangeDate('hours', value) }} 
+                                                                         placeholder="Hours"
+                                                                         value={this.state.date.hours === null ? new Date(this.state.event.startTime).getHours() % 12 : this.state.date.hours} 
+                                                                         required />
+                                                            <span>:</span>
+                                                            <Form.Select name='start_time_mins' 
+                                                                         options={MINUTES}
+                                                                         onChange={(event, {name, value}) => { this._onChangeDate('mins', value) }} placeholder="Mins"
+                                                                         value={this.state.date.mins === null ? new Date(this.state.event.startTime).getUTCMinutes() % 60 : this.state.date.mins } 
+                                                                         required />
+                                                            <Form.Select name='start_time_noon' 
+                                                                         options={AM_PM}
+                                                                         onChange={(event, {name, value}) => { this._onChangeDate('noon', value) }} 
+                                                                         value={this.state.date.noon === null ? "am" : this.state.date.noon}
+                                                                         placeholder="am/pm"
+                                                                         required />
+                                                        </Form.Group>
+                                                    </Form.Field>
+                                                    <Form.Field required>
+                                                        <h2>Event Duration:</h2>
+                                                        <Form.Group inline widths='equal'>
+                                                            <Form.Select name='duration_hours' options={DUR_HOURS}
+                                                                onChange={(event, {name, value}) => { this._onChangeDate('durHours', value) }} placeholder="Hours" required />
+                                                            <Form.Select name='duration_mins' options={DUR_MINUTES}
+                                                                onChange={(event, {name, value}) =>{ this._onChangeDate('durMins', value) }} placeholder="Mins" required />
+                                                        </Form.Group>
+                                                    </Form.Field>
+                                                </div>) :
+                                                (
+                                                    <div>
+                                                        <Segment basic className="date">
+                                                            <div>
+                                                                <h2>Date:</h2>
+                                                                <span>{new Date(this.state.event.startTime).toDateString()}</span>
+                                                            </div>
+                                                            {
+                                                                (this.state.isUserHost && !this.state.edit.date) &&
+                                                                <Button compact 
+                                                                        className="date-edit-button" 
+                                                                        onClick={() => { this._handleEdit('date', true) }}>Edit</Button>
+                                                            }
+                                                            </Segment>
+                                                        <Segment basic><h2>Duration: </h2>{new Date(this.state.event.startTime).toTimeString()} Until: {new Date(this.state.event.endTime).toTimeString()}</Segment>
+                                                    </div>
+                                                )
+                                        }
+                                    </Segment>
+                                </Grid.Column>
+                            </Grid.Row>
+                            <Grid.Row centered as={Container}>
+                                <Grid.Column computer={16} tablet={16} mobile={16} textAlign="left">
+                                    <Segment>
+                                        {
+                                            this.state.edit.description &&
+                                            <div>
+                                                <Button className="right-aligned-p" onClick={() => { this._handleEdit('description', false) }}>Cancel</Button>
+                                                <Button className="right-aligned-p" onClick={() => { this._handleSubmit('description')}}>Confirm</Button>
+                                            </div>
+                                        }
+                                        {
+                                            <Grid.Row className="description">
+                                                <h2>Description</h2>
+                                                {(this.state.isUserHost && !this.state.edit.description)
+                                                    && <Button compact className="right-aligned-p" onClick={() => { this._handleEdit('description', true) }}>Edit</Button>}
+                                            </Grid.Row>
+                                        }
+                                        {
+                                            this.state.edit.description ?
+                                                <Form.Input name='description' 
+                                                            placeholder='Description'
+                                                            defaultValue={this.state.event.description} 
+                                                            onChange={(event, { name, value }) => { this._onChangeFields('description', value) }} 
+                                                            required fluid /> :
+                                                <p>{this.state.event.description}</p>
+                                        }
+                                    </Segment>
+                                </Grid.Column>
+                            </Grid.Row>
+                            <Grid.Row centered as={Container}>
+                                <Grid.Column textAlign="left">
+                                    <Segment>
+                                        <span>Pledge Status:</span>
+                                        {this.state.isUserHost && <Button className="right-aligned-p">Edit</Button>}
+                                        {
+                                            this.state.pledgesForEvent &&
+                                            this.state.pledgesForEvent.map((pledge, index) => {
+                                                let categoryProgress = _.filter(pledge.category.items, (item) => { return item.quota === item.pledgesCount }).length
+                                                let categoryPercent = pledge.category.items.length ?
+                                                    ((categoryProgress / pledge.category.items.length) * 100) : 0;
 
+                                                return (
+                                                    <div key={index}>
+                                                        <p>{pledge.category.name + ": "}</p>
+                                                        <Progress percent={categoryPercent} progress size="large" />
+                                                        {
+                                                            pledge.category.items.length > 0 &&
+                                                            (<ul>
+                                                                {
+                                                                    pledge.category.items.map((item, itemsIndex) => {
+                                                                        let itemPercentage = ((item.pledgesCount / item.quota) * 100)
 
-                    </Grid.Column>
-                </Grid.Row>
-            </Grid>
+                                                                        return (
+                                                                            <li key={itemsIndex}>
+                                                                                <p>{item.itemName}</p>
+                                                                                <Progress percent={((item.pledgesCount / item.quota) * 100)} size="medium" />
+                                                                            </li>
+                                                                        )
+                                                                    })
+                                                                }
+                                                            </ul>)
+                                                        }
+                                                    </div>
+                                                )
+                                            })
+                                        }
+                                    </Segment>
+                                </Grid.Column>
+                            </Grid.Row>
+                            <Grid.Row centered as={Container} >
+                                <Grid.Column mobile={16} textAlign="left">
+                                    <Segment>
+                                        <p>{`Guests (${this.state.guests.length}):`}</p>
+                                        {
+                                            this.state.guests.map((guest, index) => {
+                                                return (<p key={index}>{`${guest.firstName} ${guest.lastName}`}</p>)
+                                            })
+                                        }
+                                    </Segment>
+                                </Grid.Column>
+                            </Grid.Row>
+                        </Grid>
+                    </div>
+                }
             </div>
         );
-  }
+    }
 }
 export default EventPage;
