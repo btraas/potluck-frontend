@@ -118,6 +118,17 @@ class EditEventPledges extends Component {
                                 </Grid.Column>
                             </Grid.Row>
                             <Grid.Row centered as={Container} >
+                                <Grid.Column mobile={16} computer={6} textAlign="left">
+                                    <Input/>
+                                </Grid.Column>
+                                <Grid.Column mobile={16} computer={3} textAlign="left">
+                                    <Input/>
+                                </Grid.Column>
+                                <Grid.Column mobile={16} computer={3} textAlign="left">
+                                    <Button>+</Button>
+                                </Grid.Column>
+                            </Grid.Row>
+                            <Grid.Row centered as={Container} >
                                 <Grid.Column mobile={16} computer={16} textAlign="left">
                                     Drink
                                 </Grid.Column>
