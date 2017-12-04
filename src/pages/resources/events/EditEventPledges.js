@@ -26,13 +26,13 @@ class EditEventPledges extends Component {
         this.endpoints = ['Events']; 
         this.api = new ApiHelper();
         this.userId = jwt_decode(sessionStorage.getItem("id_token")).sub
-        console.log(this.userId);
         this.accessToken = sessionStorage.getItem("access_token");
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleItemNameChange = this.handleItemNameChange.bind(this);
         this.handleItemQuotaChange = this.handleItemQuotaChange.bind(this);
         this.handleAddItem = this.handleAddItem.bind(this);
         this.handleRemoveItem = this.handleRemoveItem.bind(this);
+        this.handleItemUnitOfMeasurementChange = this.handleItemUnitOfMeasurementChange.bind(this);
     }
 
     async componentDidMount() {
@@ -85,8 +85,6 @@ class EditEventPledges extends Component {
         });
 
         itemArr[idx].items = newItem;
-        
-        // this.state.Items[idx].items = newItem;
 
         this.setState({ Items: itemArr });
     }
@@ -104,6 +102,19 @@ class EditEventPledges extends Component {
         this.setState({ Items: itemArr });
     }
 
+    handleItemUnitOfMeasurementChange = (idx, itemIdx) => (evt) => {
+        let itemArr = this.state.Items;
+
+        const newItem = this.state.Items[idx].items.map((item, sidx) => {
+          if (itemIdx !== sidx) return item;
+          return { ...item, unitOfMeasurement: evt.target.value };
+        });
+
+        itemArr[idx].items = newItem;
+
+        this.setState({ Items: itemArr });
+    }
+
     handleAddItem = (idx) => (evt) => {
         var self = this;
         console.log (this.state.Items[idx]);
@@ -114,7 +125,7 @@ class EditEventPledges extends Component {
             itemName: '', 
             quota: 0, 
             eventId: self.state.eventId,
-            unitOfMeasurement: 'food',
+            unitOfMeasurement: null,
             tags: null,
             event: null,
             itemCategoryId: self.state.Items[idx].itemCategoryId,
@@ -125,10 +136,6 @@ class EditEventPledges extends Component {
         this.setState({
             Items: itemArr
         })
-
-        /* this.setState({
-             Items: this.state.Items[idx].items.concat([{ itemName: '', quota: '' }]) 
-            }); */
     }
       
     handleRemoveItem = (idx, itemIdx) => (evt) => {
@@ -142,8 +149,6 @@ class EditEventPledges extends Component {
         this.setState({ loading: true })
         
         let url = 'http://potluckapi.azurewebsites.net/api/Items';
-
-        console.log (this.accessToken);
 
         var self = this;
 
@@ -250,6 +255,9 @@ class EditEventPledges extends Component {
                                             Qty
                                         </Grid.Column>
                                         <Grid.Column mobile={16} computer={3} textAlign="left">
+                                            Unit of measurement
+                                        </Grid.Column>
+                                        <Grid.Column mobile={16} computer={3} textAlign="left">
                                             <Button onClick={ this.handleAddItem(idx) }>+</Button>
                                         </Grid.Column>
                                         <Grid.Column mobile={16} computer={3} textAlign="left">
@@ -267,6 +275,11 @@ class EditEventPledges extends Component {
                                                       placeholder={`${itemCat.name} #${itemidx + 1} quota`}
                                                       value={item.quota}
                                                       onChange={ this.handleItemQuotaChange(idx, itemidx)}/> 
+                                                    <Input 
+                                                      type="text"
+                                                      placeholder={`${itemCat.name} #${itemidx + 1} unit of measurement`}
+                                                      value={item.unitOfMeasurement}
+                                                      onChange={ this.handleItemUnitOfMeasurementChange(idx, itemidx)}/> 
                                                     <Grid.Column mobile={16} computer={3} textAlign="left">
                                                         <Button onClick={this.handleRemoveItem(idx, itemidx)}>X</Button>
                                                     </Grid.Column>
