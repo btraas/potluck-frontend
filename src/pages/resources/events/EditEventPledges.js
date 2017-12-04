@@ -146,31 +146,34 @@ class EditEventPledges extends Component {
 
         var self = this;
 
-        this.state.FoodItems.forEach(function (item) {
-
-            let data = JSON.stringify(item);
-
-            console.log (data);
-
-            axios({
-                url: url,
-                method: "post",
-                headers: {
-                    Authorization: `Bearer ${self.accessToken}`,
-                    'Content-Type': 'application/json',
-                },
-                data: data
-            }).then(response => {
-                // If event is successfully created
-                self.setState({ success: response.status === 201 })
-                self.setState({ loading: false })
-            }).catch(e => {
-                console.log(e)
-                self.setState({ success: false })
-                self.setState({ loading: false })
-            })
-        });
+        this.state.Items.forEach(function(itemsGroup) {
+            itemsGroup.items.forEach(function (item) {
+                if (item.itemId != null) {
+                    // PUT
+                } else {
+                    let data = JSON.stringify(item);
+                    console.log (data);
         
+                    axios({
+                        url: url,
+                        method: "post",
+                        headers: {
+                            Authorization: `Bearer ${self.accessToken}`,
+                            'Content-Type': 'application/json',
+                        },
+                        data: data
+                    }).then(response => {
+                        // If event is successfully created
+                        self.setState({ success: response.status === 201 })
+                        self.setState({ loading: false })
+                    }).catch(e => {
+                        console.log(e)
+                        self.setState({ success: false })
+                        self.setState({ loading: false })
+                    })
+                }
+            });
+        });
     }
 
     /**
