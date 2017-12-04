@@ -140,8 +140,10 @@ class EditEventPledges extends Component {
       
     handleRemoveItem = (idx, itemIdx) => (evt) => {
         let itemArr = this.state.Items;
-        itemArr[idx].items = this.state.Items[idx].items.filter((s, sidx) => itemIdx !== sidx)
+        //itemArr[idx].items = this.state.Items[idx].items.filter((s, sidx) => itemIdx !== sidx)
         
+        itemArr[idx].items[itemIdx].deleted = true;
+
         this.setState({ Items: itemArr});
     }
 
@@ -156,24 +158,46 @@ class EditEventPledges extends Component {
             itemsGroup.items.forEach(function (item) {
                 let data = JSON.stringify(item);
                 if (item.itemId != null) {
-                    axios({
-                        url: url + "/" + item.itemId,
-                        method: "put",
-                        headers: {
-                            Authorization: `Bearer ${self.accessToken}`,
-                            'Content-Type': 'application/json',
-                        },
-                        data: data
-                    }).then(response => {
-                        // If event is successfully created
-                        self.setState({ success: response.status === 201 })
-                        self.setState({ loading: false })
-                    }).catch(e => {
-                        console.log(e)
-                        self.setState({ success: false })
-                        self.setState({ loading: false })
-                    })
+                    if (item.deleted == true) {
+                        console.log (item);
+                        axios({
+                            url: url + "/" + item.itemId,
+                            method: "delete",
+                            headers: {
+                                Authorization: `Bearer ${self.accessToken}`,
+                                'Content-Type': 'application/json',
+                            },
+                        }).then(response => {
+                            // If event is successfully created
+                            self.setState({ success: response.status === 201 })
+                            self.setState({ loading: false })
+                        }).catch(e => {
+                            console.log(e)
+                            self.setState({ success: false })
+                            self.setState({ loading: false })
+                        })
+                    } else {
+                        console.log (item);
+                        axios({
+                            url: url + "/" + item.itemId,
+                            method: "put",
+                            headers: {
+                                Authorization: `Bearer ${self.accessToken}`,
+                                'Content-Type': 'application/json',
+                            },
+                            data: data
+                        }).then(response => {
+                            // If event is successfully created
+                            self.setState({ success: response.status === 201 })
+                            self.setState({ loading: false })
+                        }).catch(e => {
+                            console.log(e)
+                            self.setState({ success: false })
+                            self.setState({ loading: false })
+                        })
+                    }
                 } else {
+                    console.log (item);
                     axios({
                         url: url,
                         method: "post",
@@ -264,6 +288,7 @@ class EditEventPledges extends Component {
                                 </td>
                             </tr>  
                                 {itemCat.items.map((item, itemidx) => (
+                                    !item.deleted &&
                                     <tr>
 
                                         <td>
