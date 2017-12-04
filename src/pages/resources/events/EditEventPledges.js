@@ -245,7 +245,7 @@ class EditEventPledges extends Component {
                         {this.state.Items.map((itemCat, idx) => (
                             <Grid.Row>
                             <tr >
-                                <td>
+                                <td colspan="4" className="event-header">
                                     {itemCat.name}
                                 </td>
                             </tr>
