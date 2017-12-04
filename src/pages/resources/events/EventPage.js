@@ -317,7 +317,7 @@ class EventPage extends Component {
                                 }
                                 <Segment basic className="title">
                                     <Header as='h2' 
-                                            content={`Hosted by: ${this.state.event.organizer.firstName} ${this.state.event.organizer.firstName}`}
+                                            content={`Hosted by: ${this.state.event.organizer.firstName} ${this.state.event.organizer.lastName}`}
                                             inverted
                                             style={{ fontSize: '1.7em', fontWeight: 'normal' }}/>
                                 </Segment>
@@ -540,7 +540,27 @@ class EventPage extends Component {
                                         }
                                         {
                                             this.state.guests.map((guest, index) => {
-                                                return (<p key={index}>{`${guest.firstName} ${guest.lastName}`}</p>)
+                                                let statusFlag
+                                                switch (guest.status) {
+                                                    case 1:
+                                                        statusFlag = "fa fa-check"
+                                                        break;
+                                                    case 2:
+                                                        statusFlag = "fa fa-times"
+                                                        break;
+                                                    case 3:
+                                                        statusFlag = "fa fa-question"
+                                                        break;
+                                                    default:
+                                                        statusFlag = "fa fa-question"
+                                                        break;
+                                                }
+                                                return (
+                                                    <Segment key={index} style={{ backgroundColor : "#88B652" , marginHeight:"0px"}}>
+                                                        <p3 className="userName" textAlign="left"><a className={statusFlag}></a> {guest.firstName} {guest.lastName}</p3>
+                                                        <Button  textAlign="right"color='red'>X</Button>
+                                                    </Segment>
+                                                )
                                             })
                                         }
                                     </Segment>
