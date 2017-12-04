@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+import ApiHelper from '../../../util/ApiHelper'
 import { Button, Container, Header, Input, Grid, Loader, Dimmer, Message } from 'semantic-ui-react'
 import { Link } from 'react-router-dom';
 import Event from '../../../components/Event';
 import axios from 'axios';
 import '../../../css/dashboard.css';
+import { getItemsForEvent } from '../../../api/ItemsApi'
 
 class EditEventPledges extends Component {
 
@@ -18,12 +20,31 @@ class EditEventPledges extends Component {
         this.collect = this.collect.bind(this);
         this.baseUrl = 'http://potluckapi.azurewebsites.net/api/';
         this.endpoints = ['Events']; 
+        this.api = new ApiHelper();
+        // this.userId = jwt_decode(sessionStorage.getItem("id_token")).sub
+        // this.accessToken = sessionStorage.getItem("access_token")
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        // Start loading
+        this.setState({ loading: true })
+        
+        await this._processEvent();
         this.collect();
+
+        // End loading 
+        this.setState({ loading: false })
     }
 
+    _processEvent = async () => {
+        const { eventId } = this.props.match.params
+        
+        let items = await getItemsForEvent(eventId)
+
+        console.log (items);
+
+        this.setState({ items })
+    }
 
     /**
      * Collect all user data.
