@@ -96,6 +96,22 @@ div.inline.equal.width.fields > div.field:last-child {
 }
 .addGuestBtn{
     background-color: #EBEDD0 !important;
+}
 
+.fa-times {
+    color: red;
+}
 
+.fa-question {
+    color: blue;
+}
+
+.fa-check {
+    color: green;
+}
+
+.userName{
+    font-size: 20px;
+    font-family: Roboto !important;
+    color: #3E6550;
 }
