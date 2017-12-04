@@ -231,70 +231,78 @@ class EditEventPledges extends Component {
         return (
             <div style={{ margin: 50 }}>
                 <Grid container centered id="event-page">
-                            <Grid.Row centered as={Container} >
-                                <Grid.Column mobile={16} computer={16} textAlign="center">
-                                    POTLUCK
-                                </Grid.Column>
-                            </Grid.Row>
-                            <Grid.Row centered as={Container} >
-                                <Grid.Column mobile={16} computer={16} textAlign="center">
-                                    Edit Pledge Quotas
-                                </Grid.Column>
-                            </Grid.Row>
-                            <Grid.Row centered as={Container} >
-                                <Grid.Column mobile={16} computer={16} textAlign="left">
-                                {this.state.Items.map((itemCat, idx) => (
-                                    <Grid.Row centered as={Container} >
-                                        <Grid.Column mobile={16} computer={16} textAlign="left">
-                                            {itemCat.name}
-                                        </Grid.Column>
-                                        <Grid.Column mobile={16} computer={6} textAlign="left">
-                                            Item
-                                        </Grid.Column>
-                                        <Grid.Column mobile={16} computer={3} textAlign="left">
-                                            Qty
-                                        </Grid.Column>
-                                        <Grid.Column mobile={16} computer={3} textAlign="left">
-                                            Unit of measurement
-                                        </Grid.Column>
-                                        <Grid.Column mobile={16} computer={3} textAlign="left">
-                                            <Button onClick={ this.handleAddItem(idx) }>+</Button>
-                                        </Grid.Column>
-                                        <Grid.Column mobile={16} computer={3} textAlign="left">
-                                        </Grid.Column>
-                                        {itemCat.items.map((item, itemidx) => (
-                                            <Grid.Row centered as={Container} >
-                                                <Grid.Column mobile={16} computer={6} textAlign="left">
-                                                    <Input 
-                                                      type="text"
-                                                      placeholder={`${itemCat.name} #${itemidx + 1} name`}
-                                                      value={item.itemName}
-                                                      onChange={ this.handleItemNameChange(idx, itemidx)}/>
-                                                    <Input 
-                                                      type="text"
-                                                      placeholder={`${itemCat.name} #${itemidx + 1} quota`}
-                                                      value={item.quota}
-                                                      onChange={ this.handleItemQuotaChange(idx, itemidx)}/> 
-                                                    <Input 
-                                                      type="text"
-                                                      placeholder={`${itemCat.name} #${itemidx + 1} unit of measurement`}
-                                                      value={item.unitOfMeasurement}
-                                                      onChange={ this.handleItemUnitOfMeasurementChange(idx, itemidx)}/> 
-                                                    <Grid.Column mobile={16} computer={3} textAlign="left">
-                                                        <Button onClick={this.handleRemoveItem(idx, itemidx)}>X</Button>
-                                                    </Grid.Column>
-                                                </Grid.Column>
-                                            </Grid.Row>
-                                        ))}
-                                    </Grid.Row>
+                    <Grid.Row centered as={Container} >
+                        <Grid.Column mobile={16} computer={16} textAlign="center">
+                            POTLUCK
+                        </Grid.Column>
+                    </Grid.Row>
+                    <Grid.Row centered as={Container} >
+                        <Grid.Column mobile={16} computer={16} textAlign="center">
+                            Edit Pledge Quotas
+                        </Grid.Column>
+                    </Grid.Row>
+                    <table>
+                        {this.state.Items.map((itemCat, idx) => (
+                            <Grid.Row>
+                            <tr >
+                                <td>
+                                    {itemCat.name}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Item
+                                </td>
+                                <td>
+                                    Qty
+                                </td>
+                                <td>
+                                    Unit of measurement
+                                </td>
+                                <td>
+                                    <Button onClick={ this.handleAddItem(idx) }>+</Button>
+                                </td>
+                            </tr>  
+                                {itemCat.items.map((item, itemidx) => (
+                                    <tr>
+
+                                        <td>
+                                            <Input 
+                                                type="text"
+                                                placeholder={`${itemCat.name} #${itemidx + 1} name`}
+                                                value={item.itemName}
+                                                onChange={ this.handleItemNameChange(idx, itemidx)}/>
+                                        </td>
+                                        <td>
+                                            <Input 
+                                                type="text"
+                                                placeholder={`${itemCat.name} #${itemidx + 1} quota`}
+                                                value={item.quota}
+                                                onChange={ this.handleItemQuotaChange(idx, itemidx)}/> 
+                                        </td>
+                                        <td>
+                                            <Input 
+                                                type="text"
+                                                placeholder={`${itemCat.name} #${itemidx + 1} unit of measurement`}
+                                                value={item.unitOfMeasurement}
+                                                onChange={ this.handleItemUnitOfMeasurementChange(idx, itemidx)}/> 
+                                        </td>
+
+                                        <td>
+                                            <Button onClick={this.handleRemoveItem(idx, itemidx)}>X</Button>
+                                        </td>
+                                    </tr>
                                 ))}
-                                </Grid.Column>
+                                
                             </Grid.Row>
-                            <Grid.Row centered as={Container} >
-                                <Grid.Column mobile={16} computer={16} textAlign="center">
-                                    <Button onClick={this.handleSubmit}>Confirm</Button>
-                                </Grid.Column>
-                            </Grid.Row>
+                        ))}
+                        </table>
+                    
+                    <Grid.Row centered as={Container} >
+                        <Grid.Column mobile={16} computer={16} textAlign="center">
+                            <Button onClick={this.handleSubmit}>Confirm</Button>
+                        </Grid.Column>
+                    </Grid.Row>
                 </Grid>
             </div>
         );
