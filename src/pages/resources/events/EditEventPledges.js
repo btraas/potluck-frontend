@@ -15,7 +15,19 @@ class EditEventPledges extends Component {
             loading: true,
             error:false,
             Events: [],
-            Invitations: []
+            Invitations: [],
+            Items: [{
+                "itemId": 29,
+                "itemName": "Forks",
+                "quota": 12,
+                "unitOfMeasurement": "forks",
+                "tags": null,
+                "eventId": 32,
+                "event": null,
+                "itemCategoryId": 21,
+                "itemCategory": null,
+                "pledges": null
+            },],
         };
         this.collect = this.collect.bind(this);
         this.baseUrl = 'http://potluckapi.azurewebsites.net/api/';
@@ -34,6 +46,23 @@ class EditEventPledges extends Component {
 
         // End loading 
         this.setState({ loading: false })
+    }
+
+    handleItemNameChange = (idx) => (evt) => {
+        const newItem = this.state.Items.map((item, sidx) => {
+          if (idx !== sidx) return item;
+          return { ...item, name: evt.target.value };
+        });
+        
+        this.setState({ Items: newItem });
+    }
+
+    handleAddItem = () => {
+        this.setState({ Items: this.state.Items.concat([{ name: '' }]) });
+    }
+      
+    handleRemoveItem = (idx) => () => {
+        this.setState({ Items: this.state.Items.filter((s, sidx) => idx !== sidx) });
     }
 
     _processEvent = async () => {
@@ -93,6 +122,24 @@ class EditEventPledges extends Component {
                             <Grid.Row centered as={Container} >
                                 <Grid.Column mobile={16} computer={16} textAlign="left">
                                     Food
+                                    <form onSubmit={this.handleSubmit}>
+                                        {this.state.Items.map((item, idx) => (
+                                            <Grid.Row centered as={Container} >
+                                                <Grid.Column mobile={16} computer={6} textAlign="left">
+                                                    <Input type="text"
+                                                      placeholder={`Food #${idx + 1} name`}
+                                                      value={item.name}
+                                                      onChange={this.handleItemNameChange(idx)}/>
+                                                </Grid.Column>
+                                                <Grid.Column mobile={16} computer={3} textAlign="left">
+                                                    <Input/>
+                                                </Grid.Column>
+                                                <Grid.Column mobile={16} computer={3} textAlign="left">
+                                                    <Button onClick={this.handleRemoveItem(idx)}>X</Button>
+                                                </Grid.Column>
+                                            </Grid.Row>
+                                        ))}
+                                    </form>
                                 </Grid.Column>
                             </Grid.Row>
                             <Grid.Row centered as={Container} >
@@ -114,18 +161,7 @@ class EditEventPledges extends Component {
                                     <Input/>
                                 </Grid.Column>
                                 <Grid.Column mobile={16} computer={3} textAlign="left">
-                                    <Button>X</Button>
-                                </Grid.Column>
-                            </Grid.Row>
-                            <Grid.Row centered as={Container} >
-                                <Grid.Column mobile={16} computer={6} textAlign="left">
-                                    <Input/>
-                                </Grid.Column>
-                                <Grid.Column mobile={16} computer={3} textAlign="left">
-                                    <Input/>
-                                </Grid.Column>
-                                <Grid.Column mobile={16} computer={3} textAlign="left">
-                                    <Button>+</Button>
+                                    <Button onClick={this.handleAddItem}>+</Button>
                                 </Grid.Column>
                             </Grid.Row>
                             <Grid.Row centered as={Container} >
@@ -173,7 +209,7 @@ class EditEventPledges extends Component {
                             </Grid.Row>
                             <Grid.Row centered as={Container} >
                                 <Grid.Column mobile={16} computer={16} textAlign="center">
-                                    <Button>Confirm</Button>
+                                    <Button onClick="{this.handleSubmit}">Confirm</Button>
                                 </Grid.Column>
                             </Grid.Row>
                 </Grid>
