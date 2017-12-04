@@ -441,7 +441,7 @@ class EventPage extends Component {
                                 <Grid.Column textAlign="left">
                                     <Segment>
                                         <span>Pledge Status:</span>
-                                        {this.state.isUserHost && <Button className="right-aligned-p">Edit</Button>}
+                                        {this.state.isUserHost && <Button as={Link} to="/dashboard/events/${this.state.event.eventId}/editpledges" >Edit</Button>}
                                         {
                                             this.state.pledgesForEvent &&
                                             this.state.pledgesForEvent.map((pledge, index) => {

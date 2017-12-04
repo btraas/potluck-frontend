@@ -17,7 +17,7 @@ class EditEventPledges extends Component {
         };
         this.collect = this.collect.bind(this);
         this.baseUrl = 'http://potluckapi.azurewebsites.net/api/';
-        this.endpoints = ['Events', 'Invitations']; //, 'Pledges/User/' remove
+        this.endpoints = ['Events']; 
     }
 
     componentDidMount() {
@@ -57,8 +57,83 @@ class EditEventPledges extends Component {
     render() {
         let {loading, error} = this.state;
         return (
-            <div>
-                right page
+            <div style={{ margin: 50 }}>
+                <Grid container centered id="event-page">
+                            <Grid.Row centered as={Container} >
+                                <Grid.Column mobile={16} computer={16} textAlign="center">
+                                    POTLUCK
+                                </Grid.Column>
+                            </Grid.Row>
+                            <Grid.Row centered as={Container} >
+                                <Grid.Column mobile={16} computer={16} textAlign="center">
+                                    Edit Pledge Quotas
+                                </Grid.Column>
+                            </Grid.Row>
+                            <Grid.Row centered as={Container} >
+                                <Grid.Column mobile={16} computer={16} textAlign="left">
+                                    Food
+                                </Grid.Column>
+                            </Grid.Row>
+                            <Grid.Row centered as={Container} >
+                                <Grid.Column mobile={16} computer={8} textAlign="left">
+                                    Item
+                                </Grid.Column>
+                                <Grid.Column mobile={16} computer={3} textAlign="left">
+                                    Qty
+                                </Grid.Column>
+                                <Grid.Column mobile={16} computer={3} textAlign="left">
+                                    
+                                </Grid.Column>
+                            </Grid.Row>
+                            <Grid.Row centered as={Container} >
+                                <Grid.Column mobile={16} computer={8} textAlign="left">
+                                    Salads
+                                </Grid.Column>
+                                <Grid.Column mobile={16} computer={3} textAlign="left">
+                                    2
+                                </Grid.Column>
+                                <Grid.Column mobile={16} computer={3} textAlign="left">
+                                    <Button>X</Button>
+                                </Grid.Column>
+                            </Grid.Row>
+                            <Grid.Row centered as={Container} >
+                                <Grid.Column mobile={16} computer={16} textAlign="left">
+                                    Drink
+                                </Grid.Column>
+                            </Grid.Row>
+                            <Grid.Row centered as={Container} >
+                                <Grid.Column mobile={16} computer={8} textAlign="left">
+                                    Item
+                                </Grid.Column>
+                                <Grid.Column mobile={16} computer={3} textAlign="left">
+                                    Qty
+                                </Grid.Column>
+                                <Grid.Column mobile={16} computer={3} textAlign="left">
+                                    
+                                </Grid.Column>
+                            </Grid.Row>
+                            <Grid.Row centered as={Container} >
+                                <Grid.Column mobile={16} computer={16} textAlign="left">
+                                    Other
+                                </Grid.Column>
+                            </Grid.Row>
+                            <Grid.Row centered as={Container} >
+                                <Grid.Column mobile={16} computer={8} textAlign="left">
+                                    Item
+                                </Grid.Column>
+                                <Grid.Column mobile={16} computer={3} textAlign="left">
+                                    Qty
+                                </Grid.Column>
+                                <Grid.Column mobile={16} computer={3} textAlign="left">
+                                    
+                                </Grid.Column>
+                            </Grid.Row>
+                            <Grid.Row centered as={Container} >
+                                <Grid.Column mobile={16} computer={16} textAlign="left">
+                                    <Button>Confirm</Button>
+                                </Grid.Column>
+                            </Grid.Row>
+                </Grid>
             </div>
         );
   }
