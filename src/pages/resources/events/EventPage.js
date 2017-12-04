@@ -17,9 +17,11 @@ import {
 import DayPicker from 'react-day-picker'
 import { getEventById, updateEvent } from '../../../api/EventsApi'
 import { getInvitations } from '../../../api/InvitationsApi'
+import { addInvitations } from '../../../api/InvitationsApi'
 import { getItemsForEvent } from '../../../api/ItemsApi'
 import { getPledges } from '../../../api/PledgesApi'
 import { getItemCategories } from '../../../api/ItemCategoriesApi'
+import { getUsers         } from '../../../api/UsersApi'
 import jwt_decode from 'jwt-decode';
 import '../../../css/event.css';
 import _ from 'lodash'
@@ -46,14 +48,17 @@ class EventPage extends Component {
         this.state = {
             event: {},
             guests: [],
+            users: [],
             pledgesForEvent: [],
             isUserHost: false,
             loading: false,
+            invites: [],
             edit: {
                 location: false,
                 date: false,
                 description: false,
-                title : false
+                title : false,
+                guests: false,
             },
             submit : {
                 location    : null,
@@ -85,7 +90,9 @@ class EventPage extends Component {
         await this._processEvent()
         await this._processPledges()
         await this._processGuests()
+        await this._processUsers()
         this._processIsUserHost()
+
 
         // End loading 
         this.setState({ loading: false })
@@ -149,12 +156,19 @@ class EventPage extends Component {
         const { eventId } = this.props.match.params
 
         let invitations = await getInvitations()
-        let invitationsForEvent = await _.filter(invitations, { eventId: parseInt(eventId), status: 1 })
+        let invitationsForEvent = await _.filter(invitations, { eventId: parseInt(eventId)})
         let guests = _.map(invitationsForEvent, (invitation) => {
             return { ...invitation.applicationUser }
         })
 
+        console.log(guests)
         this.setState({ guests })
+    }
+
+    _processUsers = async () => {
+        let users = await getUsers()
+
+        this.setState({users})
     }
 
     /**
@@ -232,7 +246,30 @@ class EventPage extends Component {
         return { startDate, endDate }
     }
 
+    addInvites = () => {
+        const invites = this.state.invites
+        const eventId = this.state.event.eventId
+        let invitations = addInvitations(eventId, invites)
+        this.setState({invites: []})
+    }
+
+    handleInvitesChange = (e, { name, value }) => {
+        this.setState({invites: value})
+    }
+
+    processUsersForSearch(users) {
+        return users.map((user, index) => (
+            {
+                text : user.firstName + ' ' + user.lastName + ' (' + user.email + ')',
+                key: index,
+                value: user.applicationUserId
+            }
+        ));
+    }
+
     render() {
+        let options = this.processUsersForSearch(this.state.users)
+        console.log(options)
         return (
             <div style={{ marginBottom: 20 }}>
                 <Dimmer active={this.state.loading}>
@@ -278,7 +315,7 @@ class EventPage extends Component {
                                 }
                                 <Segment basic className="title">
                                     <Header as='h2' 
-                                            content={`Hosted by: ${this.state.event.organizer.firstName} ${this.state.event.organizer.firstName}`}
+                                            content={`Hosted by: ${this.state.event.organizer.firstName} ${this.state.event.organizer.lastName}`}
                                             inverted
                                             style={{ fontSize: '1.7em', fontWeight: 'normal' }}/>
                                 </Segment>
@@ -286,23 +323,23 @@ class EventPage extends Component {
                         </Segment>
                         <Grid container centered id="event-page">
                             <Grid.Row centered as={Container} >
-                                <Grid.Column mobile={16} computer={8} textAlign="center">
+                                <Grid.Column mobile={16} computer={8} textalign="center">
                                     <Segment className="hosting-pledge">
                                         {
                                             this.userId === this.state.event.organizerId ?
                                                 <span>Hosting</span> :
-                                                <Dropdown button fluid placeholder="Status" options={options} style={{ textAlign: "center", backgroundColor: "transparent" }} />
+                                                <Dropdown button fluid placeholder="Status" options={options} style={{ textalign: "center", backgroundColor: "transparent" }} />
                                         }
                                     </Segment>
                                 </Grid.Column>
-                                <Grid.Column mobile={16} computer={8} textAlign="center">
+                                <Grid.Column mobile={16} computer={8} textalign="center">
                                     <Segment className="hosting-pledge">
                                     {this.state.isUserHost && <Button as={Link} to={`/dashboard/events/${this.state.event.eventId}/${this.userId}/yourpledges`} className="right-aligned-p">Your Pledges</Button>}
                                     </Segment>
                                 </Grid.Column>
                             </Grid.Row>
                             <Grid.Row centered as={Container}>
-                                <Grid.Column mobile={16} computer={8} textAlign="left">
+                                <Grid.Column mobile={16} computer={8} textalign="left">
                                     <Segment>
                                         {
                                             this.state.edit.location &&
@@ -329,7 +366,7 @@ class EventPage extends Component {
                                         }
                                     </Segment>
                                 </Grid.Column>
-                                <Grid.Column mobile={16} computer={8} textAlign="left">
+                                <Grid.Column mobile={16} computer={8} textalign="left">
                                     <Segment>
                                         {
                                             this.state.edit.date &&
@@ -409,7 +446,7 @@ class EventPage extends Component {
                                 </Grid.Column>
                             </Grid.Row>
                             <Grid.Row centered as={Container}>
-                                <Grid.Column computer={16} tablet={16} mobile={16} textAlign="left">
+                                <Grid.Column computer={16} tablet={16} mobile={16} textalign="left">
                                     <Segment>
                                         {
                                             this.state.edit.description &&
@@ -438,7 +475,7 @@ class EventPage extends Component {
                                 </Grid.Column>
                             </Grid.Row>
                             <Grid.Row centered as={Container}>
-                                <Grid.Column textAlign="left">
+                                <Grid.Column textalign="left">
                                     <Segment>
                                         <span>Pledge Status:</span>
                                         {this.state.isUserHost && <Button as={Link} to={`/dashboard/events/${this.state.event.eventId}/editpledges`} className="right-aligned-p">Edit</Button>}
@@ -478,12 +515,50 @@ class EventPage extends Component {
                                 </Grid.Column>
                             </Grid.Row>
                             <Grid.Row centered as={Container} >
-                                <Grid.Column mobile={16} textAlign="left">
+                                <Grid.Column mobile={16} textalign="left">
                                     <Segment>
                                         <p>{`Guests (${this.state.guests.length}):`}</p>
                                         {
+                                            (this.state.isUserHost && !this.state.edit.guests)
+                                            && <Button compact onClick={() => { this._handleEdit('guests', true) }}>Edit</Button>
+                                        }
+                                        {
+                                            this.state.edit.guests &&
+                                                <div>
+                                                    <Form onSubmit={this.addInvites}>
+                                                        <Form.Dropdown placeholder='Users'
+                                                                       name='users'
+                                                                       onChange={this.handleInvitesChange}
+                                                                       options={options}
+                                                                       fluid multiple search selection />
+                                                        <Button onClick={() => { this._handleEdit('guests', false) }}>Cancel</Button>
+                                                        <Form.Button content='Submit' />
+                                                    </Form>
+                                                </div>
+                                        }
+                                        {
                                             this.state.guests.map((guest, index) => {
-                                                return (<p key={index}>{`${guest.firstName} ${guest.lastName}`}</p>)
+                                                let statusFlag
+                                                switch (guest.status) {
+                                                    case 1:
+                                                        statusFlag = "fa fa-check"
+                                                        break;
+                                                    case 2:
+                                                        statusFlag = "fa fa-times"
+                                                        break;
+                                                    case 3:
+                                                        statusFlag = "fa fa-question"
+                                                        break;
+                                                    default:
+                                                        statusFlag = "fa fa-question"
+                                                        break;
+                                                }
+                                                return (
+                                                    <Segment key={index} style={{ backgroundColor : "#88B652" , marginHeight:"0px"}}>
+                                                        <p className="userName" textalign="left"><a className={statusFlag}></a> {guest.firstName} {guest.lastName}</p>
+                                                        <Button className="right-aligned-p" textalign="right" color='red'>X</Button>
+                                                    </Segment>
+                                                )
                                             })
                                         }
                                     </Segment>
@@ -496,4 +571,4 @@ class EventPage extends Component {
         );
     }
 }
-export default EventPage;
+export default EventPage
