@@ -19,20 +19,18 @@ class EditEventPledges extends Component {
             Invitations: [],
             FoodItems: [
                 {
-                    "itemId": 29,
-                    "itemName": "Forks",
+                    "itemName": "Pizza",
                     "quota": 12,
-                    "unitOfMeasurement": "forks",
+                    "unitOfMeasurement": "slice",
                     "tags": null,
-                    "eventId": 32,
+                    "eventId": 33,
                     "event": null,
-                    "itemCategoryId": 21,
+                    "itemCategoryId": 20,
                     "itemCategory": null,
                     "pledges": null
-                },
+                }
             ],
             Items: [{
-                "itemId": 29,
                 "itemName": "Forks",
                 "quota": 12,
                 "unitOfMeasurement": "forks",
@@ -82,25 +80,13 @@ class EditEventPledges extends Component {
         this.setState({ FoodItems: newItem });
     }
 
-    /*
-    "itemId": 29,
-                    "itemName": "Forks",
-                    "quota": 12,
-                    "unitOfMeasurement": "forks",
-                    "tags": null,
-                    "eventId": 32,
-                    "event": null,
-                    "itemCategoryId": 21,
-                    "itemCategory": null,
-                    "pledges": null */
-
     handleAddFoodItem = () => {
         console.log (this.state.eventId);
         this.setState({ FoodItems: this.state.FoodItems.concat([{ 
                 itemName: '', 
                 quota: '', 
                 eventId: this.state.eventId,
-                unitOfMeasurement: '',
+                unitOfMeasurement: 'food',
                 tags: null,
                 event: null,
                 itemCategoryId: 20,
@@ -129,6 +115,69 @@ class EditEventPledges extends Component {
       
     handleRemoveItem = (idx) => () => {
         this.setState({ Items: this.state.Items.filter((s, sidx) => idx !== sidx) });
+    }
+
+    handleSubmit = (evt) => {
+        this.setState({ loading: true })
+        let url = 'http://potluckapi.azurewebsites.net/api/Items';
+
+        console.log (this.accessToken);
+
+        var self = this;
+
+        this.state.FoodItems.forEach(function (item) {
+
+            let data = JSON.stringify(item);
+
+            console.log (data);
+
+            axios({
+                url: url,
+                method: "post",
+                headers: {
+                    Authorization: `Bearer ${self.accessToken}`,
+                    'Content-Type': 'application/json',
+                },
+                data: data
+            }).then(response => {
+                // If event is successfully created
+                self.setState({ success: response.status === 201 })
+                self.setState({ loading: false })
+            }).catch(e => {
+                console.log(e)
+                self.setState({ success: false })
+                self.setState({ loading: false })
+            })
+        });
+        
+    }
+
+    processRequestData() {
+        const { title, location, description } = this.state.details.values;
+        const times = this.state.date.values;
+        let start = new Date(times.event_date.getFullYear(), times.event_date.getMonth(), times.event_date.getDate());
+        let end = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+        
+        start.setMinutes(times.start_time_mins);
+        end.setMinutes(times.start_time_mins + times.duration_mins);
+        
+        if (times.start_time_noon === 'am') {
+            start.setUTCHours(times.start_time_hours);
+            end.setUTCHours(times.duration_hours+times.start_time_hours);
+        } else {
+            start.setUTCHours(times.start_time_hours + 12);
+            end.setUTCHours(times.duration_hours+times.start_time_hours + 12);
+        }
+        
+        let data = {
+            title: title,
+            location: location,
+            description: description,
+            startTime: start.toISOString(),
+            endTime: end.toISOString(),
+            organizerId: this.props.uid
+        }
+        return data;
     }
 
     _processEvent = async () => {
@@ -198,7 +247,7 @@ class EditEventPledges extends Component {
                             <Grid.Row centered as={Container} >
                                 <Grid.Column mobile={16} computer={16} textAlign="left">
                                     Food
-                                    <form onSubmit={this.handleSubmit}>
+                                    <form>
                                         {this.state.FoodItems.map((item, idx) => (
                                             <Grid.Row centered as={Container} >
                                                 <Grid.Column mobile={16} computer={6} textAlign="left">
