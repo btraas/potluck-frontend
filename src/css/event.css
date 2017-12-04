@@ -1,12 +1,18 @@
+
 #event-create-page {
     background-color: #3F664E;
 }
-.time-select {
-    min-width:50px !important;
-    margin-left:5px;
+.time-select > .selection.dropdown, .equal-inline > button {
+    width:100% !important;
+}
+div.inline.equal.width.fields > div.field:last-child {
+    padding-right:0 !important;
 }
 .daypicker-form {
     text-align: center;
+    width:100%;
+    height:100%;
+    background-color:white;
 }
 .event-date-picker {
     background-color:white;
@@ -14,11 +20,82 @@
 .right-aligned-p{
     float:right;
 }
+.left-aligned-p{
+    float:left;
+}
+
 #event-page {
     background-color: #EAEDD0 !important;
+
 }
 .event-tiles {
     background-color:#88B652;
     border-radius: 25px;
     padding:10px;
+}
+
+.event-container {
+    padding:10px;
+}
+
+.hosting-pledge {
+    height : 60px;
+}
+
+.location,.description {
+    display : flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.title {
+    display : flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.title-edit-button {
+    height : 40px;
+}
+
+.title-delete-button {
+    height : 40px;
+}
+
+.date {
+    display : flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.date-edit-button {
+    height : 40px;
+}
+
+.guest_section{
+    width: 100%;
+    height: auto;
+
+}
+
+.eventPageMainBanner{
+    margin-top: 0px;
+    padding-top: 0px;
+    padding: 0px;
+}
+.eventPage{
+    margin: 0px;
+    padding: 0px;
+}
+.ui.segment {
+    margin-top: 0px;
+}
+.guest_panel{
+    padding: 20px !important;
+    padding-bottom: 40px !important;
+}
+.addGuestBtn{
+    background-color: #EBEDD0 !important;
+
+
 }

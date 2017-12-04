@@ -22,12 +22,12 @@ class App extends Component {
       idToken:'',
       uid:''
     };
-    this.handleToken = this.handleToken.bind(this);    
+    this.handleToken = this.handleToken.bind(this);
   }
 
   componentDidMount() {
-    let id = sessionStorage.getItem("id_token");
-    let access = sessionStorage.getItem("access_token");
+    let id      = sessionStorage.getItem("id_token");
+    let access  = sessionStorage.getItem("access_token");
     let refresh = sessionStorage.getItem("refresh_token");
     
     if(id) {
