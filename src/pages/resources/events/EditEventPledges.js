@@ -70,7 +70,7 @@ class EditEventPledges extends Component {
           return { ...item, itemName: evt.target.value };
         });
         
-        this.setState({ Items: newItem });
+        this.setState({ FoodItems: newItem });
     }
 
     handleFoodItemQuotaChange = (idx) => (evt) => {
@@ -79,7 +79,7 @@ class EditEventPledges extends Component {
           return { ...item, quota: evt.target.value };
         });
 
-        this.setState({ Items: newItem });
+        this.setState({ FoodItems: newItem });
     }
 
     /*
@@ -96,7 +96,18 @@ class EditEventPledges extends Component {
 
     handleAddFoodItem = () => {
         console.log (this.state.eventId);
-        this.setState({ FoodItems: this.state.FoodItems.concat([{ itemName: '', quota: '', eventId: this.state.eventId}]) });
+        this.setState({ FoodItems: this.state.FoodItems.concat([{ 
+                itemName: '', 
+                quota: '', 
+                eventId: this.state.eventId,
+                unitOfMeasurement: '',
+                tags: null,
+                event: null,
+                itemCategoryId: 20,
+                itemCategory: null,
+                pledges: null
+            }])
+        });
     }
       
     handleRemoveFoodItem = (idx) => () => {
@@ -191,12 +202,14 @@ class EditEventPledges extends Component {
                                         {this.state.FoodItems.map((item, idx) => (
                                             <Grid.Row centered as={Container} >
                                                 <Grid.Column mobile={16} computer={6} textAlign="left">
-                                                    <Input type="text"
+                                                    <Input 
+                                                      type="text"
                                                       placeholder={`Food #${idx + 1} name`}
                                                       value={item.itemName}
                                                       onChange={this.handleFoodItemNameChange(idx)}/>
-                                                    <Input type="text"
-                                                      placeholder={item.quota}
+                                                    <Input 
+                                                      type="text"
+                                                      placeholder={`Food #${idx + 1} name`}
                                                       value={item.quota}
                                                       onChange={this.handleFoodItemQuotaChange(idx)}/>
                                                 </Grid.Column>
