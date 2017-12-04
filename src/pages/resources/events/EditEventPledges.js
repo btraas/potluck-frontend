@@ -140,6 +140,7 @@ class EditEventPledges extends Component {
 
     handleSubmit = (evt) => {
         this.setState({ loading: true })
+        
         let url = 'http://potluckapi.azurewebsites.net/api/Items';
 
         console.log (this.accessToken);
@@ -148,12 +149,26 @@ class EditEventPledges extends Component {
 
         this.state.Items.forEach(function(itemsGroup) {
             itemsGroup.items.forEach(function (item) {
+                let data = JSON.stringify(item);
                 if (item.itemId != null) {
-                    // PUT
+                    axios({
+                        url: url + "/" + item.itemId,
+                        method: "put",
+                        headers: {
+                            Authorization: `Bearer ${self.accessToken}`,
+                            'Content-Type': 'application/json',
+                        },
+                        data: data
+                    }).then(response => {
+                        // If event is successfully created
+                        self.setState({ success: response.status === 201 })
+                        self.setState({ loading: false })
+                    }).catch(e => {
+                        console.log(e)
+                        self.setState({ success: false })
+                        self.setState({ loading: false })
+                    })
                 } else {
-                    let data = JSON.stringify(item);
-                    console.log (data);
-        
                     axios({
                         url: url,
                         method: "post",
