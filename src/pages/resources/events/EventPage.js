@@ -334,7 +334,7 @@ class EventPage extends Component {
                                 </Grid.Column>
                                 <Grid.Column mobile={16} computer={8} textalign="center">
                                     <Segment className="hosting-pledge">
-                                        <Button compact>Pledge</Button>
+                                    {this.state.isUserHost && <Button as={Link} to={`/dashboard/events/${this.state.event.eventId}/${this.userId}/yourpledges`} className="right-aligned-p">Your Pledges</Button>}
                                     </Segment>
                                 </Grid.Column>
                             </Grid.Row>
@@ -478,7 +478,7 @@ class EventPage extends Component {
                                 <Grid.Column textalign="left">
                                     <Segment>
                                         <span>Pledge Status:</span>
-                                        {this.state.isUserHost && <Button className="right-aligned-p">Edit</Button>}
+                                        {this.state.isUserHost && <Button as={Link} to={`/dashboard/events/${this.state.event.eventId}/editpledges`} className="right-aligned-p">Edit</Button>}
                                         {
                                             this.state.pledgesForEvent &&
                                             this.state.pledgesForEvent.map((pledge, index) => {
