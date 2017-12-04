@@ -297,7 +297,7 @@ class EventPage extends Component {
                                 </Grid.Column>
                                 <Grid.Column mobile={16} computer={8} textAlign="center">
                                     <Segment className="hosting-pledge">
-                                        <Button compact>Pledge</Button>
+                                    {this.state.isUserHost && <Button as={Link} to={`/dashboard/events/${this.state.event.eventId}/${this.userId}/yourpledges`} className="right-aligned-p">Your Pledges</Button>}
                                     </Segment>
                                 </Grid.Column>
                             </Grid.Row>

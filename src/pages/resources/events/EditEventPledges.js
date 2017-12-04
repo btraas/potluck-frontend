@@ -69,7 +69,7 @@ class EditEventPledges extends Component {
                                     Edit Pledge Quotas
                                 </Grid.Column>
                             </Grid.Row>
-                            <Grid.Row centered as={Container} className="event-header" >
+                            <Grid.Row centered as={Container} >
                                 <Grid.Column mobile={16} computer={16} textAlign="left">
                                     Food
                                 </Grid.Column>
