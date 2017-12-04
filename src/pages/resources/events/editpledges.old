@@ -6,7 +6,6 @@ import Event from '../../../components/Event';
 import axios from 'axios';
 import '../../../css/dashboard.css';
 import { getItemsForEvent } from '../../../api/ItemsApi'
-import jwt_decode from 'jwt-decode';
 
 class EditEventPledges extends Component {
 
@@ -48,17 +47,16 @@ class EditEventPledges extends Component {
         this.baseUrl = 'http://potluckapi.azurewebsites.net/api/';
         this.endpoints = ['Events']; 
         this.api = new ApiHelper();
-        this.userId = jwt_decode(sessionStorage.getItem("id_token")).sub
-        console.log(this.userId);
-        this.accessToken = sessionStorage.getItem("access_token")
+        // this.userId = jwt_decode(sessionStorage.getItem("id_token")).sub
+        // this.accessToken = sessionStorage.getItem("access_token")
     }
 
     async componentDidMount() {
         // Start loading
         this.setState({ loading: true })
         
-        this.collect();
         await this._processEvent();
+        this.collect();
 
         // End loading 
         this.setState({ loading: false })
@@ -82,25 +80,12 @@ class EditEventPledges extends Component {
         this.setState({ Items: newItem });
     }
 
-    /*
-    "itemId": 29,
-                    "itemName": "Forks",
-                    "quota": 12,
-                    "unitOfMeasurement": "forks",
-                    "tags": null,
-                    "eventId": 32,
-                    "event": null,
-                    "itemCategoryId": 21,
-                    "itemCategory": null,
-                    "pledges": null */
-
     handleAddFoodItem = () => {
-        console.log (this.state.eventId);
-        this.setState({ FoodItems: this.state.FoodItems.concat([{ itemName: '', quota: '', eventId: this.state.eventId}]) });
+        this.setState({ Items: this.state.FoodItems.concat([{ itemName: '', quota: ''}]) });
     }
       
     handleRemoveFoodItem = (idx) => () => {
-        this.setState({ FoodItems: this.state.FoodItems.filter((s, sidx) => idx !== sidx) });
+        this.setState({ Items: this.state.FoodItems.filter((s, sidx) => idx !== sidx) });
     }
 
     handleItemNameChange = (idx) => (evt) => {
@@ -122,7 +107,7 @@ class EditEventPledges extends Component {
 
     _processEvent = async () => {
         const { eventId } = this.props.match.params
-
+        
         let items = await getItemsForEvent(eventId)
 
         // var FoodItems;
@@ -136,7 +121,7 @@ class EditEventPledges extends Component {
         });
         
 
-        this.setState({ items, eventId });
+        this.setState({ items });
     }
 
     /**
@@ -199,6 +184,9 @@ class EditEventPledges extends Component {
                                                       placeholder={item.quota}
                                                       value={item.quota}
                                                       onChange={this.handleFoodItemQuotaChange(idx)}/>
+                                                </Grid.Column>
+                                                <Grid.Column mobile={16} computer={3} textAlign="left">
+                                                    <Input/>
                                                 </Grid.Column>
                                                 <Grid.Column mobile={16} computer={3} textAlign="left">
                                                     <Button onClick={this.handleRemoveFoodItem(idx)}>X</Button>
