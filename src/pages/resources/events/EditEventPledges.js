@@ -6,6 +6,7 @@ import Event from '../../../components/Event';
 import axios from 'axios';
 import '../../../css/dashboard.css';
 import { getItemsForEvent } from '../../../api/ItemsApi'
+import { getItemCategories } from '../../../api/ItemCategoriesApi'
 import jwt_decode from 'jwt-decode';
 
 class EditEventPledges extends Component {
@@ -17,30 +18,8 @@ class EditEventPledges extends Component {
             error:false,
             Events: [],
             Invitations: [],
-            FoodItems: [
-                {
-                    "itemName": "Pizza",
-                    "quota": 12,
-                    "unitOfMeasurement": "slice",
-                    "tags": null,
-                    "eventId": 33,
-                    "event": null,
-                    "itemCategoryId": 20,
-                    "itemCategory": null,
-                    "pledges": null
-                }
+            Items: [
             ],
-            Items: [{
-                "itemName": "Forks",
-                "quota": 12,
-                "unitOfMeasurement": "forks",
-                "tags": null,
-                "eventId": 32,
-                "event": null,
-                "itemCategoryId": 21,
-                "itemCategory": null,
-                "pledges": null
-            },],
         };
         this.collect = this.collect.bind(this);
         this.baseUrl = 'http://potluckapi.azurewebsites.net/api/';
@@ -48,7 +27,12 @@ class EditEventPledges extends Component {
         this.api = new ApiHelper();
         this.userId = jwt_decode(sessionStorage.getItem("id_token")).sub
         console.log(this.userId);
-        this.accessToken = sessionStorage.getItem("access_token")
+        this.accessToken = sessionStorage.getItem("access_token");
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleItemNameChange = this.handleItemNameChange.bind(this);
+        this.handleItemQuotaChange = this.handleItemQuotaChange.bind(this);
+        this.handleAddItem = this.handleAddItem.bind(this);
+        this.handleRemoveItem = this.handleRemoveItem.bind(this);
     }
 
     async componentDidMount() {
@@ -62,59 +46,96 @@ class EditEventPledges extends Component {
         this.setState({ loading: false })
     }
 
-    handleFoodItemNameChange = (idx) => (evt) => {
-        const newItem = this.state.FoodItems.map((item, sidx) => {
-          if (idx !== sidx) return item;
-          return { ...item, itemName: evt.target.value };
+    _processEvent = async () => {
+        const { eventId } = this.props.match.params
+        let itemCategories = await getItemCategories();
+        let items = await getItemsForEvent(eventId)
+
+        var self = this;
+
+        itemCategories.forEach(function (item) {
+            self.state.Items.push({
+                "name" : item.name,
+                "itemCategoryId" : item.itemCategoryId,
+                "items" : []
+            });
         });
-        
-        this.setState({ FoodItems: newItem });
+
+        items.forEach(function (item) {
+            self.state.Items.forEach(function (itemCat) {
+                if (item.itemCategoryId == itemCat.itemCategoryId) {
+                    console.log (self.state.Items);
+                    itemCat.items.push(item);
+                }
+            });
+        });
+
+        this.setState({ items, eventId });
     }
 
-    handleFoodItemQuotaChange = (idx) => (evt) => {
-        const newItem = this.state.FoodItems.map((item, sidx) => {
-          if (idx !== sidx) return item;
+    handleItemNameChange = (idx, itemIdx) => (evt) => {
+        console.log (this.state.Items[idx]);
+        let itemArr = this.state.Items;
+
+        const newItem = itemArr[idx].items.map((item, sidx) => {
+          if (itemIdx !== sidx) 
+            return item;
+
+          return { ...item, itemName: evt.target.value };
+        });
+
+        itemArr[idx].items = newItem;
+        
+        // this.state.Items[idx].items = newItem;
+
+        this.setState({ Items: itemArr });
+    }
+
+    handleItemQuotaChange = (idx, itemIdx) => (evt) => {
+        let itemArr = this.state.Items;
+
+        const newItem = this.state.Items[idx].items.map((item, sidx) => {
+          if (itemIdx !== sidx) return item;
           return { ...item, quota: evt.target.value };
         });
 
-        this.setState({ FoodItems: newItem });
+        itemArr[idx].items = newItem;
+
+        this.setState({ Items: itemArr });
     }
 
-    handleAddFoodItem = () => {
-        console.log (this.state.eventId);
-        this.setState({ FoodItems: this.state.FoodItems.concat([{ 
-                itemName: '', 
-                quota: '', 
-                eventId: this.state.eventId,
-                unitOfMeasurement: 'food',
-                tags: null,
-                event: null,
-                itemCategoryId: 20,
-                itemCategory: null,
-                pledges: null
-            }])
-        });
+    handleAddItem = (idx) => (evt) => {
+        var self = this;
+        console.log (this.state.Items[idx]);
+
+        let itemArr = this.state.Items;
+
+        itemArr[idx].items = this.state.Items[idx].items.concat([{ 
+            itemName: '', 
+            quota: 0, 
+            eventId: self.state.eventId,
+            unitOfMeasurement: 'food',
+            tags: null,
+            event: null,
+            itemCategoryId: self.state.Items[idx].itemCategoryId,
+            itemCategory: null,
+            pledges: null
+        }]);
+
+        this.setState({
+            Items: itemArr
+        })
+
+        /* this.setState({
+             Items: this.state.Items[idx].items.concat([{ itemName: '', quota: '' }]) 
+            }); */
     }
       
-    handleRemoveFoodItem = (idx) => () => {
-        this.setState({ FoodItems: this.state.FoodItems.filter((s, sidx) => idx !== sidx) });
-    }
-
-    handleItemNameChange = (idx) => (evt) => {
-        const newItem = this.state.Items.map((item, sidx) => {
-          if (idx !== sidx) return item;
-          return { ...item, itemName: evt.target.value };
-        });
+    handleRemoveItem = (idx, itemIdx) => (evt) => {
+        let itemArr = this.state.Items;
+        itemArr[idx].items = this.state.Items[idx].items.filter((s, sidx) => itemIdx !== sidx)
         
-        this.setState({ Items: newItem });
-    }
-
-    handleAddItem = () => {
-        this.setState({ Items: this.state.Items.concat([{ itemName: '' }]) });
-    }
-      
-    handleRemoveItem = (idx) => () => {
-        this.setState({ Items: this.state.Items.filter((s, sidx) => idx !== sidx) });
+        this.setState({ Items: itemArr});
     }
 
     handleSubmit = (evt) => {
@@ -150,53 +171,6 @@ class EditEventPledges extends Component {
             })
         });
         
-    }
-
-    processRequestData() {
-        const { title, location, description } = this.state.details.values;
-        const times = this.state.date.values;
-        let start = new Date(times.event_date.getFullYear(), times.event_date.getMonth(), times.event_date.getDate());
-        let end = new Date(start.getFullYear(), start.getMonth(), start.getDate());
-        
-        start.setMinutes(times.start_time_mins);
-        end.setMinutes(times.start_time_mins + times.duration_mins);
-        
-        if (times.start_time_noon === 'am') {
-            start.setUTCHours(times.start_time_hours);
-            end.setUTCHours(times.duration_hours+times.start_time_hours);
-        } else {
-            start.setUTCHours(times.start_time_hours + 12);
-            end.setUTCHours(times.duration_hours+times.start_time_hours + 12);
-        }
-        
-        let data = {
-            title: title,
-            location: location,
-            description: description,
-            startTime: start.toISOString(),
-            endTime: end.toISOString(),
-            organizerId: this.props.uid
-        }
-        return data;
-    }
-
-    _processEvent = async () => {
-        const { eventId } = this.props.match.params
-
-        let items = await getItemsForEvent(eventId)
-
-        // var FoodItems;
-
-        console.log (items);
-
-        items.forEach(function (item) {
-            if (item.itemCategoryId == "20") {
-                this.state.FoodItems.push(item);
-            }
-        });
-        
-
-        this.setState({ items, eventId });
     }
 
     /**
@@ -246,93 +220,43 @@ class EditEventPledges extends Component {
                             </Grid.Row>
                             <Grid.Row centered as={Container} >
                                 <Grid.Column mobile={16} computer={16} textAlign="left">
-                                    Food
-                                    <form>
-                                        {this.state.FoodItems.map((item, idx) => (
+                                {this.state.Items.map((itemCat, idx) => (
+                                    <Grid.Row centered as={Container} >
+                                        <Grid.Column mobile={16} computer={16} textAlign="left">
+                                            {itemCat.name}
+                                        </Grid.Column>
+                                        <Grid.Column mobile={16} computer={6} textAlign="left">
+                                            Item
+                                        </Grid.Column>
+                                        <Grid.Column mobile={16} computer={3} textAlign="left">
+                                            Qty
+                                        </Grid.Column>
+                                        <Grid.Column mobile={16} computer={3} textAlign="left">
+                                            <Button onClick={ this.handleAddItem(idx) }>+</Button>
+                                        </Grid.Column>
+                                        <Grid.Column mobile={16} computer={3} textAlign="left">
+                                        </Grid.Column>
+                                        {itemCat.items.map((item, itemidx) => (
                                             <Grid.Row centered as={Container} >
                                                 <Grid.Column mobile={16} computer={6} textAlign="left">
                                                     <Input 
                                                       type="text"
-                                                      placeholder={`Food #${idx + 1} name`}
+                                                      placeholder={`${itemCat.name} #${itemidx + 1} name`}
                                                       value={item.itemName}
-                                                      onChange={this.handleFoodItemNameChange(idx)}/>
+                                                      onChange={ this.handleItemNameChange(idx, itemidx)}/>
                                                     <Input 
                                                       type="text"
-                                                      placeholder={`Food #${idx + 1} name`}
+                                                      placeholder={`${itemCat.name} #${itemidx + 1} quota`}
                                                       value={item.quota}
-                                                      onChange={this.handleFoodItemQuotaChange(idx)}/>
-                                                </Grid.Column>
-                                                <Grid.Column mobile={16} computer={3} textAlign="left">
-                                                    <Button onClick={this.handleRemoveFoodItem(idx)}>X</Button>
+                                                      onChange={ this.handleItemQuotaChange(idx, itemidx)}/> 
+                                                    <Grid.Column mobile={16} computer={3} textAlign="left">
+                                                        <Button onClick={this.handleRemoveItem(idx, itemidx)}>X</Button>
+                                                    </Grid.Column>
                                                 </Grid.Column>
                                             </Grid.Row>
                                         ))}
-                                    </form>
-                                </Grid.Column>
-                            </Grid.Row>
-                            <Grid.Row centered as={Container} >
-                                <Grid.Column mobile={16} computer={6} textAlign="left">
-                                    Item
-                                </Grid.Column>
-                                <Grid.Column mobile={16} computer={3} textAlign="left">
-                                    Qty
-                                </Grid.Column>
-                                <Grid.Column mobile={16} computer={3} textAlign="left">
-                                    
-                                </Grid.Column>
-                            </Grid.Row>
-                            <Grid.Row centered as={Container} >
-                                <Grid.Column mobile={16} computer={6} textAlign="left">
-                                    <Input/>
-                                </Grid.Column>
-                                <Grid.Column mobile={16} computer={3} textAlign="left">
-                                    <Input/>
-                                </Grid.Column>
-                                <Grid.Column mobile={16} computer={3} textAlign="left">
-                                    <Button onClick={this.handleAddFoodItem}>+</Button>
-                                </Grid.Column>
-                            </Grid.Row>
-                            <Grid.Row centered as={Container} >
-                                <Grid.Column mobile={16} computer={16} textAlign="left">
-                                    Drink
-                                </Grid.Column>
-                            </Grid.Row>
-                            <Grid.Row centered as={Container} >
-                                <Grid.Column mobile={16} computer={6} textAlign="left">
-                                    Item
-                                </Grid.Column>
-                                <Grid.Column mobile={16} computer={3} textAlign="left">
-                                    Qty
-                                </Grid.Column>
-                                <Grid.Column mobile={16} computer={3} textAlign="left">
-                                    
-                                </Grid.Column>
-                            </Grid.Row>
-                            <Grid.Row centered as={Container} >
-                                <Grid.Column mobile={16} computer={6} textAlign="left">
-                                    <Input/>
-                                </Grid.Column>
-                                <Grid.Column mobile={16} computer={3} textAlign="left">
-                                    <Input/>
-                                </Grid.Column>
-                                <Grid.Column mobile={16} computer={3} textAlign="left">
-                                    <Button>X</Button>
-                                </Grid.Column>
-                            </Grid.Row>
-                            <Grid.Row centered as={Container} >
-                                <Grid.Column mobile={16} computer={16} textAlign="left">
-                                    Other
-                                </Grid.Column>
-                            </Grid.Row>
-                            <Grid.Row centered as={Container} >
-                                <Grid.Column mobile={16} computer={6} textAlign="left">
-                                    Item
-                                </Grid.Column>
-                                <Grid.Column mobile={16} computer={3} textAlign="left">
-                                    Qty
-                                </Grid.Column>
-                                <Grid.Column mobile={16} computer={3} textAlign="left">
-                                    
+                                    </Grid.Row>
+                                ))}
                                 </Grid.Column>
                             </Grid.Row>
                             <Grid.Row centered as={Container} >
