@@ -17,6 +17,7 @@ import {
 import DayPicker from 'react-day-picker'
 import { getEventById, updateEvent } from '../../../api/EventsApi'
 import { getInvitations } from '../../../api/InvitationsApi'
+import { addInvitations } from '../../../api/InvitationsApi'
 import { getItemsForEvent } from '../../../api/ItemsApi'
 import { getPledges } from '../../../api/PledgesApi'
 import { getItemCategories } from '../../../api/ItemCategoriesApi'
@@ -155,11 +156,12 @@ class EventPage extends Component {
         const { eventId } = this.props.match.params
 
         let invitations = await getInvitations()
-        let invitationsForEvent = await _.filter(invitations, { eventId: parseInt(eventId), status: 1 })
+        let invitationsForEvent = await _.filter(invitations, { eventId: parseInt(eventId)})
         let guests = _.map(invitationsForEvent, (invitation) => {
             return { ...invitation.applicationUser }
         })
 
+        console.log(guests)
         this.setState({ guests })
     }
 
