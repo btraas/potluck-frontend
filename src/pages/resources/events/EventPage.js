@@ -20,6 +20,7 @@ import { getInvitations } from '../../../api/InvitationsApi'
 import { getItemsForEvent } from '../../../api/ItemsApi'
 import { getPledges } from '../../../api/PledgesApi'
 import { getItemCategories } from '../../../api/ItemCategoriesApi'
+import { getUsers         } from '../../../api/UsersApi'
 import jwt_decode from 'jwt-decode';
 import '../../../css/event.css';
 import _ from 'lodash'
@@ -46,14 +47,17 @@ class EventPage extends Component {
         this.state = {
             event: {},
             guests: [],
+            users: [],
             pledgesForEvent: [],
             isUserHost: false,
             loading: false,
+            invites: [],
             edit: {
                 location: false,
                 date: false,
                 description: false,
-                title : false
+                title : false,
+                guests: false,
             },
             submit : {
                 location    : null,
@@ -85,7 +89,9 @@ class EventPage extends Component {
         await this._processEvent()
         await this._processPledges()
         await this._processGuests()
+        await this._processUsers()
         this._processIsUserHost()
+
 
         // End loading 
         this.setState({ loading: false })
@@ -155,6 +161,12 @@ class EventPage extends Component {
         })
 
         this.setState({ guests })
+    }
+
+    _processUsers = async () => {
+        let users = await getUsers()
+
+        this.setState({users})
     }
 
     /**
@@ -232,7 +244,32 @@ class EventPage extends Component {
         return { startDate, endDate }
     }
 
+    addUsers = () => {
+        const invites = this.state.invites
+        const eventId = this.state.event.id
+        console.log(eventId)
+        //addInvitations(this.state.event.id, invites)
+
+        console.log(invites);
+    }
+
+    handleInvitesChange = (e, { name, value }) => {
+        this.setState({invites: value})
+    }
+
+    processUsersForSearch(users) {
+        return users.map((user, index) => (
+            {
+                text : user.firstName + ' ' + user.lastName + ' (' + user.email + ')',
+                key: index,
+                value: user.applicationUserId
+            }
+        ));
+    }
+
     render() {
+        let options = this.processUsersForSearch(this.state.users)
+        console.log(options)
         return (
             <div style={{ marginBottom: 20 }}>
                 <Dimmer active={this.state.loading}>
@@ -482,6 +519,24 @@ class EventPage extends Component {
                                     <Segment>
                                         <p>{`Guests (${this.state.guests.length}):`}</p>
                                         {
+                                            (this.state.isUserHost && !this.state.edit.guests)
+                                            && <Button compact onClick={() => { this._handleEdit('guests', true) }}>Edit</Button>
+                                        }
+                                        {
+                                            this.state.edit.guests &&
+                                                <div>
+                                                    <Form onSubmit={this.addUsers}>
+                                                        <Form.Dropdown placeholder='Users'
+                                                                       name='users'
+                                                                       onChange={this.handleInvitesChange}
+                                                                       options={options}
+                                                                       fluid multiple search selection />
+                                                        <Button onClick={() => { this._handleEdit('guests', false) }}>Cancel</Button>
+                                                        <Form.Button content='Submit' />
+                                                    </Form>
+                                                </div>
+                                        }
+                                        {
                                             this.state.guests.map((guest, index) => {
                                                 return (<p key={index}>{`${guest.firstName} ${guest.lastName}`}</p>)
                                             })
@@ -496,4 +551,4 @@ class EventPage extends Component {
         );
     }
 }
-export default EventPage;
+export default EventPage
