@@ -246,13 +246,11 @@ class EventPage extends Component {
         return { startDate, endDate }
     }
 
-    addUsers = () => {
+    addInvites = () => {
         const invites = this.state.invites
-        const eventId = this.state.event.id
-        console.log(eventId)
-        //addInvitations(this.state.event.id, invites)
-
-        console.log(invites);
+        const eventId = this.state.event.eventId
+        let invitations = addInvitations(eventId, invites)
+        this.setState({invites: []})
     }
 
     handleInvitesChange = (e, { name, value }) => {
@@ -325,23 +323,23 @@ class EventPage extends Component {
                         </Segment>
                         <Grid container centered id="event-page">
                             <Grid.Row centered as={Container} >
-                                <Grid.Column mobile={16} computer={8} textAlign="center">
+                                <Grid.Column mobile={16} computer={8} textalign="center">
                                     <Segment className="hosting-pledge">
                                         {
                                             this.userId === this.state.event.organizerId ?
                                                 <span>Hosting</span> :
-                                                <Dropdown button fluid placeholder="Status" options={options} style={{ textAlign: "center", backgroundColor: "transparent" }} />
+                                                <Dropdown button fluid placeholder="Status" options={options} style={{ textalign: "center", backgroundColor: "transparent" }} />
                                         }
                                     </Segment>
                                 </Grid.Column>
-                                <Grid.Column mobile={16} computer={8} textAlign="center">
+                                <Grid.Column mobile={16} computer={8} textalign="center">
                                     <Segment className="hosting-pledge">
                                         <Button compact>Pledge</Button>
                                     </Segment>
                                 </Grid.Column>
                             </Grid.Row>
                             <Grid.Row centered as={Container}>
-                                <Grid.Column mobile={16} computer={8} textAlign="left">
+                                <Grid.Column mobile={16} computer={8} textalign="left">
                                     <Segment>
                                         {
                                             this.state.edit.location &&
@@ -368,7 +366,7 @@ class EventPage extends Component {
                                         }
                                     </Segment>
                                 </Grid.Column>
-                                <Grid.Column mobile={16} computer={8} textAlign="left">
+                                <Grid.Column mobile={16} computer={8} textalign="left">
                                     <Segment>
                                         {
                                             this.state.edit.date &&
@@ -448,7 +446,7 @@ class EventPage extends Component {
                                 </Grid.Column>
                             </Grid.Row>
                             <Grid.Row centered as={Container}>
-                                <Grid.Column computer={16} tablet={16} mobile={16} textAlign="left">
+                                <Grid.Column computer={16} tablet={16} mobile={16} textalign="left">
                                     <Segment>
                                         {
                                             this.state.edit.description &&
@@ -477,7 +475,7 @@ class EventPage extends Component {
                                 </Grid.Column>
                             </Grid.Row>
                             <Grid.Row centered as={Container}>
-                                <Grid.Column textAlign="left">
+                                <Grid.Column textalign="left">
                                     <Segment>
                                         <span>Pledge Status:</span>
                                         {this.state.isUserHost && <Button className="right-aligned-p">Edit</Button>}
@@ -517,7 +515,7 @@ class EventPage extends Component {
                                 </Grid.Column>
                             </Grid.Row>
                             <Grid.Row centered as={Container} >
-                                <Grid.Column mobile={16} textAlign="left">
+                                <Grid.Column mobile={16} textalign="left">
                                     <Segment>
                                         <p>{`Guests (${this.state.guests.length}):`}</p>
                                         {
@@ -527,7 +525,7 @@ class EventPage extends Component {
                                         {
                                             this.state.edit.guests &&
                                                 <div>
-                                                    <Form onSubmit={this.addUsers}>
+                                                    <Form onSubmit={this.addInvites}>
                                                         <Form.Dropdown placeholder='Users'
                                                                        name='users'
                                                                        onChange={this.handleInvitesChange}
@@ -557,8 +555,8 @@ class EventPage extends Component {
                                                 }
                                                 return (
                                                     <Segment key={index} style={{ backgroundColor : "#88B652" , marginHeight:"0px"}}>
-                                                        <p3 className="userName" textAlign="left"><a className={statusFlag}></a> {guest.firstName} {guest.lastName}</p3>
-                                                        <Button  textAlign="right"color='red'>X</Button>
+                                                        <p className="userName" textalign="left"><a className={statusFlag}></a> {guest.firstName} {guest.lastName}</p>
+                                                        <Button className="right-aligned-p" textalign="right" color='red'>X</Button>
                                                     </Segment>
                                                 )
                                             })

@@ -25,20 +25,21 @@ export async function getInvitationById(invitationId) {
 }
 
 export async function addInvitations(eventId, userIds){
-    let body = userIds.map((userId, index) => (
+    let args = userIds.map((userId, index) => (
         {
             eventId : eventId,
             applicationUserId: userId,
-            status: 0
+            status: 3
         }
     ));
-    console.log(body);
-/*    try {
-        return await API.headers({ "Authorization" : `Bearer ${sessionStorage.getItem("access_token")}` })
-            .post(`api/Invitations`, body)
-    } catch (error) {
-        console.log(error)
-        alert("An error occurred while fetching for invitation id: " + invitationId)
-        return null
-    }*/
+    for(let i = 0; i< args.length; i++) {
+        try {
+            return await API.headers({ "Authorization" : `Bearer ${sessionStorage.getItem("access_token")}` })
+                .post(`api/Invitations`, args[i])
+        } catch (error) {
+            console.log(error)
+            alert("An error occurred while adding invite")
+            return null
+        }
+    }
 }
