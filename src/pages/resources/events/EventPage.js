@@ -362,7 +362,7 @@ class EventPage extends Component {
                                         {
                                             this.userId === this.state.event.organizerId ?
                                                 <span>Hosting</span> :
-                                                <Dropdown button fluid placeholder="Status" options={userOptions} style={{ textalign: "center", backgroundColor: "transparent" }} />
+                                                <Dropdown button fluid placeholder="Status" options={options} style={{ textalign: "center", backgroundColor: "transparent" }} />
                                         }
                                     </Segment>
                                 </Grid.Column>
@@ -563,7 +563,7 @@ class EventPage extends Component {
                                                         <Form.Dropdown placeholder='Users'
                                                                        name='users'
                                                                        onChange={this.handleInvitesChange}
-                                                                       options={options}
+                                                                       options={userOptions}
                                                                        fluid multiple search selection />
                                                         <Button onClick={() => { this._handleEdit('guests', false) }}>Cancel</Button>
                                                         <Form.Button content='Submit' />
