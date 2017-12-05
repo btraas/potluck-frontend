@@ -213,35 +213,31 @@ class YourPledges extends Component {
             self.setState({ loading: false })
         })
 
-        this.state.Pledges.forEach(function (pledgeItem) {
-            console.log (pledgeItem);
-            if (pledgeItem.deleted == true) {
-                axios({
-                    url: url + "/" + pledgeItem.itemId + "/" + pledgeItem.applicationUserId,
-                    method: "delete",
-                    headers: {
-                        Authorization: `Bearer ${self.accessToken}`,
-                        'Content-Type': 'application/json',
-                    },
-                }).then(response => {
-                    // If event is successfully created
-                    self.setState({ success: response.status === 201 })
-                    self.setState({ loading: false })
-                }).catch(e => {
-                    console.log(e)
-                    self.setState({ success: false })
-                    self.setState({ loading: false })
-                })
-            }
-        })
+       
     }
 
     handleRemovePledge = (idx) => (evt) => {
-        let pledges = this.state.Pledges;
-        pledges[idx].deleted = true;
-        this.setState({
-            Pledges : pledges
+        let pledge = this.state.Pledges[idx]
+        let url = 'http://potluckapi.azurewebsites.net/api/Pledges/' + pledge.itemId + "/" + pledge.applicationUserId;
+        axios({
+            url: url,
+            method: "delete",
+            headers: {
+                Authorization: `Bearer ${this.accessToken}`,
+                'Content-Type': 'application/json',
+            },
+        }).then(response => {
+            // If event is successfully created
+            this.setState({ success: response.status === 201 })
+            this.setState({ loading: false })
+        }).catch(e => {
+            console.log(e)
+            this.setState({ success: false })
+            this.setState({ loading: false })
         })
+
+        let pledges = this.state.Pledges.filter((s, sidx) => idx !== sidx)
+        this.setState({Pledges : pledges})
     }
          
     render() {
@@ -255,7 +251,6 @@ class YourPledges extends Component {
                                 </Grid.Column>
                             </Grid.Row>
                             {this.state.Pledges.map((pledge, idx) => (
-                                !pledge.deleted && 
                                 <Grid.Row centered as={Container} >
                                     <Grid.Column mobile={16} computer={7} textAlign="center">
                                         {pledge.item.itemName}
