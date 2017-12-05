@@ -75,7 +75,7 @@ class YourPledges extends Component {
         }); */
 
         itemCategories.forEach(function (item) {
-            console.log (item);
+            // console.log (item);
             self.state.ItemCategories.push ({
                 "label" : item.name,
                 "value" : item.itemCategoryId
@@ -87,15 +87,20 @@ class YourPledges extends Component {
         this.setState({ items, eventId });
         // this.state.ItemCategories = itemCategories;
         // this.setState ({ItemCategories : itemCategories})
-        console.log (this.state.ItemCategories);
+        // console.log (this.state.ItemCategories);
 
-        let pledges = getPledges();
+        let pledges = await getPledges();
+
+        pledges.forEach (function (pledge) {
+            pledge.item = self.state.Items.filter((s, sidx) => s.itemId === pledge.itemId)
+        })
+        
+        console.log (pledges);
 
         this.setState ({
             Pledges : pledges
         })
 
-        console.log (pledges);
 
     }
 
@@ -129,7 +134,7 @@ class YourPledges extends Component {
     }
 
     handleCategoryChange = (e, { name, value }) => {
-        console.log (value)// this.setState({ [name]: value })
+        // console.log (value)// this.setState({ [name]: value })
         let items = this.state.Items.filter((s, sidx) => s.itemCategoryId === value);
         var self = this;
         let itemArr = [];
@@ -139,9 +144,9 @@ class YourPledges extends Component {
                 "value" : item.itemId
             })
         });
-        console.log (items);
+        // console.log (items);
 
-        console.log (itemArr);
+        // console.log (itemArr);
 
         this.setState(
             {
@@ -153,7 +158,7 @@ class YourPledges extends Component {
         // PledgeItems
 
     handlePledgeItemChange = (e, { name, value }) => {
-        console.log (value);
+        // console.log (value);
         this.setState({
             SelectedItem : value
         })
@@ -208,56 +213,35 @@ class YourPledges extends Component {
             self.setState({ loading: false })
         })
 
-        /*
-        this.state.Items.forEach(function(itemsGroup) {
-            itemsGroup.items.forEach(function (item) {
-                let data = JSON.stringify(item);
-                if (item.itemId != null) {
-                    if (item.deleted == true) {
-                        console.log (item);
-                        
-                    } else {
-                        console.log (item);
-                        axios({
-                            url: url + "/" + item.itemId,
-                            method: "put",
-                            headers: {
-                                Authorization: `Bearer ${self.accessToken}`,
-                                'Content-Type': 'application/json',
-                            },
-                            data: data
-                        }).then(response => {
-                            // If event is successfully created
-                            self.setState({ success: response.status === 201 })
-                            self.setState({ loading: false })
-                        }).catch(e => {
-                            console.log(e)
-                            self.setState({ success: false })
-                            self.setState({ loading: false })
-                        })
-                    }
-                } else {
-                    console.log (item);
-                    axios({
-                        url: url,
-                        method: "post",
-                        headers: {
-                            Authorization: `Bearer ${self.accessToken}`,
-                            'Content-Type': 'application/json',
-                        },
-                        data: data
-                    }).then(response => {
-                        // If event is successfully created
-                        self.setState({ success: response.status === 201 })
-                        self.setState({ loading: false })
-                    }).catch(e => {
-                        console.log(e)
-                        self.setState({ success: false })
-                        self.setState({ loading: false })
-                    })
-                }
-            });
-        }); */
+        this.state.Pledges.forEach(function (pledgeItem) {
+            console.log (pledgeItem);
+            if (pledgeItem.deleted == true) {
+                axios({
+                    url: url + "/" + pledgeItem.itemId + "/" + pledgeItem.applicationUserId,
+                    method: "delete",
+                    headers: {
+                        Authorization: `Bearer ${self.accessToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                }).then(response => {
+                    // If event is successfully created
+                    self.setState({ success: response.status === 201 })
+                    self.setState({ loading: false })
+                }).catch(e => {
+                    console.log(e)
+                    self.setState({ success: false })
+                    self.setState({ loading: false })
+                })
+            }
+        })
+    }
+
+    handleRemovePledge = (idx) => (evt) => {
+        let pledges = this.state.Pledges;
+        pledges[idx].deleted = true;
+        this.setState({
+            Pledges : pledges
+        })
     }
          
     render() {
@@ -270,17 +254,20 @@ class YourPledges extends Component {
                                     Your Pledges
                                 </Grid.Column>
                             </Grid.Row>
-                            <Grid.Row centered as={Container} >
-                                <Grid.Column mobile={16} computer={7} textAlign="center">
-                                    Pizza
-                                </Grid.Column>
-                                <Grid.Column mobile={16} computer={7} textAlign="center">
-                                    20
-                                </Grid.Column>
-                                <Grid.Column mobile={16} computer={2} textAlign="center">
-                                    <Button>X</Button>
-                                </Grid.Column>
-                            </Grid.Row>
+                            {this.state.Pledges.map((pledge, idx) => (
+                                !pledge.deleted && 
+                                <Grid.Row centered as={Container} >
+                                    <Grid.Column mobile={16} computer={7} textAlign="center">
+                                        {pledge.item.itemName}
+                                    </Grid.Column>
+                                    <Grid.Column mobile={16} computer={7} textAlign="center">
+                                        {pledge.quantity}
+                                    </Grid.Column>
+                                    <Grid.Column mobile={16} computer={2} textAlign="center">
+                                        <Button onClick={this.handleRemovePledge(idx)}>X</Button>
+                                    </Grid.Column>
+                                </Grid.Row>
+                            ))}
                             <br/><br/><br/>
                             <Grid.Row centered as={Container} className="event-header">
                                 <Grid.Column mobile={16} computer={16} textAlign="center">
