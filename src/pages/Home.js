@@ -13,7 +13,7 @@ class Home extends Component {
             <Grid.Row className="home-section banner" centered>
                 {/*<Image wrapped className="bannerImg" src="img/Putluck.png" />*/}
                 <Image wrapped className="blackOverlayImg" />
-                <Grid.Column mobile={16} className="bannerOverlay"computer={8} tablet={10} textAlign="center" verticalAlign="middle">
+                <Grid.Column mobile={16} className="bannerOverlay" computer={8} tablet={10} textAlign="center" verticalAlign="middle">
                     <Header className="headerPotLuck">Potluck</Header>
                     <Header className="headerOrganizing">Organizing a party should be easy</Header>
                     <Divider horizontal className="headerOrganizing">It is.</Divider>

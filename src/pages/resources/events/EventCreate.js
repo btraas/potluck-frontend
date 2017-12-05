@@ -182,9 +182,10 @@ class EventCreate extends Component {
                         </Grid.Column>
                     </Grid.Row>
                     <Grid.Row centered>
-                        <Grid.Column textAlign="center" computer={5} tablet={10} mobile={12}>
+                        {/*<Grid.Column textAlign="center" computer={5} tablet={10} mobile={12}>*/}
+                        <Grid.Column textAlign="center" computer={10} tablet={10} mobile={12}>
                             <span className="flavor">Create an Event</span>
-                            <Step.Group size='tiny'>
+                            <Step.Group size='tiny' className="unstackable">
                                 <Step active={step === 'details'}>
                                     <Icon name='list' />
                                     <Step.Content title='Details' />
@@ -266,7 +267,7 @@ class EventCreate extends Component {
                     {step === 'confirm' && <Grid.Row centered>
                         <Grid.Column computer={5} tablet={10} mobile={14} >
                             <label>Event Summary:</label>
-                            <Segment>
+                            <Segment className="event-summary">
                                 <div>
                                     <label className="secondary-label">Title:  {details.values.title}</label>
                                 </div>
@@ -289,7 +290,7 @@ class EventCreate extends Component {
                             </Segment>
                             <Form>
                             <Form.Group inline widths='equal'>
-                                <Form.Button content="Back" className="equal-inline" icon='chevron left' labelPosition='left' 
+                                <Form.Button className="equal-inline" icon='chevron left' labelPosition='left'
                                     content='Edit' type="button" onClick={this.handleClick}/>
                                 <Form.Button content="Confirm" className="equal-inline" color='green' icon='chevron right' 
                                     floated='right' labelPosition='right' onClick={this.handleSubmit} type='submit'/>

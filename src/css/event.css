@@ -2,6 +2,21 @@
 #event-create-page {
     background-color: #3F664E;
 }
+
+.event-summary > div {
+    padding: 3px;
+}
+
+.event-summary label {
+    font-size: 1.2em !important;
+    color: #3F664E !important;
+    padding-right: 3px;
+}
+
+.dark-background {
+    background-color: #3F664E !important;
+}
+
 .time-select > .selection.dropdown, .equal-inline > button {
     width:100% !important;
 }
@@ -28,6 +43,15 @@ div.inline.equal.width.fields > div.field:last-child {
     background-color: #EAEDD0 !important;
 
 }
+
+input, .form .dropdown, .daypicker-form, .event-date-picker, .event-summary {
+    background-color: #EBEDD0 !important;
+}
+button {
+  background-color: #8AB454 !important;
+
+}
+
 .event-tiles {
     background-color:#88B652;
     border-radius: 25px;
@@ -60,7 +84,22 @@ div.inline.equal.width.fields > div.field:last-child {
 
 .title-delete-button {
     height : 40px;
+    background-color: darkred !important;
 }
+
+.edit-button-wrapper {
+    position: absolute;
+    right : 0;
+    top: 0;
+    margin-right: 10px;
+    margin-top : 10px;
+}
+
+.button-over {
+    position: relative;
+    z-index: 101;
+}
+
 
 .date {
     display : flex;
@@ -136,3 +175,29 @@ input::-webkit-input-placeholder {
     font-family: Roboto !important;
     color: #3E6550;
 }
+
+@media only screen and (max-width: 767px) {
+
+    .ui.fluid.input {
+        display: initial !important;
+    }
+
+    .ui.fluid.input > input {
+        width: auto !important;
+    }
+
+    .ui.steps .step>.icon {
+        font-size: 1.5em;
+    }
+
+    .ui.steps .step, .ui.steps .step:first-child, .ui-steps .step:last-child {
+
+        padding: 1.14285714em 1em;
+    }
+
+}
+
+/*@media only screen and (max-width: 767px)*/
+/*<style>…</style>*/
+          /*.ui.steps:not(.unstackable) {*/
+
