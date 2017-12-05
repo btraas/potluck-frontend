@@ -217,6 +217,7 @@ class EditEventPledges extends Component {
                 }
             });
         });
+        this.props.history.push("/dashboard/events/" + this.state.eventId);
     }
 
     /**

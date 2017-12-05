@@ -214,8 +214,8 @@ class YourPledges extends Component {
             self.setState({ success: false })
             self.setState({ loading: false })
         })
-
-       
+        
+        this.props.history.push("/dashboard/events/" + this.state.eventId);
     }
 
     handleRemovePledge = (idx) => (evt) => {
@@ -253,7 +253,7 @@ class YourPledges extends Component {
                                 </Grid.Column>
                             </Grid.Row>
                             {this.state.Pledges.map((pledge, idx) => (
-                                <Grid.Row centered as={Container} >
+                                <Grid.Row centered as={Container}  className="event-header">
                                     <Grid.Column mobile={16} computer={7} textAlign="center">
                                         {pledge.item.itemName}
                                     </Grid.Column>
@@ -265,19 +265,19 @@ class YourPledges extends Component {
                                     </Grid.Column>
                                 </Grid.Row>
                             ))}
-                            <br/><br/><br/>
-                            <Grid.Row centered as={Container} className="event-header">
+                            
+                            <Grid.Row centered as={Container}>
                                 <Grid.Column mobile={16} computer={16} textAlign="center">
-                                    <Button>Add Pledge</Button>
+                                    <h1>Add Pledge</h1>
                                 </Grid.Column>
                             </Grid.Row>
                             <br/><br/><br/>
-                                <Grid.Row centered as={Container} className="event-header" >
+                                <Grid.Row centered as={Container}>
                                     <Grid.Column mobile={16} computer={16} textAlign="center">
                                         <Dropdown placeholder='Category' options={this.state.ItemCategories} onChange={this.handleCategoryChange}/*fluid selection options={friendOptions}*/ />
                                     </Grid.Column>
                                 </Grid.Row>
-                                <Grid.Row centered as={Container} className="event-header" >
+                                <Grid.Row centered as={Container}>
                                     <Grid.Column mobile={16} computer={16} textAlign="center">
                                         <Dropdown placeholder='Item' options={this.state.PledgeItems} onChange={this.handlePledgeItemChange}/*fluid selection options={friendOptions}*/ />
                                     </Grid.Column>
@@ -296,7 +296,7 @@ class YourPledges extends Component {
                                 </Grid.Row>
                                 <Grid.Row centered as={Container} >
                                     <Grid.Column mobile={16} computer={8} textAlign="center">
-                                        <Button>Cancel</Button>
+                                    <Button as={Link} to={`/dashboard/events/${this.state.eventId}`}>Cancel</Button>
                                     </Grid.Column>
                                     <Grid.Column mobile={16} computer={8} textAlign="center">
                                         <Button onClick={this.handleSubmit}>Add Pledge</Button>
