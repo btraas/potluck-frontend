@@ -32,14 +32,28 @@ export async function addInvitations(eventId, userIds){
             status: 3
         }
     ));
+    var promises = [];
     for(let i = 0; i< args.length; i++) {
         try {
-            return await API.headers({ "Authorization" : `Bearer ${sessionStorage.getItem("access_token")}` })
-                .post(`api/Invitations`, args[i])
+            promises.push(API.headers({ "Authorization" : `Bearer ${sessionStorage.getItem("access_token")}` })
+                .post(`api/Invitations`, args[i]))
         } catch (error) {
             console.log(error)
             alert("An error occurred while adding invite")
-            return null
         }
+    }
+    let response = await Promise.all(promises)
+    return response
+
+}
+
+export async function deleteInvitation(eventId, userId) {
+    try {
+        return await API.headers({ "Authorization" : `Bearer ${sessionStorage.getItem("access_token")}` })
+            .delete(`api/Invitations/${eventId}/${userId}`)
+    } catch (error) {
+        console.log(error)
+        alert("An error occurred while removing invite")
+        return null
     }
 }
