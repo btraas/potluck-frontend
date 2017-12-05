@@ -345,12 +345,6 @@ class EventPage extends Component {
                                             style={{ fontSize: '1.7em', fontWeight: 'normal' }}/>
                                 </Segment>
 
-                                <Segment basic className="title">
-                                    <Button style={{margin: '0 auto', width: "200px"}} className="title-delete-button" color="red" compact onClick={() => { }}>
-                                        Delete Event
-                                    </Button>
-                                </Segment>
-
 
 
                             </div>
