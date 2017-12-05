@@ -19,7 +19,7 @@ class YourPledges extends Component {
             error:false,
             Events: [],
             Invitations: [],
-            Items: [],
+            Items: {},
             ItemCategories: [],
             Pledges: [],
             PledgeItems: [],
@@ -74,27 +74,32 @@ class YourPledges extends Component {
             });
         }); */
 
-        itemCategories.forEach(function (item) {
-            // console.log (item);
-            self.state.ItemCategories.push ({
-                "label" : item.name,
-                "value" : item.itemCategoryId,
-                "text"  : item.name,
-            })
+        itemCategories.forEach(function (item, index) {
+            console.log (item);
+            self.state.ItemCategories.push({
+                value : item.itemCategoryId,
+                text  : item.name,
+                key  : index,
+            });
+            // self.state.ItemCategories.push ({)
         });
+        
+        console.log (self.state.ItemCategories);
+
+        // console.log (itemCategories);
 
         this.state.Items = items;
 
         this.setState({ items, eventId });
         // this.state.ItemCategories = itemCategories;
         // this.setState ({ItemCategories : itemCategories})
-        // console.log (this.state.ItemCategories);
+        console.log (this.state.ItemCategories);
 
-        console.log (items);
+        // console.log (items);
 
         let pledges = await getPledgesByUserId(self.userId);
 
-        console.log (self.userId);
+        // console.log (self.userId);
 
         // console.log (pledges);
 
@@ -150,20 +155,24 @@ class YourPledges extends Component {
     }
 
     handleCategoryChange = (e, { name, value }) => {
+        console.log (this.state.ItemCategories);
         // console.log (value)// this.setState({ [name]: value })
         let items = this.state.Items.filter((s, sidx) => s.itemCategoryId === value);
         var self = this;
         let itemArr = [];
-        items.forEach (function (item) {
-            itemArr.push ({
-                "label" : item.itemName,
-                "value" : item.itemId,
-                "text"  : item.itemName,
-            })
+        console.log (itemArr);
+        items.forEach (function (item, index) {
+            console.log (item);
+            itemArr.push({
+                value : item.itemId,
+                text  : item.itemName,
+                key   : index,
+            });
+            // itemArr.push ()
         });
         // console.log (items);
 
-        // console.log (itemArr);
+        console.log (itemArr);
 
         this.setState(
             {
@@ -272,7 +281,7 @@ class YourPledges extends Component {
         this.props.history.push("/dashboard/events/" + this.state.eventId);
     }
 
-    handleRemovePledge = (idx) => (evt) => {
+    handleRemovePledge = (idx) => {
         let pledge = this.state.Pledges[idx]
         let url = 'https://potluckapi.azurewebsites.net/api/Pledges/' + pledge.itemId + "/" + pledge.applicationUserId;
         axios({
@@ -293,6 +302,7 @@ class YourPledges extends Component {
         })
 
         let pledges = this.state.Pledges.filter((s, sidx) => idx !== sidx)
+        
         this.setState({Pledges : pledges})
     }
          
