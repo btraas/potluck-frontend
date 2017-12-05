@@ -78,7 +78,8 @@ class YourPledges extends Component {
             // console.log (item);
             self.state.ItemCategories.push ({
                 "label" : item.name,
-                "value" : item.itemCategoryId
+                "value" : item.itemCategoryId,
+                "text"  : item.name,
             })
         });
 
@@ -143,7 +144,8 @@ class YourPledges extends Component {
         items.forEach (function (item) {
             itemArr.push ({
                 "label" : item.itemName,
-                "value" : item.itemId
+                "value" : item.itemId,
+                "text"  : item.itemName,
             })
         });
         // console.log (items);
@@ -274,12 +276,12 @@ class YourPledges extends Component {
                             <br/><br/><br/>
                                 <Grid.Row centered as={Container} className="event-header" >
                                     <Grid.Column mobile={16} computer={16} textAlign="center">
-                                        <Dropdown placeholder='Category' options={this.state.ItemCategories} onChange={this.handleCategoryChange}/*fluid selection options={friendOptions}*/ />
+                                        <Dropdown placeholder='Category' fluid selection options={this.state.ItemCategories} onChange={this.handleCategoryChange}/*fluid selection options={friendOptions}*/ />
                                     </Grid.Column>
                                 </Grid.Row>
                                 <Grid.Row centered as={Container} className="event-header" >
                                     <Grid.Column mobile={16} computer={16} textAlign="center">
-                                        <Dropdown placeholder='Item' options={this.state.PledgeItems} onChange={this.handlePledgeItemChange}/*fluid selection options={friendOptions}*/ />
+                                        <Dropdown placeholder='Item' fluid selection options={this.state.PledgeItems} onChange={this.handlePledgeItemChange}/*fluid selection options={friendOptions}*/ />
                                     </Grid.Column>
                                 </Grid.Row>
                                 <Grid.Row centered as={Container} >
