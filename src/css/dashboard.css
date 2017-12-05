@@ -1,5 +1,5 @@
 .ui.centered.grid, .ui.centered.grid>.row, .ui.grid>.centered.row{
-    justify-content: space-evenly;
+    /*justify-content: space-evenly; */
 }
 
 .event-header {

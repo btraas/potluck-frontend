@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
+import DocumentTitle from 'react-document-title';
 import ApiHelper from '../../../util/ApiHelper'
 import { Button, Container,Form, Dropdown, Segment, Header, Input, Grid, Loader, Dimmer, Message } from 'semantic-ui-react'
 import { Link } from 'react-router-dom';
 import Event from '../../../components/Event';
 import axios from 'axios';
-import '../../../css/dashboard.css';
+import '../../../css/Pledges.css';
 import { getItemsForEvent, getItemById } from '../../../api/ItemsApi'
 import { getItemCategories } from '../../../api/ItemCategoriesApi'
-import { getPledges } from '../../../api/PledgesApi'
+import { getPledgesByUserId } from '../../../api/PledgesApi'
 import jwt_decode from 'jwt-decode';
 
 class YourPledges extends Component {
@@ -90,13 +91,26 @@ class YourPledges extends Component {
         // this.setState ({ItemCategories : itemCategories})
         // console.log (this.state.ItemCategories);
 
-        let pledges = await getPledges();
+        console.log (items);
+
+        let pledges = await getPledgesByUserId(self.userId);
+
+        console.log (self.userId);
+
+        // console.log (pledges);
+
+        // pledges = pledges.filter((s, sidx) => s.applicationUserId == self.userId);
+
+        // console.log (pledges);
 
         pledges.forEach (function (pledge) {
             let item = self.state.Items.filter((s, sidx) => s.itemId === pledge.itemId);
-            if (item != null)
+            console.log (item);
+            if (item != null && item != undefined)
                 pledge.item = item[0];
         })
+
+        pledges = pledges.filter((s, sidx) => (s.item != undefined && s.item != null))
         
         console.log (pledges);
 
@@ -295,79 +309,71 @@ class YourPledges extends Component {
     render() {
         let {loading, error} = this.state;
         return (
+            <DocumentTitle title='Potluck - Your Pledges'>
             <div style={{ margin: 50 }}>
-                <Grid container centered id="event-page">
-                            <Grid.Row centered as={Container} >
-                                <Grid.Column mobile={16} computer={16} textAlign="center">
-                                    <h1 className="dark-text">Your Pledges</h1>
+                <Grid padded centered id="your-pledges-page">
+                    <Dimmer active={loading}>
+                            <Loader size="massive" />
+                        </Dimmer>
+                            <Grid.Row centered as={ Container }>
+                                <Grid.Column textAlign="center" computer={5} tablet={10} mobile={12}>
+                                    <br />
+                                    <span className="pledge-flavor flavor">Your Pledges</span>
                                 </Grid.Column>
                             </Grid.Row>
-                            {this.state.Pledges.map((pledge, idx) => (
-                                <Grid.Row centered as={Container}  className="pledge-header">
-                                    <Grid.Column  textAlign="center">
-
-                                        <div className="medium-background light-text" style={{padding: "10px", minWidth: "180px", textAlign: "left", borderRadius: "5px"}}>
-
-                                            <div style={{display: "inline-block", width: "150px"}}>
-                                            {pledge.item && <span >{pledge.item.itemName}</span>}
-
-                                                <span style={{paddingLeft: "20px"}}>({pledge.quantity})</span>
-
-                                            </div>
-
-                                            {/*<div style={{display: "inline-block"}}>*/}
-                                            {/*{pledge.quantity}*/}
-                                            {/*</div>*/}
-                                        </div>
-
+                            {this.state.Pledges.length > 0 && this.state.Pledges.map((pledge, idx) => (
+                                <Grid.Row centered as={Container} >
+                                    <Grid.Column computer={4} tablet={10} mobile={14} className="pledge-item">
+                                            <Button className="pledge-item-name">{pledge.item && <span>{pledge.item.itemName}</span>}</Button>
+                                            <Button className="pledge-item-quantity">{pledge.quantity}</Button>
                                     </Grid.Column>
-                                    <Grid.Column  textAlign="center" style={{paddingLeft: "50px", paddingTop: "2px"}}>
-                                        <Button className="delete-button" onClick={this.handleRemovePledge(idx)}>X</Button>
+                                    <Grid.Column mobile={1} computer={1} textAlign="center">
+                                        <Button className="remove-pledge-x" onClick={this.handleRemovePledge(idx)}>X</Button>
                                     </Grid.Column>
                                 </Grid.Row>
                             ))}
-                            
-                            <Grid.Row centered as={Container}>
-                                <Grid.Column mobile={16} computer={16} textAlign="center">
-                                    <h1 className="dark-text">Add Pledge</h1>
-                                </Grid.Column>
-                            </Grid.Row>
-                            <br/><br/><br/>
-                                <Grid.Row centered as={Container}>
-                                    <Grid.Column mobile={16} computer={16} textAlign="center">
-                                        <Dropdown className="" placeholder='Category' fluid selection options={this.state.ItemCategories} onChange={this.handleCategoryChange}/*fluid selection options={friendOptions}*/ />
-                                    </Grid.Column>
+                            </Grid>
+                            <Grid centered className="pledge-add-container">
+                                <Grid.Row centered>
+                                    <label>Add A Pledge</label>
                                 </Grid.Row>
-                                <Grid.Row centered as={Container}>
-                                    <Grid.Column mobile={16} computer={16} textAlign="center">
-                                        <Dropdown className="" placeholder='Item' fluid selection options={this.state.PledgeItems} onChange={this.handlePledgeItemChange}/*fluid selection options={friendOptions}*/ />
-                                    </Grid.Column>
-                                </Grid.Row>
-                                <Grid.Row as={Container} className="dark-background light-text" style={{borderRadius: "5px", paddingTop: "0px", paddingBottom: "0px", marginTop: "5px"}} >
-                                    <Grid.Column  className="light-text" style={{position: "absolute", left: "0", marginLeft: "10px"}}>
-                                        <span style={{position: "absolute", left: "0", fontSize: "1em", marginTop: "10px"}}>Quantity</span>
-                                    </Grid.Column>
-                                    <Grid.Column >
-                                        <Input
-                                            className="light-background thin-input"
-                                            style={{borderRadius: "5px"}}
-                                            type="text"
-                                            placeholder="1"
-                                            value={this.state.Quantity}
-                                            onChange={ this.handleQuantityChange} />
+                                <Grid.Row centered as={Container} >
+                                    <Grid.Column computer={4} tablet={10} mobile={14} >
+                                    <Form size='large'>
+                                        <Form.Field required>
+                                                <Form.Select compact name='pledge-categories'
+                                                    options={this.state.ItemCategories}
+                                                    className="category-select"
+                                                    onChange={this.handleCategoryChange}
+                                                    placeholder="choose a category"
+                                                    required />
+                                                <Form.Select compact name='pledge-items'
+                                                    options={this.state.PledgeItems}
+                                                    className="item-select"
+                                                    onChange={this.handlePledgeItemChange}
+                                                    placeholder="choose an item"
+                                                    required />
+                                                <Form.Input name='quantity'
+                                                    label='Quantity:'
+                                                    placeholder='0'
+                                                    onChange={ this.handleQuantityChange}
+                                                    required />
+                                            <Button as={Link} to={`/dashboard/events/${this.state.eventId}`}>Cancel</Button>
+                                            <Button className="pledge-add-btn" onClick={this.handleSubmit}>Add Pledge</Button>
+                                        </Form.Field>
+                                        </Form>
                                     </Grid.Column>
                                 </Grid.Row>
                                 <Grid.Row centered as={Container} >
                                     <Grid.Column mobile={16} computer={8} textAlign="center">
-                                    <Button as={Link} to={`/dashboard/events/${this.state.eventId}`}>Cancel</Button>
+                                    
                                     </Grid.Column>
                                     <Grid.Column mobile={16} computer={8} textAlign="center">
-                                        <Button onClick={this.handleSubmit}>Add Pledge</Button>
                                     </Grid.Column>
                                 </Grid.Row>
-                            
-                </Grid>
+                            </Grid>
             </div>
+            </DocumentTitle>
         );
   }
 }
