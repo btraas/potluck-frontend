@@ -207,6 +207,7 @@ class YourPledges extends Component {
         // items.filter((s, sidx) => itemIdx !== sidx)
         if (this.state.Quantity <= 0) {
             alert ("Pledege Quantity cannot be 0 or negative");
+            this.setState({ loading: false })
             return;
         }
 
@@ -214,6 +215,7 @@ class YourPledges extends Component {
 
         if (item == undefined || item[0] == undefined) {
             alert ("Item does not exist");
+            this.setState({ loading: false })
             return;
         }
 
@@ -234,6 +236,7 @@ class YourPledges extends Component {
 
         if (checkItem != undefined && checkItem[0] != undefined) {
             alert ("Already pledged for item : " + checkItem[0].item.itemName);
+            this.setState({ loading: false })
             return;
         }
 
@@ -253,6 +256,7 @@ class YourPledges extends Component {
 
         if (remaining <= 0 || userRemaining < 0) {
             alert ("Exceeded Quota\n Quota : " + item[0].quota + "\nRemaining : " + remaining);
+            this.setState({ loading: false })
             return;
         }
 
@@ -287,7 +291,8 @@ class YourPledges extends Component {
             self.setState({ success: false })
             self.setState({ loading: false })
         })
-        
+        this.setState({ loading: false })
+
         this.props.history.push("/dashboard/events/" + this.state.eventId);
     }
 
