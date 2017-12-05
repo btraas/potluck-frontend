@@ -69,18 +69,18 @@ class Login extends Component {
             <DocumentTitle title='Potluck - Login'>
                 <Grid padded centered verticalAlign='top' id="auth-page">
                     <Grid.Row centered>
-                        <Grid.Column textAlign="center" computer={6} tablet={10} mobile={16}>
+                        <Grid.Column textAlign="center" computer={6} tablet={10} mobile={12}>
                             <br />
                             <span className="title">Potluck</span>
                         </Grid.Column>
                     </Grid.Row>
                     <Grid.Row centered >
-                        <Grid.Column textAlign="center" computer={6} tablet={10} mobile={16}>
+                        <Grid.Column textAlign="center" computer={6} tablet={10} mobile={12}>
                             <span className="flavor">Sign in</span>
                         </Grid.Column>
                     </Grid.Row>
                     <Grid.Row centered>
-                        <Grid.Column computer={6} tablet={10} mobile={16}>
+                        <Grid.Column computer={6} tablet={10} mobile={12}>
                             <Form onSubmit={this.handleSubmit} error={this.state.error}>
                                 <Message error header="We don't have that username and password match in our records!" />
                                 <Form.Input onChange={this.handleChange} label='E-mail' name='email' type='email' placeholder="E-mail"/>
