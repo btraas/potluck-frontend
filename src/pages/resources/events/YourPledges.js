@@ -92,7 +92,9 @@ class YourPledges extends Component {
         let pledges = await getPledges();
 
         pledges.forEach (function (pledge) {
-            pledge.item = self.state.Items.filter((s, sidx) => s.itemId === pledge.itemId)
+            let item = self.state.Items.filter((s, sidx) => s.itemId === pledge.itemId);
+            if (item != null)
+                pledge.item = item[0];
         })
         
         console.log (pledges);
