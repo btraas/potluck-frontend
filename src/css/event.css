@@ -89,6 +89,7 @@ div.inline.equal.width.fields > div.field:last-child {
 }
 .ui.segment {
     margin-top: 0px;
+    background-color: #ebedd0;
 }
 .guest_panel{
     padding: 20px !important;
@@ -96,6 +97,26 @@ div.inline.equal.width.fields > div.field:last-child {
 }
 .addGuestBtn{
     background-color: #EBEDD0 !important;
+}
+label{
+    color: #ebedd0;
+}
+.secondary-label{
+    color: #3f654e !important;
+}
+.content .title{
+    color: black;
+}
+input::-webkit-input-placeholder {
+    color: rgba(63, 101, 78, 0.67) !important;
+}
+.ui.dropdown:not(.button)>.default.text {
+    color: rgba(63, 101, 78, 0.67) !important;
+}
+@media only screen and (max-width: 767px){
+    .ui.steps:not(.unstackable) {
+        display:none;
+    }
 }
 
 .fa-times {
