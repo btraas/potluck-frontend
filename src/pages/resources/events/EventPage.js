@@ -345,11 +345,11 @@ class EventPage extends Component {
                                             style={{ fontSize: '1.7em', fontWeight: 'normal' }}/>
                                 </Segment>
 
-                                <Segment basic className="title">
-                                    <Button style={{margin: '0 auto', width: "200px"}} className="title-delete-button" color="red" compact onClick={() => { }}>
-                                        Delete Event
-                                    </Button>
-                                </Segment>
+                                {/*<Segment basic className="title">*/}
+                                    {/*<Button style={{margin: '0 auto', width: "200px"}} className="title-delete-button" color="red" compact onClick={() => { }}>*/}
+                                        {/*Delete Event*/}
+                                    {/*</Button>*/}
+                                {/*</Segment>*/}
 
 
 
@@ -362,7 +362,7 @@ class EventPage extends Component {
                                         {
                                             this.userId === this.state.event.organizerId ?
                                                 <span>Hosting</span> :
-                                                <Dropdown button fluid placeholder="Status" options={userOptions} style={{ textalign: "center", backgroundColor: "transparent" }} />
+                                                <Dropdown button fluid placeholder="Status" options={options} style={{ textalign: "center", backgroundColor: "transparent" }} />
                                         }
                                     </Segment>
                                 </Grid.Column>
@@ -563,7 +563,7 @@ class EventPage extends Component {
                                                         <Form.Dropdown placeholder='Users'
                                                                        name='users'
                                                                        onChange={this.handleInvitesChange}
-                                                                       options={options}
+                                                                       options={userOptions}
                                                                        fluid multiple search selection />
                                                         <Button onClick={() => { this._handleEdit('guests', false) }}>Cancel</Button>
                                                         <Form.Button content='Submit' />

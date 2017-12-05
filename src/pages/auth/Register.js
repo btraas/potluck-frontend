@@ -47,7 +47,7 @@ class Register extends Component {
             };
       
         axios({
-            url: "http://potluckapi.azurewebsites.net/api/register",
+            url: "https://potluckapi.azurewebsites.net/api/register",
             method: "post",
             headers: {
                 'Content-Type': 'application/json',

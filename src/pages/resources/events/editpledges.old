@@ -44,7 +44,7 @@ class EditEventPledges extends Component {
             },],
         };
         this.collect = this.collect.bind(this);
-        this.baseUrl = 'http://potluckapi.azurewebsites.net/api/';
+        this.baseUrl = 'https://potluckapi.azurewebsites.net/api/';
         this.endpoints = ['Events']; 
         this.api = new ApiHelper();
         // this.userId = jwt_decode(sessionStorage.getItem("id_token")).sub

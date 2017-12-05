@@ -29,7 +29,7 @@ class YourPledges extends Component {
             Quantity: 0,
         };
         this.collect = this.collect.bind(this);
-        this.baseUrl = 'http://potluckapi.azurewebsites.net/api/';
+        this.baseUrl = 'https://potluckapi.azurewebsites.net/api/';
         this.endpoints = ['Events']; 
         this.api = new ApiHelper();
         this.userId = jwt_decode(sessionStorage.getItem("id_token")).sub
@@ -178,13 +178,52 @@ class YourPledges extends Component {
     handleSubmit = (evt) => {
         this.setState({ loading: true })
         
-        let url = 'http://potluckapi.azurewebsites.net/api/Pledges';
+        let url = 'https://potluckapi.azurewebsites.net/api/Pledges';
 
         var self = this;
 
         // items.filter((s, sidx) => itemIdx !== sidx)
+        if (this.state.Quantity <= 0) {
+            alert ("Pledege Quantity cannot be 0 or negative");
+            return;
+        }
 
         let item = this.state.Items.filter((s, sidx) => s.itemId === this.state.SelectedItem)
+
+        if (item == undefined || item[0] == undefined) {
+            alert ("Item does not exist");
+            return;
+        }
+
+        console.log (this.state.Pledges);
+
+        let checkItem = this.state.Pledges.filter((s, idx) => s.item.itemId === this.state.SelectedItem);
+
+        console.log (checkItem);
+
+        if (checkItem != undefined && checkItem[0] != undefined) {
+            alert ("Already pledged for item : " + checkItem[0].item.itemName);
+            return;
+        }
+
+        console.log (item);
+
+        let totalAmt = 0;
+
+        item[0].pledges.forEach(function (pledgeItem) {
+            console.log (pledgeItem);
+            totalAmt += parseInt(pledgeItem.quantity);
+        });
+
+        let remaining = parseInt(item[0].quota - parseInt(totalAmt));
+
+        let userRemaining = remaining - this.state.Quantity;
+        console.log (remaining);
+
+        if (remaining <= 0 || userRemaining < 0) {
+            alert ("Exceeded Quota\n Quota : " + item[0].quota + "\nRemaining : " + remaining);
+            return;
+        }
 
         let pledge = {};
 
@@ -223,7 +262,7 @@ class YourPledges extends Component {
 
     handleRemovePledge = (idx) => (evt) => {
         let pledge = this.state.Pledges[idx]
-        let url = 'http://potluckapi.azurewebsites.net/api/Pledges/' + pledge.itemId + "/" + pledge.applicationUserId;
+        let url = 'https://potluckapi.azurewebsites.net/api/Pledges/' + pledge.itemId + "/" + pledge.applicationUserId;
         axios({
             url: url,
             method: "delete",

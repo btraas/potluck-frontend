@@ -66,10 +66,10 @@ class EventCreate extends Component {
         } else {
             this.setState({ loading: true })
             let data = this.processRequestData();
-            let url = 'http://potluckapi.azurewebsites.net/api/Events';
+            let url = 'https://potluckapi.azurewebsites.net/api/Events';
     
             axios({
-                url: "http://potluckapi.azurewebsites.net/api/Events",
+                url: "https://potluckapi.azurewebsites.net/api/Events",
                 method: "post",
                 headers: {
                     Authorization: `Bearer ${this.props.access}`,
@@ -184,7 +184,7 @@ class EventCreate extends Component {
                     <Grid.Row centered>
                         {/*<Grid.Column textAlign="center" computer={5} tablet={10} mobile={12}>*/}
                         <Grid.Column textAlign="center" computer={10} tablet={10} mobile={12}>
-                            <span className="flavor">Create an Event</span>
+                            <span className="flavor">Create an Event</span><br />
                             <Step.Group size='tiny' className="unstackable">
                                 <Step active={step === 'details'}>
                                     <Icon name='list' />

@@ -1,3 +1,3 @@
 export default {
-    url : 'http://potluckapi.azurewebsites.net/'
+    url : 'https://potluckapi.azurewebsites.net/'
 }
