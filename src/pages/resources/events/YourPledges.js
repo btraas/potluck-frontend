@@ -299,47 +299,58 @@ class YourPledges extends Component {
                 <Grid container centered id="event-page">
                             <Grid.Row centered as={Container} >
                                 <Grid.Column mobile={16} computer={16} textAlign="center">
-                                    Your Pledges
+                                    <h1 className="dark-text">Your Pledges</h1>
                                 </Grid.Column>
                             </Grid.Row>
                             {this.state.Pledges.map((pledge, idx) => (
-                                <Grid.Row centered as={Container}  className="event-header">
-                                    <Grid.Column mobile={16} computer={7} textAlign="center">
+                                <Grid.Row centered as={Container}  className="pledge-header">
+                                    <Grid.Column  textAlign="center">
 
-                                        {pledge.item && <span>{pledge.item.itemName}</span>}
+                                        <div className="medium-background light-text" style={{padding: "10px", minWidth: "180px", textAlign: "left", borderRadius: "5px"}}>
+
+                                            <div style={{display: "inline-block", width: "150px"}}>
+                                            {pledge.item && <span >{pledge.item.itemName}</span>}
+
+                                                <span style={{paddingLeft: "20px"}}>({pledge.quantity})</span>
+
+                                            </div>
+
+                                            {/*<div style={{display: "inline-block"}}>*/}
+                                            {/*{pledge.quantity}*/}
+                                            {/*</div>*/}
+                                        </div>
 
                                     </Grid.Column>
-                                    <Grid.Column mobile={16} computer={7} textAlign="center">
-                                        {pledge.quantity}
-                                    </Grid.Column>
-                                    <Grid.Column mobile={16} computer={2} textAlign="center">
-                                        <Button onClick={this.handleRemovePledge(idx)}>X</Button>
+                                    <Grid.Column  textAlign="center" style={{paddingLeft: "50px", paddingTop: "2px"}}>
+                                        <Button className="delete-button" onClick={this.handleRemovePledge(idx)}>X</Button>
                                     </Grid.Column>
                                 </Grid.Row>
                             ))}
                             
                             <Grid.Row centered as={Container}>
                                 <Grid.Column mobile={16} computer={16} textAlign="center">
-                                    <h1>Add Pledge</h1>
+                                    <h1 className="dark-text">Add Pledge</h1>
                                 </Grid.Column>
                             </Grid.Row>
                             <br/><br/><br/>
                                 <Grid.Row centered as={Container}>
                                     <Grid.Column mobile={16} computer={16} textAlign="center">
-                                        <Dropdown placeholder='Category' fluid selection options={this.state.ItemCategories} onChange={this.handleCategoryChange}/*fluid selection options={friendOptions}*/ />
+                                        <Dropdown className="" placeholder='Category' fluid selection options={this.state.ItemCategories} onChange={this.handleCategoryChange}/*fluid selection options={friendOptions}*/ />
                                     </Grid.Column>
                                 </Grid.Row>
                                 <Grid.Row centered as={Container}>
                                     <Grid.Column mobile={16} computer={16} textAlign="center">
-                                        <Dropdown placeholder='Item' fluid selection options={this.state.PledgeItems} onChange={this.handlePledgeItemChange}/*fluid selection options={friendOptions}*/ />
+                                        <Dropdown className="" placeholder='Item' fluid selection options={this.state.PledgeItems} onChange={this.handlePledgeItemChange}/*fluid selection options={friendOptions}*/ />
                                     </Grid.Column>
                                 </Grid.Row>
-                                <Grid.Row centered as={Container} >
-                                    <Grid.Column mobile={16} computer={4} textAlign="center">
-                                        Quantity
+                                <Grid.Row as={Container} className="dark-background light-text" style={{borderRadius: "5px", paddingTop: "0px", paddingBottom: "0px", marginTop: "5px"}} >
+                                    <Grid.Column  className="light-text" style={{position: "absolute", left: "0", marginLeft: "10px"}}>
+                                        <span style={{position: "absolute", left: "0", fontSize: "1em", marginTop: "10px"}}>Quantity</span>
                                     </Grid.Column>
-                                    <Grid.Column mobile={16} computer={4} textAlign="center">
-                                        <Input 
+                                    <Grid.Column >
+                                        <Input
+                                            className="light-background thin-input"
+                                            style={{borderRadius: "5px"}}
                                             type="text"
                                             placeholder="1"
                                             value={this.state.Quantity}

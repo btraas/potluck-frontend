@@ -289,7 +289,7 @@ class EditEventPledges extends Component {
                                     Unit of measurement
                                 </td>
                                 <td className="pledge-column-3">
-                                    <Button onClick={ this.handleAddItem(idx) }>+</Button>
+                                    <Button className="medium-background light-text" onClick={ this.handleAddItem(idx) }>+</Button>
                                 </td>
                             </tr>
 

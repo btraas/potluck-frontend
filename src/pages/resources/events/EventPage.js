@@ -118,23 +118,39 @@ class EventPage extends Component {
         let items = await getItemsForEvent(eventId)
         let pledges = await getPledges()
 
+
+
         const pledgesForEvent = _.map(itemCategories, (itemCategory) => {
+
+            let totalForCategory = 0;
+            let completedForCategory = 0;
+
             let itemsForCategory = _.map(_.filter(items, { 'itemCategoryId': itemCategory.itemCategoryId }),
                 (item) => {
                     const { itemName, itemId } = item
 
+                    let _pledges = _.reduce(_.filter(pledges, { itemId }), // accounted for
+                        (sum, pledge) => { return sum + pledge.quantity }, 0);
+
+
+                    totalForCategory += item.quota;
+                    completedForCategory += _pledges;
+
                     return {
                         ...{ itemName },
-                        quota: item.quota,
-                        pledgesCount: _.reduce(_.filter(pledges, { itemId }),
+                        quota: item.quota, // total
+                        pledgesCount: _.reduce(_.filter(pledges, { itemId }), // accounted for
                             (sum, pledge) => { return sum + pledge.quantity }, 0),
                     }
-                })
+                });
+
 
             return {
                 category: {
                     name: itemCategory.name,
-                    items: itemsForCategory
+                    items: itemsForCategory,
+                    totalForCategory: totalForCategory,
+                    completedForCategory: completedForCategory
                 }
             }
         })
@@ -312,8 +328,8 @@ class EventPage extends Component {
                                                     value={this.state.submit.title === null ? this.state.event.title : this.state.submit.title}
                                                     onChange={(event, { name, value }) => { this._onChangeFields('title', value) }} 
                                                     required size="large"/>
-                                        <Button onClick={() => { this._handleEdit('title', false) }}>Cancel</Button>
-                                        <Button onClick={() => { this._handleSubmit('title') }}>Confirm</Button>
+                                        <Button className="cancel-button" onClick={() => { this._handleEdit('title', false) }}>Cancel</Button>
+                                        <Button className="positive-button" onClick={() => { this._handleSubmit('title') }}>Confirm</Button>
                                     </div>
 
                                 }
@@ -323,15 +339,15 @@ class EventPage extends Component {
                                         <Header as='h1' 
                                                 inverted 
                                                 content={this.state.event.title}
-                                                style={{ fontSize: "3rem", fontWeight: "normal"}}
+                                                style={{ fontSize: "3rem", fontWeight: "normal", marginTop: "40px"}}
                                                 />
                                         {
                                             (this.state.isUserHost) && 
-                                            <div style={{position: 'absolute', right : 0, top: 0, marginRight: "10px", marginTop : "10px"}}>
-                                                <Button className="title-edit-button" compact onClick={() => { this._handleEdit('title', true) }}>
+                                            <div className="" style={{position: 'absolute', right : 0, top: 0, marginRight: "-5px", marginTop : "-5px"}}>
+                                                <Button className="title-edit-button full-opacity-hover" compact onClick={() => { this._handleEdit('title', true) }}>
                                                     Edit
                                                 </Button>
-                                                <Button className="title-delete-button" compact onClick={() => { this._deleteEvent() }}>
+                                                <Button className="title-delete-button full-opacity-hover" compact onClick={() => { this._deleteEvent() }}>
                                                     Delete Event
                                                 </Button>
                                             </div>
@@ -339,10 +355,12 @@ class EventPage extends Component {
                                     </Segment>
                                 }
                                 <Segment basic className="title">
-                                    <Header as='h2' 
-                                            content={`Hosted by: ${this.state.event.organizer.firstName} ${this.state.event.organizer.lastName}`}
+                                    <Header as='h2'
                                             inverted
-                                            style={{ fontSize: '1.7em', fontWeight: 'normal' }}/>
+                                            style={{ fontSize: '1.7em', fontWeight: 'normal', marginBottom: "50px" }}>
+                                        <span style={{color: "#88B652"}}>Hosted by</span> {this.state.event.organizer.firstName} {this.state.event.organizer.lastName}
+
+                                    </Header>
                                 </Segment>
 
                                 {/*<Segment basic className="title">*/}
@@ -351,39 +369,42 @@ class EventPage extends Component {
                                     {/*</Button>*/}
                                 {/*</Segment>*/}
 
+                                <div style={{position: "absolute", right: "0", bottom: "0", margin: "10px"}} >
+                                    {this.state.isUserHost && <Button as={Link} to={`/dashboard/events/${this.state.event.eventId}/${this.userId}/yourpledges`} className="right-aligned-p">My Pledges</Button>}
+                                </div>
 
 
                             </div>
                         </Segment>
                         <Grid container centered id="event-page">
-                            <Grid.Row centered as={Container} >
-                                <Grid.Column mobile={16} computer={8} textalign="center">
-                                    <Segment className="hosting-pledge">
-                                        {
-                                            this.userId === this.state.event.organizerId ?
-                                                <span>Hosting</span> :
-                                                <Dropdown button fluid placeholder="Status" options={options} style={{ textalign: "center", backgroundColor: "transparent" }} />
-                                        }
-                                    </Segment>
-                                </Grid.Column>
-                                <Grid.Column mobile={16} computer={8} textalign="center">
-                                    <Segment className="hosting-pledge">
-                                    {this.state.isUserHost && <Button as={Link} to={`/dashboard/events/${this.state.event.eventId}/${this.userId}/yourpledges`} className="right-aligned-p">Your Pledges</Button>}
-                                    </Segment>
-                                </Grid.Column>
-                            </Grid.Row>
+                            {/*<Grid.Row centered as={Container} >*/}
+                                {/*<Grid.Column mobile={16} computer={8} textalign="center">*/}
+                                    {/*<Segment className="hosting-pledge ">*/}
+                                        {/*{*/}
+                                            {/*this.userId === this.state.event.organizerId ?*/}
+                                                {/*<span>Hosting</span> :*/}
+                                                {/*<Dropdown button fluid placeholder="Status" options={options} style={{ textalign: "center", backgroundColor: "transparent" }} />*/}
+                                        {/*}*/}
+                                    {/*</Segment>*/}
+                                {/*</Grid.Column>*/}
+                                {/*<Grid.Column mobile={16} computer={8} textalign="center">*/}
+                                    {/*<Segment className="hosting-pledge">*/}
+                                    {/*{this.state.isUserHost && <Button as={Link} to={`/dashboard/events/${this.state.event.eventId}/${this.userId}/yourpledges`} className="right-aligned-p">Your Pledges</Button>}*/}
+                                    {/*</Segment>*/}
+                                {/*</Grid.Column>*/}
+                            {/*</Grid.Row>*/}
                             <Grid.Row centered as={Container}>
                                 <Grid.Column mobile={16} computer={8} textalign="left">
-                                    <Segment>
+                                    <Segment className="medium-background">
                                         {
                                             this.state.edit.location &&
                                             <div>
-                                                <Button compact className="right-aligned-p button-over" onClick={() => { this._handleEdit('location', false) }}>Cancel</Button>
-                                                <Button compact className="right-aligned-p button-over" onClick={() => { this._handleSubmit('location') }}>Confirm</Button>
+                                                <Button compact className="right-aligned-p button-over cancel-button" onClick={() => { this._handleEdit('location', false) }}>Cancel</Button>
+                                                <Button compact className="right-aligned-p button-over positive-button" onClick={() => { this._handleSubmit('location') }}>Confirm</Button>
                                             </div>
                                         }
                                         <Grid.Row className="location">
-                                            <h2>Location</h2> 
+                                            <h2 className="light-text">Location</h2>
                                             {
                                                 (this.state.isUserHost && !this.state.edit.location)
                                                 && <Button compact onClick={() => { this._handleEdit('location', true) }}>Edit</Button>
@@ -396,26 +417,28 @@ class EventPage extends Component {
                                                             value={this.state.submit.location === null ? this.state.event.location : this.state.submit.location}
                                                             onChange={(event, { name, value }) => { this._onChangeFields('location', value) }} 
                                                             required fluid /> :
-                                                <p>{this.state.event.location}</p>
+                                                <p className="dark-text" style={{fontSize: "2em"}}>{this.state.event.location}</p>
                                         }
                                     </Segment>
                                 </Grid.Column>
+                            </Grid.Row>
+                            <Grid.Row centered as={Container}>
                                 <Grid.Column mobile={16} computer={8} textalign="left">
-                                    <Segment>
+                                    <Segment className="medium-background light-text" style={{padding: "0"}}>
                                         {
                                             this.state.edit.date &&
                                             <div>
-                                                <Button className="right-aligned-p button-over" onClick={() => { this._handleEdit('date', false) }}>Cancel</Button>
-                                                <Button className="right-aligned-p button-over" onClick={() => { this._handleSubmit('date') }}>Confirm</Button>
+                                                <Button className="right-aligned-p button-over cancel-button" onClick={() => { this._handleEdit('date', false) }}>Cancel</Button>
+                                                <Button className="right-aligned-p button-over positive-button" onClick={() => { this._handleSubmit('date') }}>Confirm</Button>
                                             </div>
                                         }
                                         {
                                             this.state.edit.date ?
                                                 (<div>
-                                                    <Form.Field required>
+                                                    <Form.Field required style={{margin: "10px"}}>
                                                         <h2>Event Date:</h2>
                                                         <div className="daypicker-form" >
-                                                            <DayPicker 
+                                                            <DayPicker
                                                                 onDayClick={(day) =>{ this._onChangeDate('day', day) }}
                                                                 fromMonth={new Date()}
                                                                 className="event-date-picker"
@@ -425,36 +448,36 @@ class EventPage extends Component {
                                                         </div>
 
                                                     </Form.Field>
-                                                    <Form.Field required>
+                                                    <Form.Field required style={{margin: "10px"}}>
                                                         <h2>Event Start Time:</h2>
                                                         <Form.Group inline widths='equal'>
-                                                            <Form.Select name='start_time_hours' 
+                                                            <Form.Select name='start_time_hours'
                                                                          options={HOURS}
-                                                                         onChange={(event, {name, value}) => { this._onChangeDate('hours', value) }} 
+                                                                         onChange={(event, {name, value}) => { this._onChangeDate('hours', value) }}
                                                                          placeholder="Hours"
-                                                                         value={this.state.date.hours === null ? new Date(this.state.event.startTime).getHours() % 12 : this.state.date.hours} 
+                                                                         value={this.state.date.hours === null ? new Date(this.state.event.startTime).getHours() % 12 : this.state.date.hours}
                                                                          required />
                                                             <span>:</span>
-                                                            <Form.Select name='start_time_mins' 
+                                                            <Form.Select name='start_time_mins'
                                                                          options={MINUTES}
                                                                          onChange={(event, {name, value}) => { this._onChangeDate('mins', value) }} placeholder="Mins"
-                                                                         value={this.state.date.mins === null ? new Date(this.state.event.startTime).getUTCMinutes() % 60 : this.state.date.mins } 
+                                                                         value={this.state.date.mins === null ? new Date(this.state.event.startTime).getUTCMinutes() % 60 : this.state.date.mins }
                                                                          required />
-                                                            <Form.Select name='start_time_noon' 
+                                                            <Form.Select name='start_time_noon'
                                                                          options={AM_PM}
-                                                                         onChange={(event, {name, value}) => { this._onChangeDate('noon', value) }} 
+                                                                         onChange={(event, {name, value}) => { this._onChangeDate('noon', value) }}
                                                                          value={this.state.date.noon === null ? "am" : this.state.date.noon}
                                                                          placeholder="am/pm"
                                                                          required />
                                                         </Form.Group>
                                                     </Form.Field>
-                                                    <Form.Field required>
+                                                    <Form.Field required style={{margin: "10px"}}>
                                                         <h2>Event Duration:</h2>
                                                         <Form.Group inline widths='equal'>
                                                             <Form.Select name='duration_hours' options={DUR_HOURS}
-                                                                onChange={(event, {name, value}) => { this._onChangeDate('durHours', value) }} placeholder="Hours" required />
+                                                                         onChange={(event, {name, value}) => { this._onChangeDate('durHours', value) }} placeholder="Hours" required />
                                                             <Form.Select name='duration_mins' options={DUR_MINUTES}
-                                                                onChange={(event, {name, value}) =>{ this._onChangeDate('durMins', value) }} placeholder="Mins" required />
+                                                                         onChange={(event, {name, value}) =>{ this._onChangeDate('durMins', value) }} placeholder="Mins" required />
                                                         </Form.Group>
                                                     </Form.Field>
                                                 </div>) :
@@ -463,16 +486,17 @@ class EventPage extends Component {
                                                         <Segment basic className="date">
                                                             <div>
                                                                 <h2>Date:</h2>
-                                                                <span>{new Date(this.state.event.startTime).toDateString()}</span>
+                                                                <span className="dark-text">{new Date(this.state.event.startTime).toDateString()}</span>
                                                             </div>
                                                             {
                                                                 (this.state.isUserHost && !this.state.edit.date) &&
-                                                                <Button compact 
-                                                                        className="date-edit-button" 
+                                                                <Button compact
+                                                                        className="date-edit-button"
                                                                         onClick={() => { this._handleEdit('date', true) }}>Edit</Button>
                                                             }
-                                                            </Segment>
-                                                        <Segment basic><h2>Duration: </h2>{new Date(this.state.event.startTime).toTimeString()} Until: {new Date(this.state.event.endTime).toTimeString()}</Segment>
+                                                        </Segment>
+                                                        <Segment basic><h2>Duration: </h2><span className="dark-text">{new Date(this.state.event.startTime).toTimeString()}</span>
+                                                            <br />Until<br /><span className="dark-text">{new Date(this.state.event.endTime).toTimeString()}</span></Segment>
                                                     </div>
                                                 )
                                         }
@@ -480,22 +504,29 @@ class EventPage extends Component {
                                 </Grid.Column>
                             </Grid.Row>
                             <Grid.Row centered as={Container}>
-                                <Grid.Column computer={16} tablet={16} mobile={16} textalign="left">
-                                    <Segment>
+                                <Grid.Column computer={8} tablet={16} mobile={16} textalign="left">
+                                    <Segment className="medium-background">
+                                        <div style={{display: "inline", marginTop: "30px", marginBottom: "30px"}} >
+                                            <h2 style={{display: "inline"}} className="light-text">Description:</h2>
+                                            {(this.state.isUserHost && !this.state.edit.description)
+                                                && <Button compact className="right-aligned-p" onClick={() => { this._handleEdit('description', true) }}>Edit</Button>}
+
+                                        </div>
+
                                         {
                                             this.state.edit.description &&
                                             <div>
-                                                <Button className="right-aligned-p button-over" onClick={() => { this._handleEdit('description', false) }}>Cancel</Button>
-                                                <Button className="right-aligned-p button-over" onClick={() => { this._handleSubmit('description')}}>Confirm</Button>
+                                                <Button className="right-aligned-p button-over cancel-button" onClick={() => { this._handleEdit('description', false) }}>Cancel</Button>
+                                                <Button className="right-aligned-p button-over positive-button" onClick={() => { this._handleSubmit('description')}}>Confirm</Button>
                                             </div>
                                         }
-                                        {
-                                            <Grid.Row className="description">
-                                                <h2>Description</h2>
-                                                {(this.state.isUserHost && !this.state.edit.description)
-                                                    && <Button compact className="right-aligned-p" onClick={() => { this._handleEdit('description', true) }}>Edit</Button>}
-                                            </Grid.Row>
-                                        }
+                                        {/*{*/}
+                                            {/*<Grid.Row className="description">*/}
+                                                {/*/!*<h2 style={{display: "inline", margin: "30px"}} className="light-text">Pledge Status:</h2><br />*!/*/}
+                                                {/*{(this.state.isUserHost && !this.state.edit.description)*/}
+                                                    {/*&& <Button compact className="right-aligned-p" onClick={() => { this._handleEdit('description', true) }}>Edit</Button>}*/}
+                                            {/*</Grid.Row>*/}
+                                        {/*}*/}
                                         {
                                             this.state.edit.description ?
                                                 <Form.Input name='description' 
@@ -503,16 +534,19 @@ class EventPage extends Component {
                                                             defaultValue={this.state.event.description} 
                                                             onChange={(event, { name, value }) => { this._onChangeFields('description', value) }}
                                                             required fluid /> :
-                                                <p>{this.state.event.description}</p>
+                                                <p className="light-background dark-text" style={{marginTop: "10px", padding: "5px", borderRadius: "5px"}}>{this.state.event.description}</p>
+
                                         }
                                     </Segment>
                                 </Grid.Column>
                             </Grid.Row>
                             <Grid.Row centered as={Container}>
-                                <Grid.Column textalign="left">
-                                    <Segment>
-                                        <span>Pledge Status:</span>
-                                        {this.state.isUserHost && <Button as={Link} to={`/dashboard/events/${this.state.event.eventId}/editpledges`} className="right-aligned-p">Edit</Button>}
+                                <Grid.Column computer={8} tablet={16} mobile={16} textalign="left">
+                                    <Segment className="medium-background">
+                                        <div style={{display: "inline", marginTop: "30px", marginBottom: "30px"}} >
+                                            <h2 className="light-text" style={{display: "inline"}} >Pledge Status:</h2>
+                                        </div>
+                                        {this.state.isUserHost && <Button as={Link} to={`/dashboard/events/${this.state.event.eventId}/editpledges`} className="right-aligned-p dark-text">Edit</Button>}
                                         {
                                             this.state.pledgesForEvent &&
                                             this.state.pledgesForEvent.map((pledge, index) => {
@@ -520,10 +554,18 @@ class EventPage extends Component {
                                                 let categoryPercent = pledge.category.items.length ?
                                                     ((categoryProgress / pledge.category.items.length) * 100) : 0;
 
+                                                let categoryItems = pledge.category.items.length ? pledge.category.items.length : 0;
+
+
+
+
                                                 return (
                                                     <div key={index}>
-                                                        <p>{pledge.category.name + ": "}</p>
-                                                        <Progress percent={categoryPercent} progress size="large" />
+                                                        <p className="dark-text" style={{fontSize: "1.5em", fontWeight: "bold"}}>{pledge.category.name + ": "}</p>
+                                                        <Progress percent={categoryPercent} progress size="large" >
+                                                            <span style={{color: "white", position: "absolute", marginTop: "-35px"}}>{categoryProgress} / {categoryItems}</span>
+
+                                                        </Progress>
                                                         {
                                                             pledge.category.items.length > 0 &&
                                                             (<ul>
@@ -532,9 +574,12 @@ class EventPage extends Component {
                                                                         let itemPercentage = ((item.pledgesCount / item.quota) * 100)
 
                                                                         return (
-                                                                            <li key={itemsIndex}>
-                                                                                <p>{item.itemName}</p>
-                                                                                <Progress percent={((item.pledgesCount / item.quota) * 100)} size="medium" />
+                                                                            <li key={itemsIndex} style={{listItemType: "none"}}>
+                                                                                <p className="dark-text" style={{fontSize: "1.5em"}}>{item.itemName}</p>
+                                                                                <Progress style={{borderRadius: "10px", border: "5px solid white"}} percent={((item.pledgesCount / item.quota) * 100)} size="medium" >
+                                                                                    <span style={{color: "white", position: "absolute", marginTop: "-25px"}}>{item.pledgesCount} / {item.quota}</span>
+
+                                                                                </Progress>
                                                                             </li>
                                                                         )
                                                                     })
@@ -549,12 +594,15 @@ class EventPage extends Component {
                                 </Grid.Column>
                             </Grid.Row>
                             <Grid.Row centered as={Container} >
-                                <Grid.Column mobile={16} textalign="left">
-                                    <Segment>
-                                        <p>{`Guests (${this.state.guests.length}):`}</p>
+                                <Grid.Column computer={8} tablet={16} mobile={16} textalign="left">
+                                    <Segment className="dark-background">
+                                        <div style={{display: "inline", marginTop: "30px", marginBottom: "30px"}} >
+                                            <h2 className="light-text">{`Guests (${this.state.guests.length}):`}</h2>
+                                        </div>
+
                                         {
                                             (this.state.isUserHost && !this.state.edit.guests)
-                                            && <Button compact onClick={() => { this._handleEdit('guests', true) }}>Edit</Button>
+                                            && <Button style={{position: "absolute", top: "0", right: "0", margin: "20px"}} className="light-background dark-text" compact onClick={() => { this._handleEdit('guests', true) }}>Add Guest</Button>
                                         }
                                         {
                                             this.state.edit.guests &&
@@ -565,12 +613,12 @@ class EventPage extends Component {
                                                                        onChange={this.handleInvitesChange}
                                                                        options={userOptions}
                                                                        fluid multiple search selection />
-                                                        <Button onClick={() => { this._handleEdit('guests', false) }}>Cancel</Button>
-                                                        <Form.Button content='Submit' />
+                                                        <Button style={{display: "inline"}} className="cancel-button" onClick={() => { this._handleEdit('guests', false) }}>Cancel</Button>
+                                                        <Form.Button content='Submit' style={{display: "inline"}} className="submit-inline" />
                                                     </Form>
                                                 </div>
                                         }
-                                        <hr />
+                                        <br /><br />
                                         {
                                             this.state.guests.map((guest, index) => {
                                                 let statusFlag
@@ -589,15 +637,13 @@ class EventPage extends Component {
                                                         break;
                                                 }
                                                 return (
-                                                    <Segment key={index} style={{ backgroundColor : "#88B652" , marginHeight:"0px"}}>
-                                                        <p className="userName" textalign="left"><a className={statusFlag}></a> {guest.firstName} {guest.lastName}
-                                                            <Button className="right-aligned-p"
+                                                        <p className="userName medium-text" textalign="left"><a className={statusFlag}></a> {guest.firstName} {guest.lastName}
+                                                            <Button className="right-aligned-p custom"
                                                                     textalign="right"
                                                                     color='red'
                                                                     onClick={() => this.handleDelete( eventId ,guest.applicationUserId)}
                                                             >X</Button>
                                                         </p>
-                                                    </Segment>
                                                 )
                                             })
                                         }
