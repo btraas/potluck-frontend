@@ -293,7 +293,7 @@ class EventPage extends Component {
     }
 
     render() {
-        let usersOptions = this.processUsersForSearch(this.state.users)
+        let userOptions = this.processUsersForSearch(this.state.users)
         const eventId = this.state.event.eventId
         return (
             <div style={{ marginBottom: 20 }}>
