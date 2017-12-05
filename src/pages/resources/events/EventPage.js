@@ -563,7 +563,7 @@ class EventPage extends Component {
                                                 return (
                                                     <Segment key={index} style={{ backgroundColor : "#88B652" , marginHeight:"0px"}}>
                                                         <p className="userName" textalign="left"><a className={statusFlag}></a> {guest.firstName} {guest.lastName}</p>
-                                                        <Button className="right-aligned-p" textalign="right" color='red'>X</Button>
+                                                        <Button className="right-aligned-p title-delete-button" textalign="right" color='red'>X</Button>
                                                     </Segment>
                                                 )
                                             })

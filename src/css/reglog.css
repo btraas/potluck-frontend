@@ -10,7 +10,7 @@ body {
     line-height: normal;
     font-size: 85px;
     color: #EBEDD0;
-    display: inline;
+    /* display: inline; */
 }
 
 .flavor {
