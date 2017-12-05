@@ -33,6 +33,7 @@ const options = [
     { key: 3, text: 'Invited', value: 0 }
 ]
 
+
 const HOURS = _.range(1, 12).map((hour) => { return { key: hour, value: hour, text: hour < 10 ? `0${hour}` : hour } })
 const DUR_HOURS = _.range(1, 13).map((hour) => { return { key: hour, value: hour, text: hour < 10 ? `0${hour} hours` : `${hour} hours` } })
 
@@ -250,8 +251,8 @@ class EventPage extends Component {
         const invites = this.state.invites
         const eventId = this.state.event.eventId
         let response = await addInvitations(eventId, invites)
-        console.log(response)
         if (response) {
+            this._handleEdit('guests', false)
             await this._processGuests()
         }
 
