@@ -18,8 +18,7 @@ class EditEventPledges extends Component {
             error:false,
             Events: [],
             Invitations: [],
-            Items: [
-            ],
+            Items: [],
         };
         this.collect = this.collect.bind(this);
         this.baseUrl = 'http://potluckapi.azurewebsites.net/api/';
