@@ -162,7 +162,6 @@ class EventPage extends Component {
             return { ...invitation.applicationUser }
         })
 
-        console.log(guests)
         this.setState({ guests })
     }
 
@@ -252,6 +251,7 @@ class EventPage extends Component {
         const eventId = this.state.event.eventId
         let response = await addInvitations(eventId, invites)
         if (response = "") {
+            console.log("added")
             await this._processGuests()
         }
 
