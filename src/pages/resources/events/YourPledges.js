@@ -8,7 +8,7 @@ import axios from 'axios';
 import '../../../css/Pledges.css';
 import { getItemsForEvent, getItemById } from '../../../api/ItemsApi'
 import { getItemCategories } from '../../../api/ItemCategoriesApi'
-import { getPledges } from '../../../api/PledgesApi'
+import { getPledgesByUserId } from '../../../api/PledgesApi'
 import jwt_decode from 'jwt-decode';
 
 class YourPledges extends Component {
@@ -93,15 +93,15 @@ class YourPledges extends Component {
 
         console.log (items);
 
-        let pledges = await getPledges();
+        let pledges = await getPledgesByUserId(self.userId);
 
         console.log (self.userId);
 
-        console.log (pledges);
+        // console.log (pledges);
 
-        pledges = pledges.filter((s, sidx) => s.applicationUserId == self.userId);
+        // pledges = pledges.filter((s, sidx) => s.applicationUserId == self.userId);
 
-        console.log (pledges);
+        // console.log (pledges);
 
         pledges.forEach (function (pledge) {
             let item = self.state.Items.filter((s, sidx) => s.itemId === pledge.itemId);
