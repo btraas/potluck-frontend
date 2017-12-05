@@ -18,6 +18,7 @@ import DayPicker from 'react-day-picker'
 import { getEventById, updateEvent, deleteEvent } from '../../../api/EventsApi'
 import { getInvitations } from '../../../api/InvitationsApi'
 import { addInvitations } from '../../../api/InvitationsApi'
+import { deleteInvitation } from '../../../api/InvitationsApi'
 import { getItemsForEvent } from '../../../api/ItemsApi'
 import { getPledges } from '../../../api/PledgesApi'
 import { getItemCategories } from '../../../api/ItemCategoriesApi'
@@ -31,6 +32,7 @@ const options = [
     { key: 2, text: 'Not Attending', value: 2 },
     { key: 3, text: 'Invited', value: 0 }
 ]
+
 
 const HOURS = _.range(1, 12).map((hour) => { return { key: hour, value: hour, text: hour < 10 ? `0${hour}` : hour } })
 const DUR_HOURS = _.range(1, 13).map((hour) => { return { key: hour, value: hour, text: hour < 10 ? `0${hour} hours` : `${hour} hours` } })
@@ -161,7 +163,6 @@ class EventPage extends Component {
             return { ...invitation.applicationUser }
         })
 
-        console.log(guests)
         this.setState({ guests })
     }
 
@@ -259,11 +260,15 @@ class EventPage extends Component {
         return { startDate, endDate }
     }
 
-    addInvites = () => {
+    addInvites = async () => {
         const invites = this.state.invites
         const eventId = this.state.event.eventId
-        let invitations = addInvitations(eventId, invites)
-        this.setState({invites: []})
+        let response = await addInvitations(eventId, invites)
+        if (response) {
+            this._handleEdit('guests', false)
+            await this._processGuests()
+        }
+
     }
 
     handleInvitesChange = (e, { name, value }) => {
@@ -280,9 +285,16 @@ class EventPage extends Component {
         ));
     }
 
+    handleDelete = async (eventId, userId) => {
+        let response = await deleteInvitation(eventId,userId)
+        if (response) {
+            await this._processGuests()
+        }
+    }
+
     render() {
         let options = this.processUsersForSearch(this.state.users)
-
+        const eventId = this.state.event.eventId
         return (
             <div style={{ marginBottom: 20 }}>
                 <Dimmer active={this.state.loading}>
@@ -489,7 +501,7 @@ class EventPage extends Component {
                                                 <Form.Input name='description' 
                                                             placeholder='Description'
                                                             defaultValue={this.state.event.description} 
-                                                            onChange={(event, { name, value }) => { this._onChangeFields('description', value) }} 
+                                                            onChange={(event, { name, value }) => { this._onChangeFields('description', value) }}
                                                             required fluid /> :
                                                 <p>{this.state.event.description}</p>
                                         }
@@ -558,6 +570,7 @@ class EventPage extends Component {
                                                     </Form>
                                                 </div>
                                         }
+                                        <hr />
                                         {
                                             this.state.guests.map((guest, index) => {
                                                 let statusFlag
@@ -577,8 +590,13 @@ class EventPage extends Component {
                                                 }
                                                 return (
                                                     <Segment key={index} style={{ backgroundColor : "#88B652" , marginHeight:"0px"}}>
-                                                        <p className="userName" textalign="left"><a className={statusFlag}></a> {guest.firstName} {guest.lastName}</p>
-                                                        <Button className="right-aligned-p title-delete-button" textalign="right" color='red'>X</Button>
+                                                        <p className="userName" textalign="left"><a className={statusFlag}></a> {guest.firstName} {guest.lastName}
+                                                            <Button className="right-aligned-p"
+                                                                    textalign="right"
+                                                                    color='red'
+                                                                    onClick={() => this.handleDelete( eventId ,guest.applicationUserId)}
+                                                            >X</Button>
+                                                        </p>
                                                     </Segment>
                                                 )
                                             })
