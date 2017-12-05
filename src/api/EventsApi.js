@@ -47,3 +47,14 @@ export async function updateEvent(event) {
         return null
     }
 }
+
+export async function deleteEvent(eventId) {
+    try {
+        return await API.headers({ "Authorization" : `Bearer ${sessionStorage.getItem("access_token")}` })
+                        .delete(`api/Events/${eventId}`)
+    } catch (error) {
+        console.log(error)
+        alert("An error occurred while updating the event")
+        return null
+    }
+}

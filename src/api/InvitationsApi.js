@@ -29,17 +29,29 @@ export async function addInvitations(eventId, userIds){
         {
             eventId : eventId,
             applicationUserId: userId,
-            status: 3
+            status: 0
         }
     ));
+    var promises = [];
     for(let i = 0; i< args.length; i++) {
         try {
-            return await API.headers({ "Authorization" : `Bearer ${sessionStorage.getItem("access_token")}` })
-                .post(`api/Invitations`, args[i])
+            promises.push(API.headers({ "Authorization" : `Bearer ${sessionStorage.getItem("access_token")}` })
+                .post(`api/Invitations`, args[i]))
         } catch (error) {
-            console.log(error)
-            alert("An error occurred while adding invite")
-            return null
+            console.log("silently telling you, your add failed bro")
         }
+    }
+    let response = await Promise.all(promises)
+    return response
+
+}
+
+export async function deleteInvitation(eventId, userId) {
+    try {
+        return await API.headers({ "Authorization" : `Bearer ${sessionStorage.getItem("access_token")}` })
+            .delete(`api/Invitations/${eventId}/${userId}`)
+    } catch (error) {
+        console.log("silently telling you, your delete failed bro")
+        return null
     }
 }
