@@ -118,3 +118,21 @@ input::-webkit-input-placeholder {
         display:none;
     }
 }
+
+.fa-times {
+    color: red;
+}
+
+.fa-question {
+    color: blue;
+}
+
+.fa-check {
+    color: green;
+}
+
+.userName{
+    font-size: 20px;
+    font-family: Roboto !important;
+    color: #3E6550;
+}
