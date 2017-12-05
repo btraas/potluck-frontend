@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
+import ApiHelper from '../../../util/ApiHelper'
 import { Button, Container,Form, Dropdown, Segment, Header, Input, Grid, Loader, Dimmer, Message } from 'semantic-ui-react'
 import { Link } from 'react-router-dom';
 import Event from '../../../components/Event';
 import axios from 'axios';
 import '../../../css/dashboard.css';
-import { getItemsForEvent } from '../../../api/ItemsApi'
+import { getItemsForEvent, getItemById } from '../../../api/ItemsApi'
 import { getItemCategories } from '../../../api/ItemCategoriesApi'
+import { getPledges } from '../../../api/PledgesApi'
+import jwt_decode from 'jwt-decode';
 
 class YourPledges extends Component {
 
@@ -18,12 +21,21 @@ class YourPledges extends Component {
             Invitations: [],
             Items: [],
             ItemCategories: [],
+            Pledges: [],
             PledgeItems: [],
+            SelectedCat: null,
+            SelectedItem: null,
+            Quantity: 0,
         };
         this.collect = this.collect.bind(this);
         this.baseUrl = 'http://potluckapi.azurewebsites.net/api/';
         this.endpoints = ['Events']; 
+        this.api = new ApiHelper();
+        this.userId = jwt_decode(sessionStorage.getItem("id_token")).sub
+        this.accessToken = sessionStorage.getItem("access_token");
         this.handleCategoryChange = this.handleCategoryChange.bind(this);
+        this.handlePledgeItemChange = this.handlePledgeItemChange.bind(this);
+        this.handleQuantityChange = this.handleQuantityChange.bind(this);
     }
 
     async componentDidMount() {
@@ -76,6 +88,15 @@ class YourPledges extends Component {
         // this.state.ItemCategories = itemCategories;
         // this.setState ({ItemCategories : itemCategories})
         console.log (this.state.ItemCategories);
+
+        let pledges = getPledges();
+
+        this.setState ({
+            Pledges : pledges
+        })
+
+        console.log (pledges);
+
     }
 
     /**
@@ -122,12 +143,124 @@ class YourPledges extends Component {
 
         console.log (itemArr);
 
-        this.setState({PledgeItems : itemArr});
+        this.setState(
+            {
+                PledgeItems : itemArr,
+                SelectedCat : value
+            }
+        );
     }
         // PledgeItems
+
+    handlePledgeItemChange = (e, { name, value }) => {
+        console.log (value);
+        this.setState({
+            SelectedItem : value
+        })
+    }
+
+    handleQuantityChange = (evt) => {
+        this.setState ({
+            Quantity : evt.target.value
+        })
+    }
+
+    handleSubmit = (evt) => {
+        this.setState({ loading: true })
+        
+        let url = 'http://potluckapi.azurewebsites.net/api/Pledges';
+
+        var self = this;
+
+        // items.filter((s, sidx) => itemIdx !== sidx)
+
+        let item = this.state.Items.filter((s, sidx) => s.itemId === this.state.SelectedItem)
+
+        let pledge = {};
+
+        pledge.itemId = this.state.SelectedItem;
+
+        pledge.quantity = parseInt(this.state.Quantity);
+
+        pledge.applicationUserId = this.userId;
+        
+        console.log (pledge);
+
+        let data = JSON.stringify(pledge);
+
+        console.log (data);
+
+        axios({
+            url: url,
+            method: "post",
+            headers: {
+                Authorization: `Bearer ${self.accessToken}`,
+                'Content-Type': 'application/json',
+            },
+            data : data
+        }).then(response => {
+            // If event is successfully created
+            self.setState({ success: response.status === 201 })
+            self.setState({ loading: false })
+        }).catch(e => {
+            console.log(e)
+            self.setState({ success: false })
+            self.setState({ loading: false })
+        })
+
+        /*
+        this.state.Items.forEach(function(itemsGroup) {
+            itemsGroup.items.forEach(function (item) {
+                let data = JSON.stringify(item);
+                if (item.itemId != null) {
+                    if (item.deleted == true) {
+                        console.log (item);
+                        
+                    } else {
+                        console.log (item);
+                        axios({
+                            url: url + "/" + item.itemId,
+                            method: "put",
+                            headers: {
+                                Authorization: `Bearer ${self.accessToken}`,
+                                'Content-Type': 'application/json',
+                            },
+                            data: data
+                        }).then(response => {
+                            // If event is successfully created
+                            self.setState({ success: response.status === 201 })
+                            self.setState({ loading: false })
+                        }).catch(e => {
+                            console.log(e)
+                            self.setState({ success: false })
+                            self.setState({ loading: false })
+                        })
+                    }
+                } else {
+                    console.log (item);
+                    axios({
+                        url: url,
+                        method: "post",
+                        headers: {
+                            Authorization: `Bearer ${self.accessToken}`,
+                            'Content-Type': 'application/json',
+                        },
+                        data: data
+                    }).then(response => {
+                        // If event is successfully created
+                        self.setState({ success: response.status === 201 })
+                        self.setState({ loading: false })
+                    }).catch(e => {
+                        console.log(e)
+                        self.setState({ success: false })
+                        self.setState({ loading: false })
+                    })
+                }
+            });
+        }); */
+    }
          
     render() {
-        
         let {loading, error} = this.state;
         return (
             <div style={{ margin: 50 }}>
@@ -162,7 +295,7 @@ class YourPledges extends Component {
                                 </Grid.Row>
                                 <Grid.Row centered as={Container} className="event-header" >
                                     <Grid.Column mobile={16} computer={16} textAlign="center">
-                                        <Dropdown placeholder='Item' options={this.state.PledgeItems}/*fluid selection options={friendOptions}*/ />
+                                        <Dropdown placeholder='Item' options={this.state.PledgeItems} onChange={this.handlePledgeItemChange}/*fluid selection options={friendOptions}*/ />
                                     </Grid.Column>
                                 </Grid.Row>
                                 <Grid.Row centered as={Container} >
@@ -170,7 +303,11 @@ class YourPledges extends Component {
                                         Quantity
                                     </Grid.Column>
                                     <Grid.Column mobile={16} computer={4} textAlign="center">
-                                        <Input/>
+                                        <Input 
+                                            type="text"
+                                            placeholder="1"
+                                            value={this.state.Quantity}
+                                            onChange={ this.handleQuantityChange} />
                                     </Grid.Column>
                                 </Grid.Row>
                                 <Grid.Row centered as={Container} >
@@ -178,7 +315,7 @@ class YourPledges extends Component {
                                         <Button>Cancel</Button>
                                     </Grid.Column>
                                     <Grid.Column mobile={16} computer={8} textAlign="center">
-                                        <Button>Add Pledge</Button>
+                                        <Button onClick={this.handleSubmit}>Add Pledge</Button>
                                     </Grid.Column>
                                 </Grid.Row>
                             
