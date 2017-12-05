@@ -184,7 +184,7 @@ class EventCreate extends Component {
                     <Grid.Row centered>
                         {/*<Grid.Column textAlign="center" computer={5} tablet={10} mobile={12}>*/}
                         <Grid.Column textAlign="center" computer={10} tablet={10} mobile={12}>
-                            <span className="flavor">Create an Event</span>
+                            <span className="flavor">Create an Event</span><br />
                             <Step.Group size='tiny' className="unstackable">
                                 <Step active={step === 'details'}>
                                     <Icon name='list' />
