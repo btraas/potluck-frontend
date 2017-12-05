@@ -293,7 +293,7 @@ class EventPage extends Component {
     }
 
     render() {
-        let options = this.processUsersForSearch(this.state.users)
+        let userOptions = this.processUsersForSearch(this.state.users)
         const eventId = this.state.event.eventId
         return (
             <div style={{ marginBottom: 20 }}>
@@ -362,7 +362,7 @@ class EventPage extends Component {
                                         {
                                             this.userId === this.state.event.organizerId ?
                                                 <span>Hosting</span> :
-                                                <Dropdown button fluid placeholder="Status" options={options} style={{ textalign: "center", backgroundColor: "transparent" }} />
+                                                <Dropdown button fluid placeholder="Status" options={userOptions} style={{ textalign: "center", backgroundColor: "transparent" }} />
                                         }
                                     </Segment>
                                 </Grid.Column>
