@@ -8,7 +8,7 @@ class Event extends Component {
         if(this.props.data == null) 
         {
             return (
-                    <Card className="no-event-card">
+                    <Card className="no-event-card" >
                         <Segment attached className='no-event-content'>
                             <h4 className='no-event-text'>No Event</h4>
                         </Segment>
@@ -20,7 +20,7 @@ class Event extends Component {
             return (
                 <Link to={`/dashboard/events/${eventId}`}>
                     <Card className="event-card">
-                        <Header className='event-header' as='h5' attached='top'>{title}</Header>
+                        <Header className='event-header' as='h4' attached='top'>{title}</Header>
                         <Segment attached className='event-content'>
                             Location: {location}    
                             <br/>

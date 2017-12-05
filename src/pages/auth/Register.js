@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import DocumentTitle from 'react-document-title';
-import { Form, Grid } from 'semantic-ui-react'
+import { Form, Grid, Message } from 'semantic-ui-react'
 import axios from 'axios';
 import 'semantic-ui-css/semantic.min.css';
 import '../../css/reglog.css'
@@ -15,7 +15,9 @@ class Register extends Component {
             lname: '',
             email: '',
             password: '',
-            cPassword: ''
+            cPassword: '',
+            error: '',
+            displayErrors: false,
         };
         this.handleSubmit          = this.handleSubmit.bind(this);
         this.handleFNameChange     = this.handleFNameChange.bind(this);
@@ -52,12 +54,18 @@ class Register extends Component {
             },
             data: JSON.stringify (data)
         }).then(response => {
-            this.setState({ openModal: true, success: response.status === 201 })
+            this.setState({
+                success: response.status === 201,
+                displayErrors: false,
+                error: ''
+            })
             this.props.regIsSuccessful()
             this.props.history.push('/login')
         }).catch(e => {
-            console.log(e)
-            this.setState({ openModal: true, success: false })
+            this.setState({
+                error: e.response.data.errors[0].description,
+                displayErrors: true,
+                success: false })
         })
     }
 
@@ -82,22 +90,25 @@ class Register extends Component {
      }
 
   render() {
+    const displayErrors = this.state.displayErrors
+    const error = this.state.error
     return (
         <DocumentTitle title='Potluck - Register'>
             <Grid padded centered id="auth-page">
                 <Grid.Row centered>
-                    <Grid.Column textAlign="center" computer={6} tablet={10} mobile={16}>
+                    <Grid.Column textAlign="center" computer={6} tablet={10} mobile={12}>
                         <br />
                         <span className="title">Potluck</span>
                     </Grid.Column>
                 </Grid.Row>
                 <Grid.Row >
-                    <Grid.Column textAlign="center" computer={6} tablet={10} mobile={16}>
+                    <Grid.Column textAlign="center" computer={6} tablet={10} mobile={12}>
                         <span className="flavor">Sign up</span>
                     </Grid.Column>
                 </Grid.Row>
                 <Grid.Row >
-                    <Grid.Column textAlign="center" computer={6} tablet={10} mobile={16}>
+                    <Grid.Column textAlign="center" computer={6} tablet={10} mobile={12}>
+                        {displayErrors &&  <Message error header={error} />}
                         <Form onSubmit={this.handleSubmit}>
                             <Form.Input label='First Name' type='text' placeholder="First Name" value={this.state.fname} onChange={this.handleFNameChange} />
                             <Form.Input label='Last Name' type='text' placeholder="Last Name" value={this.state.lname} onChange={this.handleLNameChange} />
