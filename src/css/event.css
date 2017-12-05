@@ -13,9 +13,70 @@
     padding-right: 3px;
 }
 
+.light-background {
+    background-color: #EBEDD0 !important;
+}
+
+.medium-background {
+    background-color: #8AB454 !important;
+
+}
+
 .dark-background {
     background-color: #3F664E !important;
 }
+
+.light-text {
+    color: #EBEDD0 !important;
+}
+
+.medium-text {
+    color: #8AB454 !important;
+}
+
+.dark-text {
+    color: #3F664E !important;
+}
+
+.cancel-button {
+    color: gray !important;
+}
+
+.submit-inline {
+    display: inline;
+}
+
+.negative-button {
+    color: white !important;
+    background-color: darkred !important;
+}
+
+.positive-button {
+    color: #3F664E !important;
+    background-color: #EBEDD0 !important;
+}
+
+.delete-button {
+    background: darkred !important;
+    color: white !important;
+}
+
+
+.DayPicker-wrapper {
+    border: 1px solid #3F664E !important;
+}
+
+.DayPicker-Day {
+    color: #3F664E !important;
+}
+
+
+.DayPicker-Day--disabled {
+    color: #3F664E !important;
+    opacity: 0.5 !important;
+}
+
+
 
 .time-select > .selection.dropdown, .equal-inline > button {
     width:100% !important;
@@ -44,11 +105,17 @@ div.inline.equal.width.fields > div.field:last-child {
 
 }
 
+#event-quotas-page {
+    /*background-color: #EAEDD0 !important;*/
+    color: white !important;
+}
+
 input, .form .dropdown, .daypicker-form, .event-date-picker, .event-summary {
     background-color: #EBEDD0 !important;
 }
-button {
+button:not(.custom, .dark-background, .light-background) {
   background-color: #8AB454 !important;
+  color: #EBEDD0 !important;
 
 }
 
@@ -175,6 +242,65 @@ input::-webkit-input-placeholder {
     font-size: 20px;
     font-family: Roboto !important;
     color: #3E6550;
+}
+
+.pledge-category-header {
+    text-align: left;
+}
+
+.pledge-column-1 {
+    width: 200px !important;
+}
+
+.pledge-column-2 {
+    width: 50px !important;
+}
+
+.pledge-column-3 {
+    width: 100px !important;
+}
+
+
+.ui.progress {
+    color: white;
+    border: 5px solid white !important;
+    border-radius: 15px !important;
+    background: gray;
+}
+
+.progress .bar {
+    background-color: #3F664E !important;
+    border-radius: 10px !important;
+    color: white;
+    /*border-right: 0px solid white !important;*/
+}
+
+.progress .bar .progress {
+    color: transparent !important;
+}
+
+ul, li {
+    list-style-type: none;
+}
+
+.thin-input {
+    margin: 8px !important;
+}
+
+.thin-input > input {
+    padding: 2px !important;
+}
+
+.full-opacity-hover {
+    opacity: 0.5 !important;
+    transition: opacity .3s ease-out !important;
+    -moz-transition: opacity .3s ease-out !important;
+    -webkit-transition: opacity .3s ease-out !important;
+    -o-transition: opacity .3s ease-out !important;
+}
+
+.full-opacity-hover:hover {
+    opacity: 1 !important;
 }
 
 @media only screen and (max-width: 767px) {
