@@ -13,7 +13,7 @@
 
 .pledge-item{
     border-radius: .28571429rem;
-    background-color: #8AB454;
+    background-color: #8AB454 !important;
 }
 
 .pledge-item-name {
@@ -23,7 +23,6 @@
 
 .pledge-item-quantity {
     color: #EBEDD0 !important;
-    float: right;
 }
 
 .pledge-add-btn {

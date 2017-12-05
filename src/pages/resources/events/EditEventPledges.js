@@ -253,10 +253,10 @@ class EditEventPledges extends Component {
         let {loading, error} = this.state;
         displayName: 'Edit Event';
         return (
-            <div style={{ paddingTop: '50px' }} className="dark-background">
-                <Grid container centered id="event-quotas-page" >
+            <div style={{ paddingTop: '50px' }} className="light-background">
+                <Grid container centered id="event-quotas-page" className="dark-background" style={{borderRadius: "15px"}} >
                     <Grid.Row as={Container} >
-                        <Grid.Column mobile={16} computer={16} textAlign="center">
+                        <Grid.Column mobile={16} computer={8} textAlign="center">
                             <Header as='h1'
                                         inverted
                                         content="Potluck"
@@ -266,7 +266,7 @@ class EditEventPledges extends Component {
                         </Grid.Column>
                     </Grid.Row>
                     <Grid.Row centered as={Container} >
-                        <Grid.Column mobile={16} computer={16} textAlign="center">
+                        <Grid.Column mobile={16} computer={8} textAlign="center">
                             <span className="flavor">Set Pledge Quotas</span><br />
 
                         </Grid.Column>
@@ -329,7 +329,7 @@ class EditEventPledges extends Component {
                         ))}
                     
                     <Grid.Row centered as={Container} >
-                        <Grid.Column mobile={16} computer={16} textAlign="center">
+                        <Grid.Column mobile={16} computer={8} textAlign="center">
                             <Button style={{width: '250px'}} onClick={this.handleSubmit}>Confirm</Button>
                         </Grid.Column>
                     </Grid.Row>

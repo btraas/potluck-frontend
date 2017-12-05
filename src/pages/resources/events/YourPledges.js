@@ -323,9 +323,9 @@ class YourPledges extends Component {
                             </Grid.Row>
                             {this.state.Pledges.length > 0 && this.state.Pledges.map((pledge, idx) => (
                                 <Grid.Row centered as={Container} >
-                                    <Grid.Column computer={4} tablet={10} mobile={14} className="pledge-item">
-                                            <Button className="pledge-item-name">{pledge.item && <span>{pledge.item.itemName}</span>}</Button>
-                                            <Button className="pledge-item-quantity">{pledge.quantity}</Button>
+                                    <Grid.Column computer={4} tablet={10} mobile={14} className="pledge-item custom">
+                                            <Button className="pledge-item pledge-item-name custom">{pledge.item && <span>{pledge.item.itemName}</span>}</Button>
+                                            <Button className="pledge-item pledge-item-quantity custom" style={{float: "right"}}>({pledge.quantity})</Button>
                                     </Grid.Column>
                                     <Grid.Column mobile={1} computer={1} textAlign="center">
                                         <Button className="remove-pledge-x" onClick={this.handleRemovePledge(idx)}>X</Button>
