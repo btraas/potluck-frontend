@@ -28,11 +28,16 @@
     color: #4F4F4F !important;  
 }
 
+.event-card {
+    margin: 0 auto !important;
+}
+
  .no-event-card {
     background-color: #EAEDD2 !important;
     border: 5px dashed #3F664E !important;
     box-sizing: border-box !important;
     border-radius: 10px !important;
+    margin: 0 auto !important;
 }
 
 .no-event-content {
@@ -40,6 +45,7 @@
     color: #3F664E !important;
     text-align: center !important;
     height: 118.5px !important;
+
 }
 
 .no-event-text {

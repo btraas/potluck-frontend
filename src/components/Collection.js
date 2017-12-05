@@ -21,8 +21,8 @@ class Collection extends Component {
             });
         } else {
             items = (
-                <Grid.Column mobile={16} computer={4} tablet={8}>
-                    <Child  data={null}/>
+                <Grid.Column mobile={16} computer={4} tablet={8} >
+                    <Child  data={null} />
                 </Grid.Column>
             )
         }

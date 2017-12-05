@@ -7,7 +7,7 @@ class Invitation extends Component {
         if(this.props.data == null) 
         {
             return (
-                <Card className="no-event-card">
+                <Card className="no-event-card" >
                     <Segment attached className='no-event-content'>
                         <h4 className='no-event-text'>No Event</h4>
                     </Segment>
