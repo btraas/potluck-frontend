@@ -90,13 +90,26 @@ class YourPledges extends Component {
         // this.setState ({ItemCategories : itemCategories})
         // console.log (this.state.ItemCategories);
 
+        console.log (items);
+
         let pledges = await getPledges();
+
+        console.log (self.userId);
+
+        console.log (pledges);
+
+        pledges = pledges.filter((s, sidx) => s.applicationUserId == self.userId);
+
+        console.log (pledges);
 
         pledges.forEach (function (pledge) {
             let item = self.state.Items.filter((s, sidx) => s.itemId === pledge.itemId);
-            if (item != null)
+            console.log (item);
+            if (item != null && item != undefined)
                 pledge.item = item[0];
         })
+
+        pledges = pledges.filter((s, sidx) => (s.item != undefined && s.item != null))
         
         console.log (pledges);
 
@@ -293,7 +306,8 @@ class YourPledges extends Component {
                                     Your Pledges
                                 </Grid.Column>
                             </Grid.Row>
-                            {this.state.Pledges.map((pledge, idx) => (
+
+                            {this.state.Pledges.length > 0 && this.state.Pledges.map((pledge, idx) => (
                                 <Grid.Row centered as={Container}  className="event-header">
                                     <Grid.Column mobile={16} computer={7} textAlign="center">
                                         {pledge.item.itemName}
