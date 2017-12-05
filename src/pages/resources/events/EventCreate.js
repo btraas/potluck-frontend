@@ -66,10 +66,10 @@ class EventCreate extends Component {
         } else {
             this.setState({ loading: true })
             let data = this.processRequestData();
-            let url = 'http://potluckapi.azurewebsites.net/api/Events';
+            let url = 'https://potluckapi.azurewebsites.net/api/Events';
     
             axios({
-                url: "http://potluckapi.azurewebsites.net/api/Events",
+                url: "https://potluckapi.azurewebsites.net/api/Events",
                 method: "post",
                 headers: {
                     Authorization: `Bearer ${this.props.access}`,
