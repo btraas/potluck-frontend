@@ -18,7 +18,7 @@ class Login extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleModalClose = this.handleModalClose.bind(this)
-        this.baseUrl = 'http://potluckapi.azurewebsites.net/connect/token';        
+        this.baseUrl = 'https://potluckapi.azurewebsites.net/connect/token';        
     }
 
     /**

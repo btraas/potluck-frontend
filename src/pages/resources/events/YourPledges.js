@@ -28,7 +28,7 @@ class YourPledges extends Component {
             Quantity: 0,
         };
         this.collect = this.collect.bind(this);
-        this.baseUrl = 'http://potluckapi.azurewebsites.net/api/';
+        this.baseUrl = 'https://potluckapi.azurewebsites.net/api/';
         this.endpoints = ['Events']; 
         this.api = new ApiHelper();
         this.userId = jwt_decode(sessionStorage.getItem("id_token")).sub
@@ -177,7 +177,7 @@ class YourPledges extends Component {
     handleSubmit = (evt) => {
         this.setState({ loading: true })
         
-        let url = 'http://potluckapi.azurewebsites.net/api/Pledges';
+        let url = 'https://potluckapi.azurewebsites.net/api/Pledges';
 
         var self = this;
 
@@ -222,7 +222,7 @@ class YourPledges extends Component {
 
     handleRemovePledge = (idx) => (evt) => {
         let pledge = this.state.Pledges[idx]
-        let url = 'http://potluckapi.azurewebsites.net/api/Pledges/' + pledge.itemId + "/" + pledge.applicationUserId;
+        let url = 'https://potluckapi.azurewebsites.net/api/Pledges/' + pledge.itemId + "/" + pledge.applicationUserId;
         axios({
             url: url,
             method: "delete",

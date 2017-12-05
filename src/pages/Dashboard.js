@@ -19,7 +19,7 @@ class Dashboard extends Component {
             Invitations: []
         };
         this.collect = this.collect.bind(this);
-        this.baseUrl = 'http://potluckapi.azurewebsites.net/api/';
+        this.baseUrl = 'https://potluckapi.azurewebsites.net/api/';
         this.endpoints = ['Events', 'Invitations']; //, 'Pledges/User/' remove
     }
 

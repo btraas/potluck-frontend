@@ -21,7 +21,7 @@ class EditEventPledges extends Component {
             Items: [],
         };
         this.collect = this.collect.bind(this);
-        this.baseUrl = 'http://potluckapi.azurewebsites.net/api/';
+        this.baseUrl = 'https://potluckapi.azurewebsites.net/api/';
         this.endpoints = ['Events']; 
         this.api = new ApiHelper();
         this.userId = jwt_decode(sessionStorage.getItem("id_token")).sub
@@ -149,7 +149,7 @@ class EditEventPledges extends Component {
     handleSubmit = (evt) => {
         this.setState({ loading: true })
         
-        let url = 'http://potluckapi.azurewebsites.net/api/Items';
+        let url = 'https://potluckapi.azurewebsites.net/api/Items';
 
         var self = this;
 

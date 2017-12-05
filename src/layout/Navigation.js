@@ -14,7 +14,7 @@ class Navigation extends Component {
     handleLogout = (e, {name}) => {
         axios({
             method: 'POST',            
-            url: 'http://potluckapi.azurewebsites.net/connect/logout',
+            url: 'https://potluckapi.azurewebsites.net/connect/logout',
             headers: {
                 Authorization: `Bearer ${this.props.access}`,
                 Accept: "text/html"
