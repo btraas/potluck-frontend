@@ -29,7 +29,7 @@ export async function addInvitations(eventId, userIds){
         {
             eventId : eventId,
             applicationUserId: userId,
-            status: 3
+            status: 0
         }
     ));
     var promises = [];
