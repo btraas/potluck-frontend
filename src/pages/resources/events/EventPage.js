@@ -15,7 +15,7 @@ import {
     Form
 } from 'semantic-ui-react';
 import DayPicker from 'react-day-picker'
-import { getEventById, updateEvent } from '../../../api/EventsApi'
+import { getEventById, updateEvent, deleteEvent } from '../../../api/EventsApi'
 import { getInvitations } from '../../../api/InvitationsApi'
 import { addInvitations } from '../../../api/InvitationsApi'
 import { deleteInvitation } from '../../../api/InvitationsApi'
@@ -234,6 +234,19 @@ class EventPage extends Component {
     /**
      * 
      */
+    _deleteEvent = async () => {
+        const { eventId } = this.props.match.params
+
+        let deletedEvent = await deleteEvent(eventId)
+
+        if (deletedEvent !== null && deletedEvent.eventId === parseInt(eventId)) {
+            this.props.history.goBack()
+        }
+    }
+
+    /**
+     * 
+     */
     _getEventDate = () => {
         let startDate = this.state.date.day
         let endDate   = new Date(startDate)
@@ -318,7 +331,9 @@ class EventPage extends Component {
                                                 <Button className="title-edit-button" compact onClick={() => { this._handleEdit('title', true) }}>
                                                     Edit
                                                 </Button>
-
+                                                <Button className="title-delete-button" compact onClick={() => { this._deleteEvent() }}>
+                                                    Delete Event
+                                                </Button>
                                             </div>
                                         }
                                     </Segment>
