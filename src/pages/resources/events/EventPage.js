@@ -394,7 +394,7 @@ class EventPage extends Component {
                                 {/*</Grid.Column>*/}
                             {/*</Grid.Row>*/}
                             <Grid.Row centered as={Container}>
-                                <Grid.Column mobile={16} computer={8} textalign="left">
+                                <Grid.Column mobile={16} computer={16} textalign="left">
                                     <Segment className="medium-background">
                                         {
                                             this.state.edit.location &&
@@ -423,7 +423,7 @@ class EventPage extends Component {
                                 </Grid.Column>
                             </Grid.Row>
                             <Grid.Row centered as={Container}>
-                                <Grid.Column mobile={16} computer={8} textalign="left">
+                                <Grid.Column mobile={16} computer={16} textalign="left">
                                     <Segment className="medium-background light-text" style={{padding: "0"}}>
                                         {
                                             this.state.edit.date &&
@@ -504,7 +504,7 @@ class EventPage extends Component {
                                 </Grid.Column>
                             </Grid.Row>
                             <Grid.Row centered as={Container}>
-                                <Grid.Column computer={8} tablet={16} mobile={16} textalign="left">
+                                <Grid.Column computer={16} tablet={16} mobile={16} textalign="left">
                                     <Segment className="medium-background">
                                         <div style={{display: "inline", marginTop: "30px", marginBottom: "30px"}} >
                                             <h2 style={{display: "inline"}} className="light-text">Description:</h2>
@@ -541,7 +541,7 @@ class EventPage extends Component {
                                 </Grid.Column>
                             </Grid.Row>
                             <Grid.Row centered as={Container}>
-                                <Grid.Column computer={8} tablet={16} mobile={16} textalign="left">
+                                <Grid.Column computer={16} tablet={16} mobile={16} textalign="left">
                                     <Segment className="medium-background">
                                         <div style={{display: "inline", marginTop: "30px", marginBottom: "30px"}} >
                                             <h2 className="light-text" style={{display: "inline"}} >Pledge Status:</h2>
@@ -594,7 +594,7 @@ class EventPage extends Component {
                                 </Grid.Column>
                             </Grid.Row>
                             <Grid.Row centered as={Container} >
-                                <Grid.Column computer={8} tablet={16} mobile={16} textalign="left">
+                                <Grid.Column computer={16} tablet={16} mobile={16} textalign="left">
                                     <Segment className="dark-background">
                                         <div style={{display: "inline", marginTop: "30px", marginBottom: "30px"}} >
                                             <h2 className="light-text">{`Guests (${this.state.guests.length}):`}</h2>
