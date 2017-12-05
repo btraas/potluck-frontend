@@ -310,17 +310,6 @@ class YourPledges extends Component {
                                     </Grid.Column>
                                 </Grid.Row>
                             ))}
-
-                                <Grid.Row centered as={Container} >
-                                    <Grid.Column computer={4} tablet={10} mobile={14} className="pledge-item">
-                                            <Button className="pledge-item-name">dummyData</Button>
-                                            <Button className="pledge-item-quantity">0</Button>
-                                    </Grid.Column>
-                                    <Grid.Column mobile={1} computer={1} textAlign="center">
-                                        <Button className="remove-pledge-x">X</Button>
-                                    </Grid.Column>
-                                </Grid.Row>
-
                             </Grid>
                             <Grid centered className="pledge-add-container">
                                 <Grid.Row centered>
