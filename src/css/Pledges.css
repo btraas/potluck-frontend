@@ -1,0 +1,47 @@
+#your-pledges-page{
+    justify-content: center !important;
+}
+
+.pledge-flavor {
+    color: #3F664E !important;
+}
+
+.remove-pledge-x{
+    background-color: #db2828 !important;
+    color: #EBEDD0 !important;
+}
+
+.pledge-item{
+    border-radius: .28571429rem;
+    background-color: #8AB454;
+}
+
+.pledge-item-name {
+    color: #EBEDD0 !important;
+    float: left;
+}
+
+.pledge-item-quantity {
+    color: #EBEDD0 !important;
+    float: right;
+}
+
+.pledge-add-btn {
+    background-color: #3F664E !important;
+    color: #EBEDD0 !important;
+}
+
+.pledge-add-container {
+    background-color: #8AB454;
+}
+
+.pledge-category-select > .selection.dropdown, .equal-inline > button {
+    width:100% !important;
+}
+
+label{
+    color: #ebedd0 !important;
+}
+.secondary-label{
+    color: #3f654e !important;
+}
