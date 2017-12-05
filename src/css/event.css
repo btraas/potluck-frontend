@@ -13,7 +13,9 @@
     padding-right: 3px;
 }
 
-
+.dark-background {
+    background-color: #3F664E !important;
+}
 
 .time-select > .selection.dropdown, .equal-inline > button {
     width:100% !important;
@@ -82,7 +84,22 @@ button {
 
 .title-delete-button {
     height : 40px;
+    background-color: darkred !important;
 }
+
+.edit-button-wrapper {
+    position: absolute;
+    right : 0;
+    top: 0;
+    margin-right: 10px;
+    margin-top : 10px;
+}
+
+.button-over {
+    position: relative;
+    z-index: 101;
+}
+
 
 .date {
     display : flex;
@@ -139,6 +156,14 @@ button {
 }
 
 @media only screen and (max-width: 767px) {
+
+    .ui.fluid.input {
+        display: initial !important;
+    }
+
+    .ui.fluid.input > input {
+        width: auto !important;
+    }
 
     .ui.steps .step>.icon {
         font-size: 1.5em;
