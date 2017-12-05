@@ -44,10 +44,15 @@ div.inline.equal.width.fields > div.field:last-child {
 
 }
 
+#event-quotas-page {
+    /*background-color: #EAEDD0 !important;*/
+    color: white !important;
+}
+
 input, .form .dropdown, .daypicker-form, .event-date-picker, .event-summary {
     background-color: #EBEDD0 !important;
 }
-button {
+button:not(.custom) {
   background-color: #8AB454 !important;
 
 }
@@ -176,6 +181,23 @@ input::-webkit-input-placeholder {
     font-family: Roboto !important;
     color: #3E6550;
 }
+
+.pledge-category-header {
+    text-align: left;
+}
+
+.pledge-column-1 {
+    width: 200px !important;
+}
+
+.pledge-column-2 {
+    width: 50px !important;
+}
+
+.pledge-column-3 {
+    width: 100px !important;
+}
+
 
 @media only screen and (max-width: 767px) {
 

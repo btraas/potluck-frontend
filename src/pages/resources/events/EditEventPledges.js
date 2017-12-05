@@ -253,79 +253,84 @@ class EditEventPledges extends Component {
         let {loading, error} = this.state;
         displayName: 'Edit Event';
         return (
-            <div style={{ margin: 50 }}>
-                <Grid container centered id="event-page">
-                    <Grid.Row centered as={Container} >
+            <div style={{ paddingTop: '50px' }} className="dark-background">
+                <Grid container centered id="event-quotas-page" >
+                    <Grid.Row as={Container} >
                         <Grid.Column mobile={16} computer={16} textAlign="center">
-                            POTLUCK
+                            <Header as='h1'
+                                        inverted
+                                        content="Potluck"
+                                        style={{ fontSize: "3rem", fontWeight: "normal"}}
+                                />
+
                         </Grid.Column>
                     </Grid.Row>
                     <Grid.Row centered as={Container} >
                         <Grid.Column mobile={16} computer={16} textAlign="center">
-                            Edit Pledge Quotas
+                            <span className="flavor">Set Pledge Quotas</span><br />
+
                         </Grid.Column>
                     </Grid.Row>
-                    <table>
                         {this.state.Items.map((itemCat, idx) => (
-                            <Grid.Row>
-                            <tr >
-                                <td colspan="4" className="event-header">
-                                    {itemCat.name}
+                            <table style={{marginTop: "80px"}}>
+                            <tr>
+                                <td colspan="4" className="pledge-category-header">
+                                    <h5>{itemCat.name}</h5>
                                 </td>
                             </tr>
                             <tr>
-                                <td>
+                                <td className="pledge-column-1">
                                     Item
                                 </td>
-                                <td>
+                                <td className="pledge-column-2">
                                     Qty
                                 </td>
                                 <td>
                                     Unit of measurement
                                 </td>
-                                <td>
+                                <td className="pledge-column-3">
                                     <Button onClick={ this.handleAddItem(idx) }>+</Button>
                                 </td>
-                            </tr>  
-                                {itemCat.items.map((item, itemidx) => (
-                                    !item.deleted &&
-                                    <tr>
+                            </tr>
 
+                            {itemCat.items.map((item, itemidx) => (
+                                    !item.deleted &&
+                                      <tr>
                                         <td>
-                                            <Input 
+                                            <Input
                                                 type="text"
                                                 placeholder={`${itemCat.name} #${itemidx + 1} name`}
                                                 value={item.itemName}
                                                 onChange={ this.handleItemNameChange(idx, itemidx)}/>
                                         </td>
-                                        <td>
-                                            <Input 
+                                        <td >
+                                            <Input
                                                 type="text"
                                                 placeholder={`${itemCat.name} #${itemidx + 1} quota`}
                                                 value={item.quota}
-                                                onChange={ this.handleItemQuotaChange(idx, itemidx)}/> 
+                                                style={{width: "50px"}}
+                                                onChange={ this.handleItemQuotaChange(idx, itemidx)}/>
                                         </td>
                                         <td>
-                                            <Input 
+                                            <Input
                                                 type="text"
-                                                placeholder={`${itemCat.name} #${itemidx + 1} unit of measurement`}
+                                                placeholder={`${itemCat.name} #${itemidx + 1} units`}
                                                 value={item.unitOfMeasurement}
-                                                onChange={ this.handleItemUnitOfMeasurementChange(idx, itemidx)}/> 
+                                                style={{width: "100px"}}
+                                                onChange={ this.handleItemUnitOfMeasurementChange(idx, itemidx)}/>
                                         </td>
 
                                         <td>
-                                            <Button onClick={this.handleRemoveItem(idx, itemidx)}>X</Button>
+                                            <Button color="red" className="custom" onClick={this.handleRemoveItem(idx, itemidx)}>X</Button>
                                         </td>
-                                    </tr>
+                                      </tr>
                                 ))}
-                                
-                            </Grid.Row>
+                            </table>
                         ))}
-                        </table>
                     
                     <Grid.Row centered as={Container} >
                         <Grid.Column mobile={16} computer={16} textAlign="center">
-                            <Button onClick={this.handleSubmit}>Confirm</Button>
+                            <Button style={{width: '250px'}} onClick={this.handleSubmit}>Confirm</Button>
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
