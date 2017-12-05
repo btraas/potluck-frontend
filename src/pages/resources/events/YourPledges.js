@@ -196,7 +196,16 @@ class YourPledges extends Component {
 
         console.log (this.state.Pledges);
 
-        let checkItem = this.state.Pledges.filter((s, idx) => s.item.itemId === this.state.SelectedItem);
+
+        try {
+
+            var checkItem = this.state.Pledges.filter((s, idx) => s.item.itemId === this.state.SelectedItem);
+        } catch (e) {
+            console.log(e);
+
+            return;
+        }
+
 
         console.log (checkItem);
 
@@ -296,7 +305,9 @@ class YourPledges extends Component {
                             {this.state.Pledges.map((pledge, idx) => (
                                 <Grid.Row centered as={Container}  className="event-header">
                                     <Grid.Column mobile={16} computer={7} textAlign="center">
-                                        {pledge.item.itemName}
+
+                                        {pledge.item && <span>{pledge.item.itemName}</span>}
+
                                     </Grid.Column>
                                     <Grid.Column mobile={16} computer={7} textAlign="center">
                                         {pledge.quantity}
