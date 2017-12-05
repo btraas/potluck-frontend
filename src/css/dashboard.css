@@ -1,3 +1,7 @@
+.ui.centered.grid, .ui.centered.grid>.row, .ui.grid>.centered.row{
+    justify-content: space-evenly;
+}
+
 .event-header {
     background-color: #3E6550 !important;
     color: #EAEDD0 !important;
@@ -50,4 +54,9 @@
 
 .no-event-text {
     margin-top: 10% !important;
+}
+
+.ui.grid>.column:not(.row), .ui.grid>.row>.column {
+    padding-left: 0rem;
+    padding-right: 0rem;
 }

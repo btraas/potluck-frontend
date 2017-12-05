@@ -176,13 +176,13 @@ class EventCreate extends Component {
                         <Loader size="massive" />
                     </Dimmer>
                     <Grid.Row centered>
-                        <Grid.Column textAlign="center" computer={5} tablet={10} mobile={16}>
+                        <Grid.Column textAlign="center" computer={5} tablet={10} mobile={12}>
                             <br />
                             <span className="title">Potluck</span>
                         </Grid.Column>
                     </Grid.Row>
                     <Grid.Row centered>
-                        <Grid.Column textAlign="center" computer={5} tablet={10} mobile={16}>
+                        <Grid.Column textAlign="center" computer={5} tablet={10} mobile={12}>
                             <span className="flavor">Create an Event</span>
                             <Step.Group size='tiny' className="unstackable">
                                 <Step active={step === 'details'}>
@@ -238,7 +238,6 @@ class EventCreate extends Component {
                                         <Form.Select compact name='start_time_hours' options={hours} className="time-select"
                                             onChange={this.handleChange} placeholder="Hours"
                                             defaultValue={date.values.start_time_hours} required />
-                                        <span>:</span>
                                         <Form.Select compact name='start_time_mins' options={minutes} className="time-select"
                                             onChange={this.handleChange} placeholder="Mins"
                                             defaultValue={date.values.start_time_mins} required />
@@ -269,24 +268,23 @@ class EventCreate extends Component {
                             <label>Event Summary:</label>
                             <Segment className="event-summary">
                                 <div>
-                                    <label>Title:</label> {details.values.title}
+                                    <label className="secondary-label">Title:  {details.values.title}</label>
                                 </div>
                                 <div>
-                                    <label>Description:</label>  {details.values.description}
+                                    <label className="secondary-label">Description:  {details.values.description}</label>
                                 </div>
                                 <div>
-                                    <label>Location:</label>{details.values.location}
+                                    <label className="secondary-label">Location:  {details.values.location}</label>
                                 </div>
                                 <div>
-                                    <label>Date:</label>   {date.values.event_date.toDateString()}
+                                    <label className="secondary-label">Date:  {date.values.event_date.toDateString()}</label>
                                 </div>
                                 <div>
-                                    <label>Time:</label>
-                                    {`${date.values.start_time_hours}:${date.values.start_time_mins < 10 
-                                        ? '0'+date.values.start_time_mins : date.values.start_time_mins} ${date.values.start_time_noon}`}
+                                    <label className="secondary-label">Time:  {`${date.values.start_time_hours}:${date.values.start_time_mins < 10 
+                                        ? '0'+date.values.start_time_mins : date.values.start_time_mins} ${date.values.start_time_noon}`}</label>
                                 </div>
                                 <div>
-                                    <label>Duration:</label> {`${date.values.duration_hours} hours ${date.values.duration_mins} mins`}
+                                    <label className="secondary-label">Duration:  {`${date.values.duration_hours} hours ${date.values.duration_mins} mins`}</label>
                                 </div>
                             </Segment>
                             <Form>
