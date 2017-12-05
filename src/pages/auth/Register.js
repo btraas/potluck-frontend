@@ -96,18 +96,18 @@ class Register extends Component {
         <DocumentTitle title='Potluck - Register'>
             <Grid padded centered id="auth-page">
                 <Grid.Row centered>
-                    <Grid.Column textAlign="center" computer={6} tablet={10} mobile={16}>
+                    <Grid.Column textAlign="center" computer={6} tablet={10} mobile={12}>
                         <br />
                         <span className="title">Potluck</span>
                     </Grid.Column>
                 </Grid.Row>
                 <Grid.Row >
-                    <Grid.Column textAlign="center" computer={6} tablet={10} mobile={16}>
+                    <Grid.Column textAlign="center" computer={6} tablet={10} mobile={12}>
                         <span className="flavor">Sign up</span>
                     </Grid.Column>
                 </Grid.Row>
                 <Grid.Row >
-                    <Grid.Column textAlign="center" computer={6} tablet={10} mobile={16}>
+                    <Grid.Column textAlign="center" computer={6} tablet={10} mobile={12}>
                         {displayErrors &&  <Message error header={error} />}
                         <Form onSubmit={this.handleSubmit}>
                             <Form.Input label='First Name' type='text' placeholder="First Name" value={this.state.fname} onChange={this.handleFNameChange} />

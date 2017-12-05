@@ -65,19 +65,34 @@ class Dashboard extends Component {
                     <Loader size="massive"/>
                 </Dimmer>
                 <Container>
+                    <br />
                     {error && <Message error
                         header='There was a problem loading the page. Try refreshing later!'
                     />}
-                    <Grid verticalAlign='middle' columns={2} centered padded>
-                    <Grid.Row>
-                            <Grid.Column mobile={3} computer={3} tablet={3}>
-                                <Button as={Link} to="/dashboard/events/create" className='btn-create-event'>Create Event</Button>
-                            </Grid.Column>
-                            <Grid.Column mobile={9} computer={9} tablet={9}>
-                                <Input fluid focus placeholder='Search...' />
-                            </Grid.Column>
-                        </Grid.Row>
-                    </Grid>
+
+                    {/* Brayden - doesn't do anything right now */}
+                    {/*<Input padded centered fluid focus placeholder='Search...' />*/}
+
+                    <br />
+                    <Container centered style={{display: 'flex',justifyContent: 'center'}}>
+                        <Button style={{width: 250 }} padded centered fluid as={Link} to="/dashboard/events/create" className='btn-create-event'>Create Event</Button>
+
+                    </Container>
+
+
+                    {/*<Grid verticalAlign='middle' columns={2} centered padded>*/}
+                    {/*/!*<Grid.Row>*!/*/}
+                        {/*/!*<Grid.Column mobile={9} computer={9} tablet={9}>*!/*/}
+                            {/*/!*<Input fluid focus placeholder='Search...' />*!/*/}
+                        {/*/!*</Grid.Column>*!/*/}
+                    {/*/!*</Grid.Row>*!/*/}
+                    {/*/!*<Grid.Row>*!/*/}
+                            {/*/!*<Grid.Column mobile={3} computer={3} tablet={3}>*!/*/}
+                                {/*/!*<Button as={Link} to="/dashboard/events/create" className='btn-create-event'>Create Event</Button>*!/*/}
+                            {/*/!*</Grid.Column>*!/*/}
+
+                        {/*/!*</Grid.Row>*!/*/}
+                    {/*</Grid>*/}
                     
                 </Container>
                 <br/><br/>

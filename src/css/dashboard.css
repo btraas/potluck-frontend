@@ -1,3 +1,7 @@
+.ui.centered.grid, .ui.centered.grid>.row, .ui.grid>.centered.row{
+    justify-content: space-evenly;
+}
+
 .event-header {
     background-color: #3E6550 !important;
     color: #EAEDD0 !important;
@@ -28,11 +32,16 @@
     color: #4F4F4F !important;  
 }
 
+.event-card {
+    margin: 0 auto !important;
+}
+
  .no-event-card {
     background-color: #EAEDD2 !important;
     border: 5px dashed #3F664E !important;
     box-sizing: border-box !important;
     border-radius: 10px !important;
+    margin: 0 auto !important;
 }
 
 .no-event-content {
@@ -40,8 +49,14 @@
     color: #3F664E !important;
     text-align: center !important;
     height: 118.5px !important;
+
 }
 
 .no-event-text {
     margin-top: 10% !important;
+}
+
+.ui.grid>.column:not(.row), .ui.grid>.row>.column {
+    padding-left: 0rem;
+    padding-right: 0rem;
 }
