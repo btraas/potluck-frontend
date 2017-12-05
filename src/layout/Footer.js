@@ -6,7 +6,7 @@ class Footer extends Component {
   render() {
     return (
         <Menu inverted className="footer">
-            <Menu.Item>Footer</Menu.Item>
+            <Menu.Item>Copyright 2017 Medhat and Friends</Menu.Item>
         </Menu>
     );
   }
