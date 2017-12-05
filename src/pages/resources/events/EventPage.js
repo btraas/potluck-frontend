@@ -252,7 +252,6 @@ class EventPage extends Component {
         let response = await addInvitations(eventId, invites)
         console.log(response)
         if (response) {
-            console.log("added")
             await this._processGuests()
         }
 
@@ -275,7 +274,6 @@ class EventPage extends Component {
     handleDelete = async (eventId, userId) => {
         let response = await deleteInvitation(eventId,userId)
         if (response) {
-            console.log("deleted")
             await this._processGuests()
         }
     }
@@ -556,6 +554,7 @@ class EventPage extends Component {
                                                     </Form>
                                                 </div>
                                         }
+                                        <hr />
                                         {
                                             this.state.guests.map((guest, index) => {
                                                 let statusFlag
@@ -575,12 +574,13 @@ class EventPage extends Component {
                                                 }
                                                 return (
                                                     <Segment key={index} style={{ backgroundColor : "#88B652" , marginHeight:"0px"}}>
-                                                        <p className="userName" textalign="left"><a className={statusFlag}></a> {guest.firstName} {guest.lastName}</p>
-                                                        <Button className="right-aligned-p"
-                                                                textalign="right"
-                                                                color='red'
-                                                                onClick={() => this.handleDelete( eventId ,guest.applicationUserId)}
-                                                        >X</Button>
+                                                        <p className="userName" textalign="left"><a className={statusFlag}></a> {guest.firstName} {guest.lastName}
+                                                            <Button className="right-aligned-p"
+                                                                    textalign="right"
+                                                                    color='red'
+                                                                    onClick={() => this.handleDelete( eventId ,guest.applicationUserId)}
+                                                            >X</Button>
+                                                        </p>
                                                     </Segment>
                                                 )
                                             })
