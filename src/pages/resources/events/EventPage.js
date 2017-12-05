@@ -250,7 +250,8 @@ class EventPage extends Component {
         const invites = this.state.invites
         const eventId = this.state.event.eventId
         let response = await addInvitations(eventId, invites)
-        if (response = "") {
+        console.log(response)
+        if (response) {
             console.log("added")
             await this._processGuests()
         }
@@ -273,7 +274,7 @@ class EventPage extends Component {
 
     handleDelete = async (eventId, userId) => {
         let response = await deleteInvitation(eventId,userId)
-        if (response = "") {
+        if (response) {
             console.log("deleted")
             await this._processGuests()
         }
