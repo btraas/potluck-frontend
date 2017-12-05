@@ -277,8 +277,8 @@ class EventPage extends Component {
                 </Dimmer>
                 {!this.state.loading &&
                     <div>
-                        <Segment style={{ backgroundColor: "green" }}>
-                            <div style={{ margin: 50 }} >
+                        <Segment className="dark-background">
+                            <div style={{ margin: '0 auto' }} >
                                 {
                                     this.state.edit.title &&
                                     <div style={{ display : "inline", width: "100%", height : "100px"}}>
@@ -298,17 +298,15 @@ class EventPage extends Component {
                                         <Header as='h1' 
                                                 inverted 
                                                 content={this.state.event.title}
-                                                style={{ fontSize: "4rem", fontWeight: "normal"}}
+                                                style={{ fontSize: "3rem", fontWeight: "normal"}}
                                                 />
                                         {
                                             (this.state.isUserHost) && 
-                                            <div style={{marginLeft : "10px", marginTop : "10px"}}>
+                                            <div style={{position: 'absolute', right : 0, top: 0, marginRight: "10px", marginTop : "10px"}}>
                                                 <Button className="title-edit-button" compact onClick={() => { this._handleEdit('title', true) }}>
                                                     Edit
                                                 </Button>
-                                                <Button className="title-delete-button" compact onClick={() => { }}>
-                                                    Delete Event
-                                                </Button>
+
                                             </div>
                                         }
                                     </Segment>
@@ -319,6 +317,15 @@ class EventPage extends Component {
                                             inverted
                                             style={{ fontSize: '1.7em', fontWeight: 'normal' }}/>
                                 </Segment>
+
+                                <Segment basic className="title">
+                                    <Button style={{margin: '0 auto', width: "200px"}} className="title-delete-button" color="red" compact onClick={() => { }}>
+                                        Delete Event
+                                    </Button>
+                                </Segment>
+
+
+
                             </div>
                         </Segment>
                         <Grid container centered id="event-page">
@@ -344,8 +351,8 @@ class EventPage extends Component {
                                         {
                                             this.state.edit.location &&
                                             <div>
-                                                <Button compact className="right-aligned-p" onClick={() => { this._handleEdit('location', false) }}>Cancel</Button>
-                                                <Button compact className="right-aligned-p" onClick={() => { this._handleSubmit('location') }}>Confirm</Button>
+                                                <Button compact className="right-aligned-p button-over" onClick={() => { this._handleEdit('location', false) }}>Cancel</Button>
+                                                <Button compact className="right-aligned-p button-over" onClick={() => { this._handleSubmit('location') }}>Confirm</Button>
                                             </div>
                                         }
                                         <Grid.Row className="location">
@@ -371,8 +378,8 @@ class EventPage extends Component {
                                         {
                                             this.state.edit.date &&
                                             <div>
-                                                <Button className="right-aligned-p" onClick={() => { this._handleEdit('date', false) }}>Cancel</Button>
-                                                <Button className="right-aligned-p" onClick={() => { this._handleSubmit('date') }}>Confirm</Button>
+                                                <Button className="right-aligned-p button-over" onClick={() => { this._handleEdit('date', false) }}>Cancel</Button>
+                                                <Button className="right-aligned-p button-over" onClick={() => { this._handleSubmit('date') }}>Confirm</Button>
                                             </div>
                                         }
                                         {
@@ -451,8 +458,8 @@ class EventPage extends Component {
                                         {
                                             this.state.edit.description &&
                                             <div>
-                                                <Button className="right-aligned-p" onClick={() => { this._handleEdit('description', false) }}>Cancel</Button>
-                                                <Button className="right-aligned-p" onClick={() => { this._handleSubmit('description')}}>Confirm</Button>
+                                                <Button className="right-aligned-p button-over" onClick={() => { this._handleEdit('description', false) }}>Cancel</Button>
+                                                <Button className="right-aligned-p button-over" onClick={() => { this._handleSubmit('description')}}>Confirm</Button>
                                             </div>
                                         }
                                         {
