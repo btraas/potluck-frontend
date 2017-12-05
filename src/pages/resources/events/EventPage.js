@@ -581,7 +581,7 @@ class EventPage extends Component {
                                                     case 2:
                                                         statusFlag = "fa fa-times"
                                                         break;
-                                                    case 3:
+                                                    case 0:
                                                         statusFlag = "fa fa-question"
                                                         break;
                                                     default:
