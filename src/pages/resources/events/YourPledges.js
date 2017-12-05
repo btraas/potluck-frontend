@@ -91,13 +91,26 @@ class YourPledges extends Component {
         // this.setState ({ItemCategories : itemCategories})
         // console.log (this.state.ItemCategories);
 
+        console.log (items);
+
         let pledges = await getPledges();
+
+        console.log (self.userId);
+
+        console.log (pledges);
+
+        pledges = pledges.filter((s, sidx) => s.applicationUserId == self.userId);
+
+        console.log (pledges);
 
         pledges.forEach (function (pledge) {
             let item = self.state.Items.filter((s, sidx) => s.itemId === pledge.itemId);
-            if (item != null)
+            console.log (item);
+            if (item != null && item != undefined)
                 pledge.item = item[0];
         })
+
+        pledges = pledges.filter((s, sidx) => (s.item != undefined && s.item != null))
         
         console.log (pledges);
 
@@ -197,7 +210,16 @@ class YourPledges extends Component {
 
         console.log (this.state.Pledges);
 
-        let checkItem = this.state.Pledges.filter((s, idx) => s.item.itemId === this.state.SelectedItem);
+
+        try {
+
+            var checkItem = this.state.Pledges.filter((s, idx) => s.item.itemId === this.state.SelectedItem);
+        } catch (e) {
+            console.log(e);
+
+            return;
+        }
+
 
         console.log (checkItem);
 
@@ -299,10 +321,10 @@ class YourPledges extends Component {
                                     <span className="pledge-flavor flavor">Your Pledges</span>
                                 </Grid.Column>
                             </Grid.Row>
-                            {this.state.Pledges.map((pledge, idx) => (
+                            {this.state.Pledges.length > 0 && this.state.Pledges.map((pledge, idx) => (
                                 <Grid.Row centered as={Container} >
                                     <Grid.Column computer={4} tablet={10} mobile={14} className="pledge-item">
-                                            <Button className="pledge-item-name">{pledge.item.itemName}</Button>
+                                            <Button className="pledge-item-name">{pledge.item && <span>{pledge.item.itemName}</span>}</Button>
                                             <Button className="pledge-item-quantity">{pledge.quantity}</Button>
                                     </Grid.Column>
                                     <Grid.Column mobile={1} computer={1} textAlign="center">
